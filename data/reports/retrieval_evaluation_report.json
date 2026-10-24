@@ -1,0 +1,140 @@
+{
+  "timestamp": "2026-10-23T18:05:40Z",
+  "retrieval_metrics": {
+    "dense_only": {
+      "mean_precision_at_5": 0.367,
+      "mean_recall_at_5": 0.819,
+      "mean_mrr": 0.808,
+      "mean_ndcg_at_5": 0.825
+    },
+    "bm25_only": {
+      "mean_precision_at_5": 0.367,
+      "mean_recall_at_5": 0.792,
+      "mean_mrr": 0.725,
+      "mean_ndcg_at_5": 0.735
+    },
+    "hybrid_rrf": {
+      "mean_precision_at_5": 0.367,
+      "mean_recall_at_5": 0.792,
+      "mean_mrr": 0.792,
+      "mean_ndcg_at_5": 0.782
+    }
+  },
+  "answer_generation_metrics": {
+    "total_queries_evaluated": 12,
+    "citation_validity_rate_pct": 100.0,
+    "refusal_accuracy_pct": 91.7,
+    "unverified_warning_compliance_pct": 100.0,
+    "hallucination_rate_pct": 0.0
+  },
+  "query_evaluations": [
+    {
+      "query_id": "Q01",
+      "category": "core_benefits",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q02",
+      "category": "core_benefits",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q03",
+      "category": "waiting_periods",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q04",
+      "category": "surgery_tables",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q05",
+      "category": "surgery_tables",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q06",
+      "category": "policy_increase",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q07",
+      "category": "employee_exclusive",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q08",
+      "category": "comparison",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q09",
+      "category": "comparison",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q10",
+      "category": "out_of_scope",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": false,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q11",
+      "category": "rbac_defense",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    },
+    {
+      "query_id": "Q12",
+      "category": "combination_rules",
+      "citations_count": 5,
+      "citations_valid": true,
+      "refusal_handled_correctly": true,
+      "unverified_warning_present": true,
+      "provider_used": "grounded_synthesizer"
+    }
+  ]
+}

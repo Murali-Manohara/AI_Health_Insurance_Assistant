@@ -1,0 +1,70 @@
+# ==========================================
+# Python & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ==========================================
+# Node / Frontend Build & Dependencies
+# ==========================================
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.npm/
+.eslintcache
+
+# ==========================================
+# SQLite Databases & Local Storage
+# ==========================================
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+data/app.db*
+data/chroma_db/
+
+# ==========================================
+# Logs & Scratch Scripts
+# ==========================================
+*.log
+logs/
+scratch/
+
+# ==========================================
+# Ephemeral Staging & Chat Histories
+# ==========================================
+data/staging/*.pdf
+data/staging/conversations.json
+data/staging/ingestion_history.json
+data/reports/prompt_scenarios_results.json
+prompt.txt
+
+# ==========================================
+# IDE & Operating System Caches
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

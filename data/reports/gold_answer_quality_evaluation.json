@@ -1,0 +1,499 @@
+{
+  "metadata": {
+    "evaluation_timestamp": "2026-10-23T19:00:09Z",
+    "plan_id": "HS-GOLD-001",
+    "llm_provider": "gemini",
+    "gemini_model": "gemini-flash-lite-latest",
+    "average_overall_match_score": 98.06
+  },
+  "evaluation_results": [
+    {
+      "question_id": "GOLD-Q1",
+      "question": "What is the Daily Hospital Cash benefit, and what are its limits?",
+      "expected_answer": "Health Shield \u2013 Gold provides an illustrative Daily Hospital Cash benefit of \u20b95,000 per day for eligible hospitalizations exceeding 24 hours. The maximum benefit is 20 days per policy year and 20 days over the illustrative policy period. For example, four eligible payable days would result in an illustrative benefit of \u20b920,000 (\u20b95,000 \u00d7 4 days). These are illustrative demonstration values and must not be represented as verified real insurance coverage.",
+      "actual_answer": "Based on your selected plan, Health Shield \u2013 Gold, here are the details regarding the Daily Hospital Cash benefit and its limits:\n\n* **Daily Hospital Cash Amount:** The illustrative Daily Hospital Cash benefit is **\u20b95,000** [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].\n* **Minimum Hospitalization Duration:** Hospitalization must last **more than 24 hours** to qualify [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].\n* **Maximum Benefit Days:** \n  * Maximum Benefit Days Per Policy Year: **20 days** [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].\n  * Maximum Benefit Days Over the Illustrative Policy Period: **20 days** [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].\n* **Calculation Example:** If an eligible hospitalization qualifies for 4 payable days, the illustrative benefit is calculated as: \n  $$\\text{\u20b95,000} \\times 4 \\text{ days} = \\text{\u20b920,000}$$ \n  [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].\n\n*Please note: The policy figures and benefits provided in the Health Shield \u2013 Gold plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, pp. 2\u20133].*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "provider_used": "gemini",
+      "overall_match_score": 100.0,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "dimension_scores": {
+        "retrieval_evidence_coverage": {
+          "score": 100.0,
+          "weight": "30%",
+          "weighted_points": 30.0,
+          "details": {
+            "score": 100.0,
+            "total_required": 6,
+            "retrieved_count": 6,
+            "retrieved_items": [
+              "Daily benefit of \u20b95,000",
+              "Minimum hospitalization duration exceeding 24 hours",
+              "Maximum benefit days per policy year: 20 days",
+              "Maximum benefit days over illustrative policy period: 20 days",
+              "Example calculation: 4 days = \u20b920,000 (\u20b95,000 \u00d7 4)",
+              "Illustrative demonstration / unverified status"
+            ],
+            "missing_items": [],
+            "target_section_present": true
+          }
+        },
+        "answer_factual_correctness": {
+          "score": 100.0,
+          "weight": "35%",
+          "weighted_points": 35.0,
+          "details": {
+            "score": 100.0,
+            "earned_points": 6.0,
+            "total_points": 6.0,
+            "fact_results": [
+              {
+                "fact": "Daily benefit amount is \u20b95,000",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Hospitalization duration requirement: > 24 hours",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Maximum 20 days per policy year",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Maximum 20 days over illustrative policy period",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Example 4 days = \u20b920,000 included or referenced",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Clarified as illustrative demonstration data (not official/guaranteed coverage)",
+                "score": 1.0,
+                "status": "PASS"
+              }
+            ],
+            "critical_errors": []
+          }
+        },
+        "citation_correctness": {
+          "score": 100.0,
+          "weight": "15%",
+          "weighted_points": 15.0,
+          "details": {
+            "score": 100.0,
+            "citations_count": 5,
+            "target_plan_match": true,
+            "target_section_match": true,
+            "in_text_citations_present": true,
+            "citations_details": [
+              {
+                "source_id": "SRC-1",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 3: HOSPITAL CASH BENEFIT",
+                "pages": "2-3",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-2",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 4: ICU BENEFIT",
+                "pages": "3-3",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-3",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 7: OTHER SURGERY BENEFIT",
+                "pages": "4-5",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-4",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 9: EXTENDED HOSPITAL STAY BENEFIT",
+                "pages": "5-6",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-5",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 14: PREMIUM WAIVER AND AUTO HEALTH",
+                "pages": "8-8",
+                "data_status": "illustrative_unverified"
+              }
+            ]
+          }
+        },
+        "natural_language_quality": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "word_count": 216,
+            "is_raw_table_dump": false,
+            "deductions": []
+          }
+        },
+        "data_status_compliance": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "compliant": true,
+            "violations": []
+          }
+        }
+      },
+      "retrieval_precision_metrics": {
+        "chunks_retrieved_count": 5,
+        "target_section_chunks_count": 1,
+        "unrelated_sections_count": 4,
+        "retrieved_section_numbers": [
+          "3",
+          "4",
+          "7",
+          "9",
+          "14"
+        ],
+        "parents_expanded_count": 5
+      }
+    },
+    {
+      "question_id": "GOLD-Q2",
+      "question": "What is the ICU limit per day and per year?",
+      "expected_answer": "The Gold plan document specifies an illustrative ICU benefit of \u20b910,000 per day. However, it does not define the maximum number of ICU benefit days or a separate annual ICU limit. The ICU eligibility conditions are also not officially defined, and whether the ICU benefit can be combined with Hospital Cash depends on approved policy terms. Therefore, the daily benefit is specified, but the annual ICU limit cannot be confirmed from the document.",
+      "actual_answer": "Based on your Health Shield \u2013 Gold plan, here are the details regarding the ICU benefit limits:\n\n* **Daily ICU Benefit:** The illustrative daily ICU benefit is **\u20b910,000** per day when an eligible insured person is admitted to an Intensive Care Unit (ICU) [Health Shield \u2013 Gold, Section 4: ICU BENEFIT, p. 3]. \n* **Maximum ICU Benefit Days (Per Year / Total):** The maximum ICU benefit days are **not defined** in the available policy documents [Health Shield \u2013 Gold, Section 4: ICU BENEFIT, p. 3].\n* **ICU Eligibility Conditions:** The eligibility conditions are **not officially defined** [Health Shield \u2013 Gold, Section 4: ICU BENEFIT, p. 3].\n\n*Note: Please be aware that the figures provided for the Health Shield \u2013 Gold plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 4: ICU BENEFIT, p. 3].*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "provider_used": "gemini",
+      "overall_match_score": 94.17,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "dimension_scores": {
+        "retrieval_evidence_coverage": {
+          "score": 100.0,
+          "weight": "30%",
+          "weighted_points": 30.0,
+          "details": {
+            "score": 100.0,
+            "total_required": 6,
+            "retrieved_count": 6,
+            "retrieved_items": [
+              "Daily ICU benefit: \u20b910,000",
+              "Maximum ICU benefit days: not defined",
+              "Separate annual ICU limit: not defined / cannot be confirmed",
+              "ICU eligibility conditions: not officially defined",
+              "Interaction with Hospital Cash: subject to approved policy terms",
+              "Plan illustrative status"
+            ],
+            "missing_items": [],
+            "target_section_present": true
+          }
+        },
+        "answer_factual_correctness": {
+          "score": 83.33,
+          "weight": "35%",
+          "weighted_points": 29.17,
+          "details": {
+            "score": 83.33,
+            "earned_points": 5.0,
+            "total_points": 6.0,
+            "fact_results": [
+              {
+                "fact": "Daily ICU benefit is \u20b910,000",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Maximum ICU benefit days or annual limit is not defined",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Eligibility conditions not officially defined",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Interaction with Hospital Cash depends on approved policy terms",
+                "score": 0.0,
+                "status": "MISSING"
+              },
+              {
+                "fact": "Does not fabricate an annual limit or apply the 20-day Hospital Cash limit to ICU",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Identified as illustrative demonstration data",
+                "score": 1.0,
+                "status": "PASS"
+              }
+            ],
+            "critical_errors": []
+          }
+        },
+        "citation_correctness": {
+          "score": 100.0,
+          "weight": "15%",
+          "weighted_points": 15.0,
+          "details": {
+            "score": 100.0,
+            "citations_count": 5,
+            "target_plan_match": true,
+            "target_section_match": true,
+            "in_text_citations_present": true,
+            "citations_details": [
+              {
+                "source_id": "SRC-1",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 6: DAY-CARE PROCEDURE BENEFIT",
+                "pages": "4-4",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-2",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 4: ICU BENEFIT",
+                "pages": "3-3",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-3",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 3: HOSPITAL CASH BENEFIT",
+                "pages": "2-3",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-4",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 7: OTHER SURGERY BENEFIT",
+                "pages": "4-5",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-5",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 9: EXTENDED HOSPITAL STAY BENEFIT",
+                "pages": "5-6",
+                "data_status": "illustrative_unverified"
+              }
+            ]
+          }
+        },
+        "natural_language_quality": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "word_count": 163,
+            "is_raw_table_dump": false,
+            "deductions": []
+          }
+        },
+        "data_status_compliance": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "compliant": true,
+            "violations": []
+          }
+        }
+      },
+      "retrieval_precision_metrics": {
+        "chunks_retrieved_count": 5,
+        "target_section_chunks_count": 1,
+        "unrelated_sections_count": 4,
+        "retrieved_section_numbers": [
+          "6",
+          "4",
+          "3",
+          "7",
+          "9"
+        ],
+        "parents_expanded_count": 5
+      }
+    },
+    {
+      "question_id": "GOLD-Q3",
+      "question": "What is the payout for Major Surgery Category 2?",
+      "expected_answer": "The Gold plan specifies an illustrative Major Surgery Benefit basis of \u20b95,00,000. The proposed payout for Category 2 is 60% of that basis: \u20b95,00,000 \u00d7 60% = \u20b93,00,000. The document describes these as illustrative payout values. The actual surgery list and category mapping have not been officially defined, so a particular operation's category cannot be confirmed without the applicable approved policy terms.",
+      "actual_answer": "Under the Health Shield \u2013 Gold plan, the illustrative payout for Major Surgery Category 2 is **\u20b93,00,000**, which represents 60% of the illustrative Gold Benefit Basis of \u20b95,00,000 [Health Shield \u2013 Gold, Section 5, pp. 3-4].\n\nPlease note that these figures are illustrative demonstration values and not official verified coverage, and the surgery list and category mapping are not officially defined [Health Shield \u2013 Gold, Section 5, pp. 3-4].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "provider_used": "gemini",
+      "overall_match_score": 100.0,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "dimension_scores": {
+        "retrieval_evidence_coverage": {
+          "score": 100.0,
+          "weight": "30%",
+          "weighted_points": 30.0,
+          "details": {
+            "score": 100.0,
+            "total_required": 5,
+            "retrieved_count": 5,
+            "retrieved_items": [
+              "Major Surgery Benefit basis: \u20b95,00,000",
+              "Category 2 payout percentage: 60%",
+              "Category 2 illustrative payout: \u20b93,00,000 (\u20b95,00,000 \u00d7 60%)",
+              "Surgery list and category mapping: not officially defined",
+              "Plan illustrative status"
+            ],
+            "missing_items": [],
+            "target_section_present": true
+          }
+        },
+        "answer_factual_correctness": {
+          "score": 100.0,
+          "weight": "35%",
+          "weighted_points": 35.0,
+          "details": {
+            "score": 100.0,
+            "earned_points": 6.0,
+            "total_points": 6.0,
+            "fact_results": [
+              {
+                "fact": "Major Surgery Benefit basis is \u20b95,00,000",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Category 2 payout percentage is 60%",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Category 2 illustrative payout is \u20b93,00,000",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Surgery list and category mapping is not officially defined",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Does not fabricate a specific surgery assignment for Category 2 without policy terms",
+                "score": 1.0,
+                "status": "PASS"
+              },
+              {
+                "fact": "Identified as illustrative demonstration data",
+                "score": 1.0,
+                "status": "PASS"
+              }
+            ],
+            "critical_errors": []
+          }
+        },
+        "citation_correctness": {
+          "score": 100.0,
+          "weight": "15%",
+          "weighted_points": 15.0,
+          "details": {
+            "score": 100.0,
+            "citations_count": 5,
+            "target_plan_match": true,
+            "target_section_match": true,
+            "in_text_citations_present": true,
+            "citations_details": [
+              {
+                "source_id": "SRC-1",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 5: MAJOR SURGERY BENEFIT",
+                "pages": "4-4",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-2",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 5: MAJOR SURGERY BENEFIT",
+                "pages": "3-4",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-3",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 7: OTHER SURGERY BENEFIT",
+                "pages": "4-4",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-4",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 6: DAY-CARE PROCEDURE BENEFIT",
+                "pages": "4-4",
+                "data_status": "illustrative_unverified"
+              },
+              {
+                "source_id": "SRC-5",
+                "plan_id": "HS-GOLD-001",
+                "plan_name": "Health Shield \u2013 Gold",
+                "section": "Section 7: OTHER SURGERY BENEFIT",
+                "pages": "4-5",
+                "data_status": "illustrative_unverified"
+              }
+            ]
+          }
+        },
+        "natural_language_quality": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "word_count": 92,
+            "is_raw_table_dump": false,
+            "deductions": []
+          }
+        },
+        "data_status_compliance": {
+          "score": 100.0,
+          "weight": "10%",
+          "weighted_points": 10.0,
+          "details": {
+            "score": 100.0,
+            "compliant": true,
+            "violations": []
+          }
+        }
+      },
+      "retrieval_precision_metrics": {
+        "chunks_retrieved_count": 5,
+        "target_section_chunks_count": 2,
+        "unrelated_sections_count": 3,
+        "retrieved_section_numbers": [
+          "5",
+          "5",
+          "7",
+          "6",
+          "7"
+        ],
+        "parents_expanded_count": 3
+      }
+    }
+  ]
+}

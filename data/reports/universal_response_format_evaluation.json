@@ -1,0 +1,328 @@
+{
+  "metadata": {
+    "evaluation_timestamp": "2026-10-24T08:11:42Z",
+    "total_tested": 15,
+    "total_passed": 15,
+    "pass_rate_percentage": 100.0,
+    "average_score_percentage": 95.55,
+    "llm_provider": "gemini",
+    "gemini_model": "gemini-flash-lite-latest"
+  },
+  "results": [
+    {
+      "id": "UQF-01",
+      "archetype": "Simple Factual Question",
+      "query": "What is the Daily Hospital Cash benefit in Health Shield \u2013 Basic?",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 83.3,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": false
+      },
+      "answer_preview": "The proposed Daily Hospital Cash benefit in Health Shield \u2013 Basic is **\u20b92,000 per day** [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n\n- **Eligibility:** Hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]\n- **Maximum duration:** Up to 10 days during the o...",
+      "full_answer": "The proposed Daily Hospital Cash benefit in Health Shield \u2013 Basic is **\u20b92,000 per day** [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n\n- **Eligibility:** Hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]\n- **Maximum duration:** Up to 10 days during the one-year policy term [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]\n- **Nature of benefit:** Fixed payment, not a reimbursement of actual hospital expenses [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract."
+    },
+    {
+      "id": "UQF-02",
+      "archetype": "Plan Comparison",
+      "query": "Compare Health Shield \u2013 Basic and Health Shield \u2013 Premium across Hospital Cash, ICU, and Annual Premium.",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 8,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "Health Shield \u2013 Basic offers lower illustrative benefits and premiums compared to Health Shield \u2013 Premium.\n\n| Feature / Criteria | Health Shield \u2013 Basic | Health Shield \u2013 Premium |\n| :--- | :--- | :--- |\n| **Annual Premium** | \u20b94,500 (illustrative) | \u20b915,000 (illustrative) |\n| **...",
+      "full_answer": "Health Shield \u2013 Basic offers lower illustrative benefits and premiums compared to Health Shield \u2013 Premium.\n\n| Feature / Criteria | Health Shield \u2013 Basic | Health Shield \u2013 Premium |\n| :--- | :--- | :--- |\n| **Annual Premium** | \u20b94,500 (illustrative) | \u20b915,000 (illustrative) |\n| **Daily Hospital Cash Benefit** | \u20b92,000 per day (illustrative) | \u20b910,000 per day (illustrative) |\n| **Daily ICU Benefit** | \u20b94,000 per day (illustrative) | \u20b920,000 per day (illustrative) |\n| **Policy Term** | 1 year (illustrative) | 1 year (illustrative) |\n\n[Health Shield \u2013 Basic, Sections 1\u20134, pp. 1\u20133; Health Shield \u2013 Premium, Sections 1\u20134, pp. 1\u20133]"
+    },
+    {
+      "id": "UQF-03",
+      "archetype": "Numerical Calculation",
+      "query": "If a patient spends 5 days in a general ward under Health Shield \u2013 Gold, how much total hospital cash will they receive?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "**Benefit amount:** \u20b925,000 (illustrative)  \n**Calculation:** \u20b95,000/day \u00d7 5 days  \n**Eligibility conditions:** Hospital stay exceeding 24 hours  \n\n[Health Shield \u2013 Gold, Section 3, pp. 2\u20133]",
+      "full_answer": "**Benefit amount:** \u20b925,000 (illustrative)  \n**Calculation:** \u20b95,000/day \u00d7 5 days  \n**Eligibility conditions:** Hospital stay exceeding 24 hours  \n\n[Health Shield \u2013 Gold, Section 3, pp. 2\u20133]"
+    },
+    {
+      "id": "UQF-04",
+      "archetype": "Conceptual Explanation",
+      "query": "What does 'day-care procedure' mean in the context of Health Shield \u2013 Gold?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 50.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "The Day-Care Procedure Benefit under Health Shield \u2013 Gold provides a predefined payment for eligible listed medical procedures that meet the plan's day-care criteria, typically completed without an overnight hospital stay.\n\n- **Benefit per eligible procedure:** \u20b925,000 (illustrat...",
+      "full_answer": "The Day-Care Procedure Benefit under Health Shield \u2013 Gold provides a predefined payment for eligible listed medical procedures that meet the plan's day-care criteria, typically completed without an overnight hospital stay.\n\n- **Benefit per eligible procedure:** \u20b925,000 (illustrative)\n- **Maximum claims per policy year:** 2 (illustrative)\n- **Illustrative maximum benefit per policy year:** \u20b950,000\n- **Eligible procedure list:** Not defined in available documents\n- **Overall procedure limit:** Not defined in available documents\n\n[Health Shield \u2013 Gold, Section 6, p. 4]"
+    },
+    {
+      "id": "UQF-05",
+      "archetype": "Multi-Step Procedure",
+      "query": "What steps should an insured person follow when filing a claim under Health Shield \u2013 Gold?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "**Status:** Not specified in the available policy documents [Health Shield \u2013 Gold, Section 15, pp. 9\u201310]. \n\nThe official claim filing deadlines, documentation requirements, and step-by-step claim procedures are unverified and require confirmation in the draft policy [Health Shiel...",
+      "full_answer": "**Status:** Not specified in the available policy documents [Health Shield \u2013 Gold, Section 15, pp. 9\u201310]. \n\nThe official claim filing deadlines, documentation requirements, and step-by-step claim procedures are unverified and require confirmation in the draft policy [Health Shield \u2013 Gold, Section 15, pp. 9\u201310]. \n\nAs general guidance for fixed-benefit health insurance claims, you can follow these standard steps:\n1. **Notify the insurer** promptly regarding the hospitalization, surgery, or medical event.\n2. **Gather required documents**, which typically include discharge summaries, medical bills, diagnostic reports, and completed claim forms.\n3. **Submit the claim** through the insurer's designated customer portal, mobile app, or official claims email address.\n4. **Follow up** with the support team to track claim verification and payout status.\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract."
+    },
+    {
+      "id": "UQF-06",
+      "archetype": "Technical Troubleshooting",
+      "query": "My hospital cash claim was rejected for a 16-hour hospital stay under Gold. Why might this happen, and what can I do?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 83.3,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 50.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": false
+      },
+      "answer_preview": "Your claim was likely rejected because the 16-hour stay does not meet the minimum required hospitalization duration of more than 24 hours under the Health Shield \u2013 Gold plan.\n\n- **Reason for rejection:** Hospital stay duration of 16 hours is below the mandatory >24 hours threshol...",
+      "full_answer": "Your claim was likely rejected because the 16-hour stay does not meet the minimum required hospitalization duration of more than 24 hours under the Health Shield \u2013 Gold plan.\n\n- **Reason for rejection:** Hospital stay duration of 16 hours is below the mandatory >24 hours threshold [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]\n- **Daily Hospital Cash amount:** \u20b95,000/day (illustrative) [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]\n- **Claim filing steps:** \n  1. **Status:** Claim filing steps and documentation requirements are not specified in the available draft policy documents [Health Shield \u2013 Gold, Section 15, pp. 9\u201310].\n  2. **Recommended Action:** Contact customer support or your plan administrator to verify official claim review procedures and check if any exceptions apply.\n  3. **Review Policy Terms:** Request confirmation of all official waiting periods, exclusions, and conditions, as these are currently unverified in the illustrative draft [Health Shield \u2013 Gold, Section 15, pp. 9\u201310]."
+    },
+    {
+      "id": "UQF-07",
+      "archetype": "Multi-Part Question",
+      "query": "Under Health Shield \u2013 Premium: 1) What is the ICU daily benefit? 2) Is there an ambulance allowance? 3) What is the annual premium?",
+      "plan": "HS-PREMIUM-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 66.7,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "1) **ICU daily benefit:** **\u20b920,000 (illustrative)** per day for eligible hospitalization in an Intensive Care Unit [Health Shield \u2013 Premium, Section 4, p. 3].\n\n2) **Ambulance allowance:** **\u20b91,000 (illustrative)**, though eligibility conditions, eligible ambulance types, and cla...",
+      "full_answer": "1) **ICU daily benefit:** **\u20b920,000 (illustrative)** per day for eligible hospitalization in an Intensive Care Unit [Health Shield \u2013 Premium, Section 4, p. 3].\n\n2) **Ambulance allowance:** **\u20b91,000 (illustrative)**, though eligibility conditions, eligible ambulance types, and claim limits are not defined in the available documents [Health Shield \u2013 Premium, Section 11.2, pp. 7\u20138].\n\n3) **Annual premium:** Not specified in the available policy documents [Health Shield \u2013 Premium, Section 1, pp. 1\u20132]."
+    },
+    {
+      "id": "UQF-08",
+      "archetype": "Conversational Follow-Up",
+      "query": "What is the maximum duration for that?",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "The maximum duration for the Hospital Cash benefit under Health Shield \u2013 Basic is **up to 10 days** during the one-year policy term.\n\n- **Benefit amount:** \u20b92,000 per day (illustrative)\n- **Eligibility:** Hospital stay exceeding 24 hours\n- **Maximum duration:** 10 days per policy...",
+      "full_answer": "The maximum duration for the Hospital Cash benefit under Health Shield \u2013 Basic is **up to 10 days** during the one-year policy term.\n\n- **Benefit amount:** \u20b92,000 per day (illustrative)\n- **Eligibility:** Hospital stay exceeding 24 hours\n- **Maximum duration:** 10 days per policy year\n\n[Health Shield \u2013 Basic, Section 3, pp. 2\u20133]"
+    },
+    {
+      "id": "UQF-09",
+      "archetype": "Insurance Question with Missing Evidence",
+      "query": "Does Health Shield \u2013 Basic cover robotic knee surgery with stem cell therapy?",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 50.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "The available policy documents for Health Shield \u2013 Basic do not specify or mention coverage for robotic knee surgery with stem cell therapy. \n\n- **Coverage status:** Not specified in the available policy documents\n- **Plan category:** Proposed fixed-benefit health insurance (Heal...",
+      "full_answer": "The available policy documents for Health Shield \u2013 Basic do not specify or mention coverage for robotic knee surgery with stem cell therapy. \n\n- **Coverage status:** Not specified in the available policy documents\n- **Plan category:** Proposed fixed-benefit health insurance (Health Shield \u2013 Basic) [Health Shield \u2013 Basic, Section 1, pp. 1\u20132]\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract."
+    },
+    {
+      "id": "UQF-10",
+      "archetype": "General Technical Question (No Insurance Results)",
+      "query": "What is NLP, and how does tokenization work?",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "Natural Language Processing (NLP) is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language.\n\n**Tokenization** is the foundational preprocessing step in NLP where a text string is broken down into smaller, manageable piece...",
+      "full_answer": "Natural Language Processing (NLP) is a branch of artificial intelligence that enables computers to understand, interpret, and generate human language.\n\n**Tokenization** is the foundational preprocessing step in NLP where a text string is broken down into smaller, manageable pieces called tokens (such as words, parts of words, or characters).\n\n### How Tokenization Works\n1. **Text Input:** Receive a raw string of text (e.g., *\"Insurance policies are clear.\"*).\n2. **Splitting (Segmentation):** Scan the text to separate words based on whitespace and punctuation rules.\n3. **Subword or Word Indexing:** Convert the resulting tokens (e.g., `\"Insurance\"`, `\"policies\"`, `\"are\"`, `\"clear\"`, `\".\"`) into numerical IDs using a predefined vocabulary so a machine learning model can process them."
+    },
+    {
+      "id": "UQF-11",
+      "archetype": "Platform-Specific Question (Unverified Tech)",
+      "query": "Does this AI assistant use a quantum computing backend to compute similarity scores?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 83.3,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": false,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 50.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "No, this AI assistant does not use a quantum computing backend; it relies on classical computing infrastructure.",
+      "full_answer": "No, this AI assistant does not use a quantum computing backend; it relies on classical computing infrastructure."
+    },
+    {
+      "id": "UQF-12",
+      "archetype": "Comparison with Missing Value",
+      "query": "Compare the specific list of approved day-care procedures between Basic and Gold.",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 8,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 60.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "The specific list of approved day-care procedures is not defined or specified for either plan in the available policy documents.\n\n| Comparison Criteria | Health Shield \u2013 Basic | Health Shield \u2013 Gold (Illustrative) |\n| :--- | :--- | :--- |\n| **Eligible Procedure List** | Not speci...",
+      "full_answer": "The specific list of approved day-care procedures is not defined or specified for either plan in the available policy documents.\n\n| Comparison Criteria | Health Shield \u2013 Basic | Health Shield \u2013 Gold (Illustrative) |\n| :--- | :--- | :--- |\n| **Eligible Procedure List** | Not specified | Not defined |\n| **Benefit Per Eligible Procedure** | \u20b910,000 | \u20b925,000 (illustrative) |\n| **Maximum Claims Per Policy Year** | 1 | 2 (illustrative) |\n\n[Health Shield \u2013 Basic, Section 6, p. 4; Health Shield \u2013 Gold, Section 6, p. 4]"
+    },
+    {
+      "id": "UQF-13",
+      "archetype": "Conflicting or Draft Information",
+      "query": "Section 3 mentions hospital cash limits, but draft notes state combination limits are not finalized. Can I claim both hospital cash and ICU together under Basic?",
+      "plan": "HS-BASIC-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "Whether the hospital cash benefit and the ICU benefit can be claimed together is **not specified** in the current draft documents, as combination rules have not yet been finalized. \n\n* **Combination Status:** Not finalized / Requires confirmation from the final policy\n* **Hospita...",
+      "full_answer": "Whether the hospital cash benefit and the ICU benefit can be claimed together is **not specified** in the current draft documents, as combination rules have not yet been finalized. \n\n* **Combination Status:** Not finalized / Requires confirmation from the final policy\n* **Hospital Cash Limit:** \u20b92,000 per day (up to 10 days per policy year) *(illustrative)* [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]\n* **ICU Benefit Amount:** \u20b94,000 per eligible day *(illustrative)* [Health Shield \u2013 Basic, Section 4, p. 3]\n* **Combination Rule:** Each benefit must meet its own qualifying conditions and limits, but the permitted combination of these benefits must be specified in the final approved policy [Health Shield \u2013 Basic, Section 12, pp. 7\u20138]."
+    },
+    {
+      "id": "UQF-14",
+      "archetype": "Illustrative Insurance Benefit",
+      "query": "What is the major surgery benefit under Health Shield \u2013 Gold?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 100.0,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": true,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 100.0,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "The Major Surgery Benefit under Health Shield \u2013 Gold provides a predefined lump-sum payment based on the surgery category and an illustrative benefit basis of \u20b95,00,000. \n\n* **Benefit Basis:** \u20b95,00,000 (illustrative)\n* **Category 1 (100% payout):** \u20b95,00,000 (illustrative)\n* **C...",
+      "full_answer": "The Major Surgery Benefit under Health Shield \u2013 Gold provides a predefined lump-sum payment based on the surgery category and an illustrative benefit basis of \u20b95,00,000. \n\n* **Benefit Basis:** \u20b95,00,000 (illustrative)\n* **Category 1 (100% payout):** \u20b95,00,000 (illustrative)\n* **Category 2 (60% payout):** \u20b93,00,000 (illustrative)\n* **Category 3 (40% payout):** \u20b92,00,000 (illustrative)\n* **Category 4 (20% payout):** \u20b91,00,000 (illustrative)\n* **Overall Surgery Benefit Limit:** 5 times the benefit basis (illustrative maximum of \u20b925,00,000)\n* **Surgery List and Category Mapping:** Not officially defined in the policy documents\n\n[Health Shield \u2013 Gold, Section 5, pp. 3\u20134]"
+    },
+    {
+      "id": "UQF-15",
+      "archetype": "Greeting or Conversational Message",
+      "query": "Good morning! Can you help me?",
+      "plan": "HS-GOLD-001",
+      "role": "customer",
+      "provider": "gemini",
+      "chunks_retrieved": 7,
+      "overall_score": 83.3,
+      "passed": true,
+      "metrics": {
+        "directness_no_preamble": true,
+        "scan_friendly_bold": false,
+        "appropriate_structure": true,
+        "factual_uncertainty_coverage": 66.7,
+        "no_duplicate_disclaimer": true,
+        "compact_attribution": true
+      },
+      "answer_preview": "Good morning! I am happy to help you with your Health Shield \u2013 Gold plan questions. How can I assist you today?",
+      "full_answer": "Good morning! I am happy to help you with your Health Shield \u2013 Gold plan questions. How can I assist you today?"
+    }
+  ]
+}

@@ -1,0 +1,1185 @@
+{
+  "metadata": {
+    "evaluation_timestamp": "2026-10-23T20:39:16Z",
+    "total_questions_tested": 35,
+    "dev_baseline_count": 3,
+    "held_out_count": 32,
+    "total_passed": 29,
+    "pass_rate_percentage": 82.86,
+    "dev_baseline_avg_score": 100.0,
+    "held_out_avg_score": 94.97,
+    "overall_avg_score": 95.4,
+    "llm_provider": "gemini",
+    "gemini_model": "gemini-flash-lite-latest"
+  },
+  "category_performance": {
+    "dev_baseline": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "paraphrased_benefits": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "synonyms_and_informal": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "pass_rate": 66.7,
+      "avg_score": 88.33
+    },
+    "calculations_and_limits": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "multi_section_synthesis": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "follow_up_context": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "missing_or_undefined": {
+      "total": 4,
+      "passed": 3,
+      "failed": 1,
+      "pass_rate": 75.0,
+      "avg_score": 94.17
+    },
+    "out_of_domain": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "pass_rate": 0.0,
+      "avg_score": 76.67
+    },
+    "ambiguous_clarification": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "cross_plan_comparison": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "avg_score": 100.0
+    },
+    "role_authorization": {
+      "total": 4,
+      "passed": 3,
+      "failed": 1,
+      "pass_rate": 75.0,
+      "avg_score": 91.88
+    }
+  },
+  "detailed_results": [
+    {
+      "id": "DEV-01",
+      "category": "dev_baseline",
+      "split": "dev_baseline",
+      "query": "What is the Daily Hospital Cash benefit, and what are its limits?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the Daily Hospital Cash benefit, and what are its limits?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your selected plan, Health Shield \u2013 Gold, here are the details regarding the Daily Hospital Cash benefit and its limits:\n\n* **Daily Hospital Cash Amount:** The illustrative Daily Hospital Cash benefit is **\u20b95,000** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n* **Minimum ...",
+      "full_answer": "Based on your selected plan, Health Shield \u2013 Gold, here are the details regarding the Daily Hospital Cash benefit and its limits:\n\n* **Daily Hospital Cash Amount:** The illustrative Daily Hospital Cash benefit is **\u20b95,000** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n* **Minimum Hospitalization Duration:** To be eligible, the hospitalization must last for **more than 24 hours** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n* **Maximum Benefit Days:** \n  * Maximum Benefit Days Per Policy Year: **20 days** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n  * Maximum Benefit Days Over the Illustrative Policy Period: **20 days** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n* **Calculation Basis & Example:** The benefit is calculated by multiplying the daily amount by the number of qualifying payable days. For example, if an eligible hospitalization qualifies for 4 payable days, the illustrative benefit is calculated as: \n  $$\\text{\u20b95,000} \\times 4 \\text{ days} = \\text{\u20b920,000}$$ \n  [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n\n*Please note: The figures provided above are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "DEV-02",
+      "category": "dev_baseline",
+      "split": "dev_baseline",
+      "query": "What is the ICU limit per day and per year?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the ICU limit per day and per year?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your selected plan, Health Shield \u2013 Gold, here are the details regarding the ICU benefit limits:\n\n* **Daily ICU Benefit:** The illustrative daily ICU benefit is **\u20b910,000** when an eligible insured person is admitted to an Intensive Care Unit (ICU) [Health Shield \u2013 Gold,...",
+      "full_answer": "Based on your selected plan, Health Shield \u2013 Gold, here are the details regarding the ICU benefit limits:\n\n* **Daily ICU Benefit:** The illustrative daily ICU benefit is **\u20b910,000** when an eligible insured person is admitted to an Intensive Care Unit (ICU) [Health Shield \u2013 Gold, Section 4, p. 3]. (Note: Please remember that policy figures for Health Shield \u2013 Gold are illustrative demonstration values and not official verified coverage.)\n* **Maximum ICU Benefit Days (Per Year / Total):** The maximum ICU benefit days per year and overall are **not defined** in the policy documents [Health Shield \u2013 Gold, Section 4, p. 3].\n* **ICU Eligibility Conditions:** The eligibility conditions for the ICU benefit are **not officially defined** [Health Shield \u2013 Gold, Section 4, p. 3]. \n\n*Example calculation provided in the policy:* For 3 eligible ICU days, the benefit is calculated as \u20b910,000 \u00d7 3 days = \u20b930,000 [Health Shield \u2013 Gold, Section 4, p. 3].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "DEV-03",
+      "category": "dev_baseline",
+      "split": "dev_baseline",
+      "query": "What is the payout for Major Surgery Category 2?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the payout for Major Surgery Category 2?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your Health Shield \u2013 Gold plan, the illustrative payout for Major Surgery Category 2 is **\u20b93,00,000**, which represents 60% of the illustrative Gold Benefit Basis of \u20b95,00,000 [Health Shield \u2013 Gold, Section 5, pp. 3\u20134]. \n\nPlease note the following additional details rega...",
+      "full_answer": "Based on your Health Shield \u2013 Gold plan, the illustrative payout for Major Surgery Category 2 is **\u20b93,00,000**, which represents 60% of the illustrative Gold Benefit Basis of \u20b95,00,000 [Health Shield \u2013 Gold, Section 5, pp. 3\u20134]. \n\nPlease note the following additional details regarding the Major Surgery Benefit:\n* **Overall Surgery Benefit Limit:** Illustrative 5 times the benefit basis (Illustrative Overall Maximum: \u20b925,00,000) [Health Shield \u2013 Gold, Section 5, p. 3].\n* **Surgery list and category mapping:** Not officially defined [Health Shield \u2013 Gold, Section 5, p. 3].\n* **Repeated claims for the same surgery:** Subject to approved policy terms [Health Shield \u2013 Gold, Section 5, p. 3].\n\n*Please be advised that these figures are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 5, pp. 3\u20134].*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-01",
+      "category": "paraphrased_benefits",
+      "split": "held_out",
+      "query": "Can you tell me how much I get every day if I am admitted to the hospital under the Gold tier?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Can you tell me how much I get every day if I am admitted to the hospital under the Gold tier?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Under the Health Shield \u2013 Gold plan, the illustrative daily benefits during hospitalization depend on whether you are in a standard hospital room or an Intensive Care Unit (ICU):\n\n* **Daily Hospital Cash:** You receive an illustrative daily amount of **\u20b95,000** for eligible hospi...",
+      "full_answer": "Under the Health Shield \u2013 Gold plan, the illustrative daily benefits during hospitalization depend on whether you are in a standard hospital room or an Intensive Care Unit (ICU):\n\n* **Daily Hospital Cash:** You receive an illustrative daily amount of **\u20b95,000** for eligible hospitalization, provided the minimum hospitalization duration is **more than 24 hours** [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, Pages 2-3]. The maximum benefit is limited to 20 days per policy year and 20 days over the illustrative policy period [Health Shield \u2013 Gold | Section 3: HOSPITAL CASH BENEFIT, Pages 2-3]. \n* **Daily ICU Benefit:** If you are admitted to an Intensive Care Unit (ICU), the illustrative daily benefit increases to **\u20b910,000** [Health Shield \u2013 Gold | Section 4: ICU BENEFIT, Page 3]. Please note that ICU eligibility conditions and the maximum ICU benefit days are currently *not defined* in the policy documents [Health Shield \u2013 Gold | Section 4: ICU BENEFIT, Page 3].\n\n*Note: The policy figures provided above are illustrative demonstration values and not official verified coverage.*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-02",
+      "category": "paraphrased_benefits",
+      "split": "held_out",
+      "query": "If I have the Basic plan, how much money is provided per day for normal hospital stay?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "If I have the Basic plan, how much money is provided per day for normal hospital stay?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Under the Health Shield \u2013 Basic plan, the proposed hospital cash benefit provides a fixed daily amount of **\u20b92,000 per day** for an eligible hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. \n\n**Duration and Eligibility Requirements:**\n* **Eligible Sta...",
+      "full_answer": "Under the Health Shield \u2013 Basic plan, the proposed hospital cash benefit provides a fixed daily amount of **\u20b92,000 per day** for an eligible hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. \n\n**Duration and Eligibility Requirements:**\n* **Eligible Stay:** The hospital stay must exceed 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n* **Limits:** The benefit is limited to up to 10 days during the policy year, with a maximum of 10 days overall during the one-year policy term [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n* **Payment Basis:** The hospital cash benefit is a fixed payment and is not a reimbursement of actual hospital expenses [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-03",
+      "category": "paraphrased_benefits",
+      "split": "held_out",
+      "query": "What's the daily allowance for an intensive care unit stay under Health Shield \u2013 Premium?",
+      "role": "customer",
+      "selected_plan": "HS-PREMIUM-001",
+      "effective_scope": [
+        "HS-PREMIUM-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "What's the daily allowance for an intensive care unit stay under Health Shield \u2013 Premium?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Under the Health Shield \u2013 Premium plan, the illustrative daily benefit for an eligible hospitalization in an Intensive Care Unit (ICU) is **\u20b920,000** [Health Shield \u2013 Premium, Section 4, p. 3]. \n\nPlease note the following details regarding this benefit based on the available poli...",
+      "full_answer": "Under the Health Shield \u2013 Premium plan, the illustrative daily benefit for an eligible hospitalization in an Intensive Care Unit (ICU) is **\u20b920,000** [Health Shield \u2013 Premium, Section 4, p. 3]. \n\nPlease note the following details regarding this benefit based on the available policy evidence:\n* **ICU Eligibility Conditions:** Not officially defined [Health Shield \u2013 Premium, Section 4, p. 3].\n* **Maximum ICU Benefit Days:** Not defined [Health Shield \u2013 Premium, Section 4, p. 3].\n* **Interaction with Hospital Cash:** Subject to approved policy terms [Health Shield \u2013 Premium, Section 4, p. 3].\n\n*Example calculation provided in the policy:* For 3 eligible ICU days, the benefit is calculated as \u20b920,000 \u00d7 3 days = \u20b960,000 [Health Shield \u2013 Premium, Section 4, p. 3].\n\nAdditionally, please note that the figures in this document are proposed demo/illustrative demonstration values and not official verified coverage [Health Shield \u2013 Premium, Section 1, pp. 1\u20132].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-04",
+      "category": "synonyms_and_informal",
+      "split": "held_out",
+      "query": "How much cash do you pay out daily if I get hospitalized on Gold?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "How much cash do you pay out daily if I get hospitalized on Gold?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your Health Shield \u2013 Gold plan, the daily cash payout depends on whether your stay is a standard hospitalization or involves an Intensive Care Unit (ICU) admission:\n\n* **Daily Hospital Cash:** The illustrative daily benefit is **\u20b95,000** for eligible hospitalizations tha...",
+      "full_answer": "Based on your Health Shield \u2013 Gold plan, the daily cash payout depends on whether your stay is a standard hospitalization or involves an Intensive Care Unit (ICU) admission:\n\n* **Daily Hospital Cash:** The illustrative daily benefit is **\u20b95,000** for eligible hospitalizations that last for a minimum duration of **more than 24 hours** [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. \n  * *Limits & Duration:* This is subject to a maximum of **20 days** per policy year and **20 days** over the illustrative policy period [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n  * *Example:* For 4 payable days, the illustrative benefit is calculated as \u20b95,000 \u00d7 4 days = \u20b920,000 [Health Shield \u2013 Gold, Section 3, pp. 2\u20133].\n\n* **Daily ICU Benefit:** If you are admitted to an Intensive Care Unit (ICU), the illustrative daily benefit is higher at **\u20b910,000** [Health Shield \u2013 Gold, Section 4, p. 3]. \n  * *Limits & Conditions:* ICU eligibility conditions and maximum ICU benefit days are **not officially defined** in the available policy documents [Health Shield \u2013 Gold, Section 4, p. 3]. The interaction with Hospital Cash is subject to approved policy terms, though the specific combination status is currently \"Not verified\" [Health Shield \u2013 Gold, Section 4, p. 3; Section 12, pp. 7\u20138].\n  * *Example:* For 3 eligible ICU days, the illustrative benefit is calculated as \u20b910,000 \u00d7 3 days = \u20b930,000 [Health Shield \u2013 Gold, Section 4, p. 3].\n\n*(Note: Please be aware that these figures are illustrative demonstration values and not official verified coverage.)*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-05",
+      "category": "synonyms_and_informal",
+      "split": "held_out",
+      "query": "What is the yearly fee or price to buy the Premium policy?",
+      "role": "customer",
+      "selected_plan": "HS-PREMIUM-001",
+      "effective_scope": [
+        "HS-PREMIUM-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the yearly fee or price to buy the Premium policy?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the Health Shield \u2013 Premium policy documents, the illustrative annual premium is **\u20b915,000** on an annual payment frequency [Health Shield \u2013 Premium, Section 2, p. 2]. \n\nPlease note the following additional details and conditions regarding this figure:\n* **Taxes:** Taxes...",
+      "full_answer": "Based on the Health Shield \u2013 Premium policy documents, the illustrative annual premium is **\u20b915,000** on an annual payment frequency [Health Shield \u2013 Premium, Section 2, p. 2]. \n\nPlease note the following additional details and conditions regarding this figure:\n* **Taxes:** Taxes are not included in the illustrative amount [Health Shield \u2013 Premium, Section 2, p. 2].\n* **Other Frequencies:** Half-yearly and monthly premiums are not defined [Health Shield \u2013 Premium, Section 2, p. 2].\n* **Variations:** Premiums by age, location, or underwriting category are not defined [Health Shield \u2013 Premium, Section 2, p. 2].\n* **Renewal Terms:** Renewal premium terms are not verified [Health Shield \u2013 Premium, Section 2, p. 2].\n* **Status of Figures:** This premium figure is an illustrative placeholder for testing and demonstration, and is not an officially verified coverage value [Health Shield \u2013 Premium, Section 2, p. 2; Health Shield \u2013 Premium, Section 1, pp. 1\u20132].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-06",
+      "category": "synonyms_and_informal",
+      "split": "held_out",
+      "query": "Does Basic cover outpatient day-surgeries, and what's the payout?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Does Basic cover outpatient day-surgeries, and what's the payout?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": true,
+      "critical_reasons": [
+        "Complete factual mismatch or hallucinated values."
+      ],
+      "overall_score": 65.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 0.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the Health Shield \u2013 Basic policy documents, the day-care procedure benefit applies to eligible listed procedures [Health Shield \u2013 Basic, Section 12, p. 7-8]. \n\nThe retrieved evidence provides the following illustrative benefit amounts based on the proposed surgery benefi...",
+      "full_answer": "Based on the Health Shield \u2013 Basic policy documents, the day-care procedure benefit applies to eligible listed procedures [Health Shield \u2013 Basic, Section 12, p. 7-8]. \n\nThe retrieved evidence provides the following illustrative benefit amounts based on the proposed surgery benefit percentage:\n* **100%:** \u20b92,00,000 [Health Shield \u2013 Basic, Section 6, p. 4]\n* **60%:** \u20b91,20,000 [Health Shield \u2013 Basic, Section 6, p. 4]\n* **40%:** \u20b980,000 [Health Shield \u2013 Basic, Section 6, p. 4]\n* **20%:** \u20b940,000 [Health Shield \u2013 Basic, Section 6, p. 4]\n\n**Important Policy Notes:**\n* These figures are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Basic, Section 6, p. 4].\n* The available policy documents do not define specific surgery category mappings, duration requirements, or exact eligibility conditions beyond stating that the benefit applies only to eligible listed procedures [Health Shield \u2013 Basic, Section 12, p. 7-8]. \n* Additional hospital cash must not be assumed for day-care procedures [Health Shield \u2013 Basic, Section 12, p. 7-8].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-07",
+      "category": "calculations_and_limits",
+      "split": "held_out",
+      "query": "If I spend 6 days in a general ward under Basic, how much total hospital cash will I receive?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "If I spend 6 days in a general ward under Basic, how much total hospital cash will I receive?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "If you spend 6 days in a general ward under the Health Shield \u2013 Basic plan, here is how your total hospital cash benefit is calculated based on the available policy evidence:\n\n* **Daily Benefit Amount:** The proposed initial daily hospital cash benefit is **\u20b92,000 per day** [Heal...",
+      "full_answer": "If you spend 6 days in a general ward under the Health Shield \u2013 Basic plan, here is how your total hospital cash benefit is calculated based on the available policy evidence:\n\n* **Daily Benefit Amount:** The proposed initial daily hospital cash benefit is **\u20b92,000 per day** [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n* **Eligibility Requirement:** The hospital cash benefit provides a fixed daily amount for an eligible hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. A 6-day stay exceeds this 24-hour requirement.\n* **Duration Limits:** The benefit is subject to a limit of up to 10 days during the policy year and a maximum of 10 days overall during the one-year policy term [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. Because your 6-day stay falls within this 10-day limit, all 6 days are eligible.\n\n**Calculation:**\n* 6 days \u00d7 \u20b92,000 per day = **\u20b912,000** total hospital cash benefit.\n\nPlease note that this hospital cash benefit is a fixed payment and is not a reimbursement of actual hospital expenses [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-08",
+      "category": "calculations_and_limits",
+      "split": "held_out",
+      "query": "Under Premium, what is the payout for Category 1 Major Surgery?",
+      "role": "customer",
+      "selected_plan": "HS-PREMIUM-001",
+      "effective_scope": [
+        "HS-PREMIUM-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "Under Premium, what is the payout for Category 1 Major Surgery?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Under the Health Shield \u2013 Premium plan, the illustrative payout for a Category 1 Major Surgery is **\u20b910,00,000**, which represents a 100% payout percentage based on an illustrative premium benefit basis of \u20b910,00,000 [Health Shield \u2013 Premium, Section 5, pp. 3-4]. \n\nPlease note th...",
+      "full_answer": "Under the Health Shield \u2013 Premium plan, the illustrative payout for a Category 1 Major Surgery is **\u20b910,00,000**, which represents a 100% payout percentage based on an illustrative premium benefit basis of \u20b910,00,000 [Health Shield \u2013 Premium, Section 5, pp. 3-4]. \n\nPlease note the following details and conditions regarding the Major Surgery Benefit:\n* **Surgery Category Mapping:** The specific surgery list and category mapping are not officially defined in the policy documents [Health Shield \u2013 Premium, Section 5, p. 3].\n* **Overall Limits:** The overall surgery benefit limit is an illustrative 10 times the benefit basis, with an illustrative overall maximum of \u20b91,00,00,000 [Health Shield \u2013 Premium, Section 5, p. 3].\n* **Repeated Claims:** Repeated claims for the same surgery are subject to approved policy terms [Health Shield \u2013 Premium, Section 5, p. 3].\n* **Important Notice:** The figures provided in the policy documents are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Premium, Section 1, pp. 1-2].",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-09",
+      "category": "calculations_and_limits",
+      "split": "held_out",
+      "query": "What is the Category 3 surgery compensation in Health Shield \u2013 Basic?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the Category 3 surgery compensation in Health Shield \u2013 Basic?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the **Health Shield \u2013 Basic** plan documents, the available policy evidence does not explicitly define or map a \"Category 3\" surgery percentage or compensation amount [Health Shield \u2013 Basic, Section 5, pp. 3\u20134]. \n\nHowever, the policy outlines the proposed Major Surgery B...",
+      "full_answer": "Based on the **Health Shield \u2013 Basic** plan documents, the available policy evidence does not explicitly define or map a \"Category 3\" surgery percentage or compensation amount [Health Shield \u2013 Basic, Section 5, pp. 3\u20134]. \n\nHowever, the policy outlines the proposed Major Surgery Benefit structure as follows:\n* **Proposed Major Surgery Benefit Basis:** \u20b92,00,000 [Health Shield \u2013 Basic, Section 5, p. 3].\n* **Proposed Benefit Percentages and Illustrative Amounts:** The policy lists benefit amounts based on approved surgery categories:\n  * **100%:** \u20b92,00,000 [Health Shield \u2013 Basic, Section 5, p. 3]\n  * **60%:** \u20b91,20,000 [Health Shield \u2013 Basic, Section 5, p. 3]\n  * **40%:** \u20b980,000 [Health Shield \u2013 Basic, Section 5, p. 3]\n  * **20%:** \u20b940,000 [Health Shield \u2013 Basic, Section 5, p. 3]\n* **Conditions & Limits:** The surgery benefit applies only to eligible listed procedures, and each surgery must be matched to the category specified in the final approved surgery list [Health Shield \u2013 Basic, Section 5, pp. 3\u20134]. The proposed overall limit is up to 3 times the benefit basis, equivalent to \u20b96,00,000 over the applicable coverage period, subject to final policy conditions [Health Shield \u2013 Basic, Section 5, pp. 3\u20134]. \n\n*Note: All figures in the Health Shield \u2013 Basic plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Basic, Section 1, pp. 1\u20132]. Because the available source does not define how specific categories (such as Category 3) map to these percentages, the policy documents do not provide enough information to answer reliably for Category 3 specifically [Health Shield \u2013 Basic, Section 5, pp. 3\u20134].*\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-10",
+      "category": "calculations_and_limits",
+      "split": "held_out",
+      "query": "If someone is hospitalized in the ICU for 5 days under Basic, what is the payable benefit?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "If someone is hospitalized in the ICU for 5 days under Basic, what is the payable benefit?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the policy evidence for the **Health Shield \u2013 Basic** plan, the proposed Intensive Care Unit (ICU) benefit is **\u20b94,000 per day** [Health Shield \u2013 Basic, Section 4, p. 3]. \n\n### Calculation and Details:\n* **Daily Rate:** \u20b94,000 per eligible day [Health Shield \u2013 Basic, Sec...",
+      "full_answer": "Based on the policy evidence for the **Health Shield \u2013 Basic** plan, the proposed Intensive Care Unit (ICU) benefit is **\u20b94,000 per day** [Health Shield \u2013 Basic, Section 4, p. 3]. \n\n### Calculation and Details:\n* **Daily Rate:** \u20b94,000 per eligible day [Health Shield \u2013 Basic, Section 4, p. 3].\n* **Calculation for 5 Days:** 5 days \u00d7 \u20b94,000 per day = **\u20b920,000** (note: this is an illustrative calculation based on the per-day rate).\n* **Conditions and Limits:** The available policy documents state that this ICU benefit is subject to final policy definitions, qualifying conditions, and applicable limits. However, a separate ICU day limit and rules governing the combination with hospital cash have **not been finalized** in the draft [Health Shield \u2013 Basic, Section 4, p. 3].\n\n*Note: The figures provided in the Health Shield \u2013 Basic plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Basic, Section 4, p. 3].*\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-11",
+      "category": "multi_section_synthesis",
+      "split": "held_out",
+      "query": "Under Health Shield \u2013 Basic, what are the daily benefits for both Hospital Cash and ICU, and what are their annual day caps?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Under Health Shield \u2013 Basic, what are the daily benefits for both Hospital Cash and ICU, and what are their annual day caps?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Under the **Health Shield \u2013 Basic** plan, the daily benefits and annual limits are as follows:\n\n* **Hospital Cash Benefit:** \n  * **Daily Benefit:** The proposed initial daily benefit is **\u20b92,000 per day** for an eligible hospital stay exceeding 24 hours [Health Shield \u2013 Basic, S...",
+      "full_answer": "Under the **Health Shield \u2013 Basic** plan, the daily benefits and annual limits are as follows:\n\n* **Hospital Cash Benefit:** \n  * **Daily Benefit:** The proposed initial daily benefit is **\u20b92,000 per day** for an eligible hospital stay exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n  * **Annual Day Cap:** Up to a **maximum of 10 days overall** during the one-year policy term [Health Shield \u2013 Basic, Section 3, pp. 2\u20133].\n\n* **Intensive Care Unit (ICU) Benefit:**\n  * **Daily Benefit:** The proposed ICU benefit is **\u20b94,000 per day** for eligible days [Health Shield \u2013 Basic, Section 4, p. 3].\n  * **Annual Day Cap:** The available policy documents state that a separate ICU day limit and rules governing combination with hospital cash have **not been finalized** in this draft [Health Shield \u2013 Basic, Section 4, p. 3].\n\n*Note:* All figures and benefits for the Health Shield \u2013 Basic plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Basic, Section 1, pp. 1\u20132; Section 4, p. 3].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-12",
+      "category": "multi_section_synthesis",
+      "split": "held_out",
+      "query": "Under Health Shield \u2013 Premium, how does the annual premium cost compare to the illustrative maximum annual hospital cash payout?",
+      "role": "customer",
+      "selected_plan": "HS-PREMIUM-001",
+      "effective_scope": [
+        "HS-PREMIUM-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Under Health Shield \u2013 Premium, how does the annual premium cost compare to the illustrative maximum annual hospital cash payout?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the Health Shield \u2013 Premium policy documents, here is the comparison between the illustrative annual premium cost and the illustrative maximum annual hospital cash payout:\n\n* **Illustrative Annual Premium Cost:** The illustrative annual premium for the plan is **\u20b915,000*...",
+      "full_answer": "Based on the Health Shield \u2013 Premium policy documents, here is the comparison between the illustrative annual premium cost and the illustrative maximum annual hospital cash payout:\n\n* **Illustrative Annual Premium Cost:** The illustrative annual premium for the plan is **\u20b915,000** (payable annually, with taxes not included) [Health Shield \u2013 Premium, Section 2, p. 2]. Please note that these figures are illustrative demonstration values and not official verified coverage.\n* **Illustrative Maximum Annual Hospital Cash Payout:** The maximum benefit is limited to **30 days** per policy year for eligible hospitalization lasting **more than 24 hours**, with a daily hospital cash amount of **\u20b910,000** [Health Shield \u2013 Premium, Section 3, pp. 2\u20133]. \n* **Calculation Basis & Maximum Payout:** Multiplying the daily rate by the maximum allowed days ($10,000 \\times 30\\text{ days}$) results in an illustrative maximum benefit of **\u20b93,00,000** per policy year [Health Shield \u2013 Premium, Section 3, pp. 2\u20133].\n\n**Comparison:** \nComparing the two illustrative figures, the illustrative maximum annual hospital cash payout of \u20b93,00,000 is 20 times greater than the illustrative annual premium cost of \u20b915,000. *(Note: Premium details regarding age, location, underwriting category, and renewal terms are not defined in the available documents [Health Shield \u2013 Premium, Section 2, p. 2].)*\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-13",
+      "category": "multi_section_synthesis",
+      "split": "held_out",
+      "query": "What are the day-care procedure payout and the ambulance allowance under Basic?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "What are the day-care procedure payout and the ambulance allowance under Basic?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your selected plan, **Health Shield \u2013 Basic**, here are the details regarding the day-care procedure payout and the ambulance allowance:\n\n### 1. Day-Care Procedure Payout\n* **Benefit Amount:** The proposed benefit amount is **\u20b910,000** per eligible listed procedure [Heal...",
+      "full_answer": "Based on your selected plan, **Health Shield \u2013 Basic**, here are the details regarding the day-care procedure payout and the ambulance allowance:\n\n### 1. Day-Care Procedure Payout\n* **Benefit Amount:** The proposed benefit amount is **\u20b910,000** per eligible listed procedure [Health Shield \u2013 Basic, Section 6, p. 4].\n* **Limits & Eligibility:** \n  * The benefit applies up to **1 eligible procedure per policy year**, with a maximum of 1 eligible procedure during the one-year policy term [Health Shield \u2013 Basic, Section 6, p. 4].\n  * It applies **only** to procedures listed in the final approved policy [Health Shield \u2013 Basic, Section 6, p. 4].\n  * *Note on combination rules:* Rule 12.2 states that additional hospital cash must not be assumed for day-care procedures [Health Shield \u2013 Basic, Section 12, pp. 7\u20138].\n\n### 2. Ambulance Allowance\n* **Benefit Amount:** The proposed ambulance benefit is **\u20b9250** [Health Shield \u2013 Basic, Section 11, pp. 6\u20137].\n* **Limits & Eligibility:** \n  * This benefit is intended to apply **only in connection with an eligible major surgery when an ambulance was required**, subject to final approved policy terms [Health Shield \u2013 Basic, Section 11, pp. 6\u20137]. \n  * It is **not** intended as unlimited ambulance coverage for every hospital visit [Health Shield \u2013 Basic, Section 11, pp. 6\u20137].",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-14",
+      "category": "follow_up_context",
+      "split": "held_out",
+      "query": "What is the minimum hours of hospitalization required for that?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the Daily Hospital Cash benefit in Health Shield \u2013 Gold? \u2014 What is the minimum hours of hospitalization required for that?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "For the Daily Hospital Cash benefit in Health Shield \u2013 Gold, the minimum hospitalization duration required is **more than 24 hours** [Health Shield \u2013 Gold, Section 3: Hospital Cash Benefit, pp. 2\u20133]. \n\nPlease note that the figures and benefits described in this plan are illustrat...",
+      "full_answer": "For the Daily Hospital Cash benefit in Health Shield \u2013 Gold, the minimum hospitalization duration required is **more than 24 hours** [Health Shield \u2013 Gold, Section 3: Hospital Cash Benefit, pp. 2\u20133]. \n\nPlease note that the figures and benefits described in this plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 1: Plan Overview, pp. 1\u20132].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-15",
+      "category": "follow_up_context",
+      "split": "held_out",
+      "query": "Is there a defined annual limit on those days?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "Tell me about the ICU benefit in Health Shield \u2013 Gold. \u2014 Is there a defined annual limit on those days?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the Health Shield \u2013 Gold plan documents, there is **no defined maximum limit for ICU benefit days** [Health Shield \u2013 Gold, Section 4, p. 3]. \n\nPlease note that the figures in the Health Shield \u2013 Gold plan are illustrative demonstration values and not official verified co...",
+      "full_answer": "Based on the Health Shield \u2013 Gold plan documents, there is **no defined maximum limit for ICU benefit days** [Health Shield \u2013 Gold, Section 4, p. 3]. \n\nPlease note that the figures in the Health Shield \u2013 Gold plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 4, p. 3]. \n\nHere are the details provided for the ICU Benefit:\n* **Daily ICU Benefit:** \u20b910,000 [Health Shield \u2013 Gold, Section 4, p. 3]\n* **ICU Eligibility Conditions:** Not officially defined [Health Shield \u2013 Gold, Section 4, p. 3]\n* **Maximum ICU Benefit Days:** Not defined [Health Shield \u2013 Gold, Section 4, p. 3]\n* **Interaction with Hospital Cash:** Subject to approved policy terms [Health Shield \u2013 Gold, Section 4, p. 3]\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-16",
+      "category": "follow_up_context",
+      "split": "held_out",
+      "query": "And what percentage is payable for Category 4?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "And what percentage is payable for Category 4?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "For Category 4, the illustrative payout percentage is **20%**, which results in an illustrative payout of **\u20b91,00,000** based on the illustrative Gold benefit basis of \u20b95,00,000 [Health Shield \u2013 Gold, Section 5, pp. 3-4]. \n\nPlease note that these figures are illustrative demonstr...",
+      "full_answer": "For Category 4, the illustrative payout percentage is **20%**, which results in an illustrative payout of **\u20b91,00,000** based on the illustrative Gold benefit basis of \u20b95,00,000 [Health Shield \u2013 Gold, Section 5, pp. 3-4]. \n\nPlease note that these figures are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 5, pp. 3-4].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-17",
+      "category": "missing_or_undefined",
+      "split": "held_out",
+      "query": "What is the exact list of surgical operations classified under Category 2 in the Gold plan?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the exact list of surgical operations classified under Category 2 in the Gold plan?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on your Health Shield \u2013 Gold plan documents, the exact surgery list and category mapping are **not officially defined** [Health Shield \u2013 Gold, Section 5, p. 3]. Therefore, the policy documents do not provide a specific list of surgical operations classified under Category 2...",
+      "full_answer": "Based on your Health Shield \u2013 Gold plan documents, the exact surgery list and category mapping are **not officially defined** [Health Shield \u2013 Gold, Section 5, p. 3]. Therefore, the policy documents do not provide a specific list of surgical operations classified under Category 2 [Health Shield \u2013 Gold, Section 5, p. 3]. \n\nHowever, under the illustrative payout structure for the Major Surgery Benefit (with an illustrative benefit basis of \u20b95,00,000), Category 2 is associated with an illustrative payout percentage of **60%**, resulting in an illustrative payout of **\u20b93,00,000** [Health Shield \u2013 Gold, Section 5, pp. 3\u20134]. \n\n*(Note: Please be advised that these figures are illustrative demonstration values and not official verified coverage) [Health Shield \u2013 Gold, Section 5, pp. 3\u20134].*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-18",
+      "category": "missing_or_undefined",
+      "split": "held_out",
+      "query": "What are the rules and increase percentage for claim-free bonus years in Health Shield \u2013 Gold?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "What are the rules and increase percentage for claim-free bonus years in Health Shield \u2013 Gold?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the available policy documents for the Health Shield \u2013 Gold plan, the claim-free benefit increase and bonus years have not been defined in the illustrative product specification. \n\nSpecifically, the policy states the following regarding the claim-free benefit increase:\n*...",
+      "full_answer": "Based on the available policy documents for the Health Shield \u2013 Gold plan, the claim-free benefit increase and bonus years have not been defined in the illustrative product specification. \n\nSpecifically, the policy states the following regarding the claim-free benefit increase:\n* **Claim-Free Increase Percentage:** Not defined [Health Shield \u2013 Gold, Section 13, p. 8]\n* **Increase Frequency:** Not defined [Health Shield \u2013 Gold, Section 13, p. 8]\n* **Maximum Increased Benefit:** Not defined [Health Shield \u2013 Gold, Section 13, p. 8]\n* **Effect of a Claim:** Not defined [Health Shield \u2013 Gold, Section 13, p. 8]\n* **Effect on Premium:** Not defined [Health Shield \u2013 Gold, Section 13, p. 8]\n\nPlease note that the figures and details described in this document are illustrative demonstration values and are not official verified coverage [Health Shield \u2013 Gold, Section 1, pp. 1\u20132].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-19",
+      "category": "missing_or_undefined",
+      "split": "held_out",
+      "query": "Can you provide the specific terms for the Premium Waiver benefit under Gold?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Can you provide the specific terms for the Premium Waiver benefit under Gold?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the Health Shield \u2013 Gold plan documents, the specific terms for the Premium Waiver benefit are currently unconfirmed and not defined [Health Shield \u2013 Gold, Section 14, pp. 8\u20139]. \n\nAccording to the policy evidence, the following details regarding the Premium Waiver benefi...",
+      "full_answer": "Based on the Health Shield \u2013 Gold plan documents, the specific terms for the Premium Waiver benefit are currently unconfirmed and not defined [Health Shield \u2013 Gold, Section 14, pp. 8\u20139]. \n\nAccording to the policy evidence, the following details regarding the Premium Waiver benefit are not defined:\n* **Availability:** Not confirmed [Health Shield \u2013 Gold, Section 14, p. 8]\n* **Qualifying Surgery Categories:** Not defined [Health Shield \u2013 Gold, Section 14, p. 8]\n* **Waiver Duration:** Not defined [Health Shield \u2013 Gold, Section 14, p. 8]\n* **Start Date:** Not defined [Health Shield \u2013 Gold, Section 14, p. 8]\n* **Rider Premium Treatment:** Not defined [Health Shield \u2013 Gold, Section 14, p. 8]\n\nAdditionally, please note that the figures and details described in this plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 1, pp. 1\u20132].\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-20",
+      "category": "missing_or_undefined",
+      "split": "held_out",
+      "query": "Does Health Shield \u2013 Basic provide a maternity or childbirth benefit?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Does Health Shield \u2013 Basic provide a maternity or childbirth benefit?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 76.67,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 33.33,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the available policy documents for Health Shield \u2013 Basic, a maturity benefit\u2014which includes maternity or childbirth benefits\u2014is not defined in this demonstration draft [Health Shield \u2013 Basic, Section 16, pp. 9\u201310]. \n\nPlease note that figures and details in this draft are...",
+      "full_answer": "Based on the available policy documents for Health Shield \u2013 Basic, a maturity benefit\u2014which includes maternity or childbirth benefits\u2014is not defined in this demonstration draft [Health Shield \u2013 Basic, Section 16, pp. 9\u201310]. \n\nPlease note that figures and details in this draft are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Basic, Section 16, pp. 9\u201310]. The available policy documents do not provide enough information to establish a maternity or childbirth benefit [Health Shield \u2013 Basic, Section 16, pp. 9\u201310].\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-21",
+      "category": "out_of_domain",
+      "split": "held_out",
+      "query": "What is the capital of France?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the capital of France?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 82.5,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 50.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "The available policy documents do not contain information regarding the capital of France, as they are strictly focused on the Health Shield \u2013 Gold insurance plan. \n\nPlease note that the figures and details provided in the Health Shield \u2013 Gold plan are illustrative demonstration ...",
+      "full_answer": "The available policy documents do not contain information regarding the capital of France, as they are strictly focused on the Health Shield \u2013 Gold insurance plan. \n\nPlease note that the figures and details provided in the Health Shield \u2013 Gold plan are illustrative demonstration values and not official verified coverage [Health Shield \u2013 Gold, Section 2, p. 2]. If you have any questions related to your policy documents, please feel free to ask!\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-22",
+      "category": "out_of_domain",
+      "split": "held_out",
+      "query": "Can you write a Python script to sort a list of numbers?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Can you write a Python script to sort a list of numbers?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 73.75,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 25.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 0.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "I am unable to write a Python script for you, as my role is limited to answering questions about your insurance policy using the authorized policy evidence. \n\nIf you have any questions regarding your **Health Shield \u2013 Gold** plan\u2014such as benefits for day-care procedures, major su...",
+      "full_answer": "I am unable to write a Python script for you, as my role is limited to answering questions about your insurance policy using the authorized policy evidence. \n\nIf you have any questions regarding your **Health Shield \u2013 Gold** plan\u2014such as benefits for day-care procedures, major surgeries, or other surgeries\u2014please feel free to ask!\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-23",
+      "category": "out_of_domain",
+      "split": "held_out",
+      "query": "Who was the first president of the United States?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "default_selected_plan",
+      "resolved_query": "Who was the first president of the United States?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 73.75,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 25.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 0.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "The available policy documents do not provide information to answer your question about the first president of the United States, as they only contain information regarding the Health Shield \u2013 Basic insurance plan. \n\nIf you have questions about your Health Shield \u2013 Basic coverage...",
+      "full_answer": "The available policy documents do not provide information to answer your question about the first president of the United States, as they only contain information regarding the Health Shield \u2013 Basic insurance plan. \n\nIf you have questions about your Health Shield \u2013 Basic coverage (such as plan overview details, ambulance benefits, or premium protection features), please feel free to ask!\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-24",
+      "category": "ambiguous_clarification",
+      "split": "held_out",
+      "query": "Compare the plans",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "clarification_needed",
+      "resolved_query": null,
+      "provider_used": "clarification_handler",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Which plans would you like to compare? You can compare Basic, Gold, and Premium (or ask to compare all customer plans).",
+      "full_answer": "Which plans would you like to compare? You can compare Basic, Gold, and Premium (or ask to compare all customer plans).",
+      "citations_count": 0,
+      "chunks_retrieved_count": 0
+    },
+    {
+      "id": "GEN-25",
+      "category": "ambiguous_clarification",
+      "split": "held_out",
+      "query": "Which plan is better?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "clarification_needed",
+      "resolved_query": null,
+      "provider_used": "clarification_handler",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Which plans would you like to compare? You can compare Basic, Gold, and Premium (or ask to compare all customer plans).",
+      "full_answer": "Which plans would you like to compare? You can compare Basic, Gold, and Premium (or ask to compare all customer plans).",
+      "citations_count": 0,
+      "chunks_retrieved_count": 0
+    },
+    {
+      "id": "GEN-26",
+      "category": "cross_plan_comparison",
+      "split": "held_out",
+      "query": "Compare the Daily Hospital Cash benefit between Basic and Gold.",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-BASIC-001",
+        "HS-GOLD-001"
+      ],
+      "reason": "explicit_comparison",
+      "resolved_query": null,
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Here is a side-by-side comparison of the Daily Hospital Cash benefit between the Health Shield \u2013 Basic and Health Shield \u2013 Gold plans, based on the authorized policy evidence:\n\n| Feature / Condition | Health Shield \u2013 Basic | Health Shield \u2013 Gold *(Illustrative / Unverified)* |\n| ...",
+      "full_answer": "Here is a side-by-side comparison of the Daily Hospital Cash benefit between the Health Shield \u2013 Basic and Health Shield \u2013 Gold plans, based on the authorized policy evidence:\n\n| Feature / Condition | Health Shield \u2013 Basic | Health Shield \u2013 Gold *(Illustrative / Unverified)* |\n| :--- | :--- | :--- |\n| **Daily Benefit Amount** | Proposed initial daily benefit of \u20b92,000 per day [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. | Illustrative daily hospital cash of \u20b95,000 [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. |\n| **Hospitalization Duration Requirement** | Exceeding 24 hours [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. | More than 24 hours [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. |\n| **Maximum Benefit Days Per Policy Year** | Up to 10 days during the policy year [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. | 20 days [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. |\n| **Maximum Benefit Days Over Policy Term** | Maximum of 10 days overall during the one-year policy term [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. | 20 days over the illustrative policy period [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. |\n| **Benefit Nature / Calculation Basis** | A fixed payment (not a reimbursement of actual hospital expenses) [Health Shield \u2013 Basic, Section 3, pp. 2\u20133]. | Predefined daily amount [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. <br><br>*Example calculation provided:* \u20b95,000 \u00d7 4 payable days = \u20b920,000 [Health Shield \u2013 Gold, Section 3, pp. 2\u20133]. |\n\n*Note: As indicated in the policy documents, the figures and values for Health Shield \u2013 Gold are illustrative demonstration values and not official verified coverage.*\n\n> **Notice:** The Health Shield \u2013 Gold content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-27",
+      "category": "cross_plan_comparison",
+      "split": "held_out",
+      "query": "Compare the pre-existing disease waiting periods between Basic and Premium.",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001",
+        "HS-PREMIUM-001"
+      ],
+      "reason": "explicit_comparison",
+      "resolved_query": null,
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the authorized policy documents, here is the comparison of pre-existing conditions and waiting periods between the Health Shield \u2013 Basic and Health Shield \u2013 Premium plans:\n\n| Policy Term / Category | Health Shield \u2013 Basic | Health Shield \u2013 Premium |\n| :--- | :--- | :--- ...",
+      "full_answer": "Based on the authorized policy documents, here is the comparison of pre-existing conditions and waiting periods between the Health Shield \u2013 Basic and Health Shield \u2013 Premium plans:\n\n| Policy Term / Category | Health Shield \u2013 Basic | Health Shield \u2013 Premium |\n| :--- | :--- | :--- |\n| **Pre-Existing Conditions / Disease Waiting Periods** | The treatment of pre-existing conditions has not been finalized in this draft. [Health Shield \u2013 Basic, Section 15, p. 9] | The official waiting periods, exclusions, and pre-existing disease definition and exclusion rules for the illustrative Premium plan have not been verified and require confirmation. [Health Shield \u2013 Premium, Section 15, pp. 9\u201310] |\n\n### Additional Context\n* **Health Shield \u2013 Basic:** The available source states that the treatment of pre-existing conditions has not been finalized in this draft [Health Shield \u2013 Basic, Section 15, p. 9]. Other waiting periods (such as the initial waiting period for illness benefits and specified medical conditions like cataract, hernia, and joint replacement) are also not finalized [Health Shield \u2013 Basic, Section 15, p. 9].\n* **Health Shield \u2013 Premium:** The figures and terms for this plan are illustrative demonstration values and not official verified coverage. The official waiting periods and pre-existing disease definition and exclusion rules require confirmation before the plan can be treated as a real product [Health Shield \u2013 Premium, Section 15, pp. 9\u201310]. \n\nBecause the terms are unverified or not finalized in the current drafts, the available policy documents do not provide specific waiting period durations to establish a definitive numerical comparison.\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-28",
+      "category": "cross_plan_comparison",
+      "split": "held_out",
+      "query": "What does Health Shield \u2013 Premium offer for ICU?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-PREMIUM-001"
+      ],
+      "reason": "explicit_named_plan",
+      "resolved_query": null,
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the available policy evidence for **Health Shield \u2013 Premium**, the ICU Benefit offers the following illustrative terms:\n\n* **Daily ICU Benefit:** \u20b920,000 [Health Shield \u2013 Premium, Section 4, p. 3]\n* **ICU Eligibility Conditions:** Not officially defined [Health Shield \u2013 ...",
+      "full_answer": "Based on the available policy evidence for **Health Shield \u2013 Premium**, the ICU Benefit offers the following illustrative terms:\n\n* **Daily ICU Benefit:** \u20b920,000 [Health Shield \u2013 Premium, Section 4, p. 3]\n* **ICU Eligibility Conditions:** Not officially defined [Health Shield \u2013 Premium, Section 4, p. 3]\n* **Maximum ICU Benefit Days:** Not defined [Health Shield \u2013 Premium, Section 4, p. 3]\n* **Interaction with Hospital Cash:** Subject to approved policy terms (the combination status of ICU Benefit + Hospital Cash is noted as \"Not verified\") [Health Shield \u2013 Premium, Section 4, p. 3; Section 12, p. 8]\n\n**Example Calculation (provided in the policy evidence):**\nFor 3 eligible ICU days: \u20b920,000 \u00d7 3 days = \u20b960,000 [Health Shield \u2013 Premium, Section 4, p. 3].\n\n*Please note:* The figures and details in this document are illustrative demonstration values and not official verified coverage (Health Shield \u2013 Premium, Section 1, pp. 1\u20132).\n\n> **Notice:** The policy content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-29",
+      "category": "role_authorization",
+      "split": "held_out",
+      "query": "What is the Executive Health Cash benefit under EMP-INS-001?",
+      "role": "customer",
+      "selected_plan": "HS-GOLD-001",
+      "effective_scope": [
+        "HS-GOLD-001"
+      ],
+      "reason": "access_restricted",
+      "resolved_query": null,
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 0.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "> **Access Restriction Notice:** Access to the Executive Employee Insurance Plan (EMP-INS-001) is restricted to authenticated employees. Only authorized customer policy terms are displayed below.\n\nThe available policy documents do not provide enough information to answer reliably...",
+      "full_answer": "> **Access Restriction Notice:** Access to the Executive Employee Insurance Plan (EMP-INS-001) is restricted to authenticated employees. Only authorized customer policy terms are displayed below.\n\nThe available policy documents do not provide enough information to answer reliably, as the retrieved evidence is for the **Health Shield \u2013 Gold** plan, and you are asking about the Executive Health Cash benefit under plan EMP-INS-001, which is outside your authorized plan scope and not present in the retrieved evidence.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-30",
+      "category": "role_authorization",
+      "split": "held_out",
+      "query": "Can I see the executive surgery schedule for corporate employees?",
+      "role": "customer",
+      "selected_plan": "HS-BASIC-001",
+      "effective_scope": [
+        "HS-BASIC-001"
+      ],
+      "reason": "access_restricted",
+      "resolved_query": null,
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 0.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "> **Access Restriction Notice:** Access to the Executive Employee Insurance Plan (EMP-INS-001) is restricted to authenticated employees. Only authorized customer policy terms are displayed below.\n\nThe available policy documents do not provide information regarding an executive su...",
+      "full_answer": "> **Access Restriction Notice:** Access to the Executive Employee Insurance Plan (EMP-INS-001) is restricted to authenticated employees. Only authorized customer policy terms are displayed below.\n\nThe available policy documents do not provide information regarding an executive surgery schedule for corporate employees. You are currently viewing the **Health Shield \u2013 Basic** plan, which is a customer plan and not an employee or executive plan. \n\nAs stated in the guidelines, figures and benefits in the Health Shield \u2013 Basic plan are illustrative demonstration values and not official verified coverage. For reference, the Health Shield \u2013 Basic plan details the following surgery benefits:\n\n* **Major Surgery Benefit:** The proposed benefit basis is \u20b92,00,000 for eligible listed major surgeries, with payable percentages and illustrative benefit amounts as follows [Health Shield \u2013 Basic, Section 5, pp. 3-4]:\n  * **100%:** \u20b92,00,000 [Health Shield \u2013 Basic, Section 5, pp. 3-4]\n  * **60%:** \u20b91,20,000 [Health Shield \u2013 Basic, Section 5, pp. 3-4]\n  * **40%:** \u20b980,000 [Health Shield \u2013 Basic, Section 5, pp. 3-4]\n  * **20%:** \u20b940,000 [Health Shield \u2013 Basic, Section 5, pp. 3-4]\n  * *Proposed Overall Limit:* Up to 3 times the benefit basis, equivalent to \u20b96,00,000 over the applicable coverage period, subject to final policy conditions [Health Shield \u2013 Basic, Section 5, pp. 3-4]. Each surgery must be matched to the category specified in the final approved surgery list [Health Shield \u2013 Basic, Section 5, pp. 3-4].\n* **Other Surgery Benefit:** Proposed at \u20b93,000 per eligible day for eligible surgeries other than specified major surgeries when the hospital stay exceeds 24 hours [Health Shield \u2013 Basic, Section 7, pp. 4-5]. Limits are up to 5 days during the policy year and a maximum of 5 days overall during the one-year policy term [Health Shield \u2013 Basic, Section 7, pp. 4-5]. Whether this benefit combines with hospital cash must be specified in the final approved policy [Health Shield \u2013 Basic, Section 7, pp. 4-5].",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-31",
+      "category": "role_authorization",
+      "split": "held_out",
+      "query": "What is the Executive Health Cash benefit under the Employee Plan?",
+      "role": "employee",
+      "selected_plan": "EMP-INS-001",
+      "effective_scope": [
+        "EMP-INS-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the Executive Health Cash benefit under the Employee Plan?",
+      "provider_used": "gemini",
+      "passed": false,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 67.5,
+      "scores": {
+        "retrieval_evidence_coverage": 0.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 50.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the available policy documents for the **Executive Employee Insurance Plan**, the provided records do not contain information regarding an \"Executive Health Cash\" benefit. \n\nHowever, the policy documents do mention an **Initial Daily Hospital Cash Benefit** of an illustr...",
+      "full_answer": "Based on the available policy documents for the **Executive Employee Insurance Plan**, the provided records do not contain information regarding an \"Executive Health Cash\" benefit. \n\nHowever, the policy documents do mention an **Initial Daily Hospital Cash Benefit** of an illustrative \u20b910,000 [Executive Employee Insurance Plan, Section 1: PLAN OVERVIEW, pp. 1-2]. Beyond this initial figure, the available policy documents do not provide enough information regarding benefit amounts, calculation steps, duration, or eligibility requirements for a specific \"Executive Health Cash\" benefit to answer your question reliably [Executive Employee Insurance Plan, Section 1: PLAN OVERVIEW, pp. 1-2].\n\n> **Notice:** The Executive Employee Insurance Plan content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    },
+    {
+      "id": "GEN-32",
+      "category": "role_authorization",
+      "split": "held_out",
+      "query": "What is the corporate surgery basis for executive employees?",
+      "role": "employee",
+      "selected_plan": "EMP-INS-001",
+      "effective_scope": [
+        "EMP-INS-001"
+      ],
+      "reason": "follow_up",
+      "resolved_query": "What is the corporate surgery basis for executive employees?",
+      "provider_used": "gemini",
+      "passed": true,
+      "critical_failure": false,
+      "critical_reasons": [],
+      "overall_score": 100.0,
+      "scores": {
+        "retrieval_evidence_coverage": 100.0,
+        "factual_correctness": 100.0,
+        "citation_accuracy": 100.0,
+        "missing_info_handling": 100.0,
+        "plan_role_isolation": 100.0,
+        "disclaimer_compliance": 100.0,
+        "natural_language_quality": 100.0
+      },
+      "answer_preview": "Based on the policy documents for the Executive Employee Insurance Plan, the illustrative Major Surgery Benefit basis is **\u20b910,00,000** [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]. \n\nPlease note that these figures are illustrative demonstration...",
+      "full_answer": "Based on the policy documents for the Executive Employee Insurance Plan, the illustrative Major Surgery Benefit basis is **\u20b910,00,000** [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]. \n\nPlease note that these figures are illustrative demonstration values and not official verified coverage.\n\n### Payout Structure and Categories\nThe payable amount depends on the surgery's classification under the applicable policy, with the following illustrative payout percentages:\n* **Category 1 (100%):** \u20b910,00,000 [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]\n* **Category 2 (60%):** \u20b96,00,000 [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]\n* **Category 3 (40%):** \u20b94,00,000 [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]\n* **Category 4 (20%):** \u20b92,00,000 [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136]\n\n### Limits and Conditions\n* **Overall Major Surgery Benefit Limit:** Up to 10 times the benefit basis (illustrative overall maximum of \u20b91,00,00,000) [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n* **Surgery Category Mapping:** Not defined for the employee plan [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n* **Eligible Surgery List:** Not provided for the employee plan [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n* **Repeat Claims for the Same Surgery:** Subject to verified policy conditions [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n* **Benefit Eligibility and Payout:** Must be established using the applicable surgery classification and approved policy wording [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n\n### Example Calculation\nFor an eligible Category 2 surgery: \n\u20b910,00,000 \u00d7 60% = \u20b96,00,000 (illustrative payout) [Executive Employee Insurance Plan | Section 5: MAJOR SURGERY BENEFIT, pp. 5\u20136].\n\n> **Notice:** The Executive Employee Insurance Plan content cited above is illustrative demonstration data and does not constitute an official insurance policy contract.",
+      "citations_count": 5,
+      "chunks_retrieved_count": 5
+    }
+  ]
+}
