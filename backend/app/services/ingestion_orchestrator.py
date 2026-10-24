@@ -307,6 +307,48 @@ class IngestionOrchestrator:
         with open(settings.HISTORY_STORE_PATH, "w", encoding="utf-8") as f:
             json.dump(history_list, f, indent=2)
 
+        # Also persist to SQLite database tables for Admin Workspace
+        try:
+            from backend.app.db.sqlite_manager import sqlite_db
+            doc_id = f"doc_{job.plan_id.lower().replace('-', '_')}"
+            status_val = "INDEXED" if job.status == "SUCCESS" else "FAILED"
+            sqlite_db.record_document(
+                document_id=doc_id,
+                filename=job.filename,
+                plan_id=job.plan_id,
+                file_size_bytes=getattr(job, "file_size_bytes", 0),
+                chunk_count=job.records_stored,
+                content_hash=job.content_hash,
+                status=status_val
+            )
+            sqlite_db.record_ingestion_job(
+                job_id=job.job_id,
+                document_id=doc_id,
+                filename=job.filename,
+                plan_id=job.plan_id,
+                status=job.status,
+                stage=job.current_stage,
+                error_summary="; ".join(job.errors) if job.errors else "",
+                duration_ms=job.total_duration_sec * 1000.0,
+                chunk_count=job.records_stored
+            )
+            sqlite_db.record_audit_event(
+                action="document_ingestion",
+                actor_id="admin_system",
+                actor_role="admin",
+                target_resource=job.filename,
+                outcome=job.status,
+                details={
+                    "job_id": job.job_id,
+                    "plan_id": job.plan_id,
+                    "chunks": job.records_stored,
+                    "duration_sec": round(job.total_duration_sec, 2),
+                    "errors": job.errors
+                }
+            )
+        except Exception as e:
+            logger.warning(f"Failed to record ingestion run to SQLite: {e}")
+
     def get_history(self) -> list[dict[str, Any]]:
         if not settings.HISTORY_STORE_PATH.exists():
             return []

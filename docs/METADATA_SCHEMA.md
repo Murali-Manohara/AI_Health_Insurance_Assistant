@@ -192,7 +192,66 @@ Thread-safe SQLite database initialized with WAL journal mode (`PRAGMA journal_m
 |---|---|---|---|
 | `user_id` | TEXT | PRIMARY KEY, FK to `users` | User identifier. |
 | `email` | TEXT | NOT NULL | User contact email. |
-| `role` | TEXT | NOT NULL | Current active role. |
-| `governance_status` | TEXT | NOT NULL | Account status: `"active"`, `"verified_employee"`, `"pending_verification"`. |
+| `role` | TEXT | NOT NULL | Current active role (`customer`, `employee`, `admin`). |
+| `governance_status` | TEXT | NOT NULL | Account status: `"active"`, `"verified_employee"`, `"verified_administrator"`. |
 | `last_login` | TEXT | NULL | Most recent session login timestamp. |
+
+### 5.6 `document_records` Table
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `document_id` | TEXT | PRIMARY KEY | Unique document identifier (`doc_...`). |
+| `filename` | TEXT | NOT NULL | Source PDF file name (e.g. `health_shield_gold.pdf`). |
+| `plan_id` | TEXT | NOT NULL | Bound policy identifier (`HS-GOLD-001`, etc.). |
+| `content_hash` | TEXT | NULL | Document SHA-256 hash. |
+| `file_size_bytes` | INTEGER | DEFAULT 0 | Size of file on disk in bytes. |
+| `file_type` | TEXT | DEFAULT 'application/pdf' | MIME content type. |
+| `status` | TEXT | NOT NULL DEFAULT 'INDEXED' | Ingestion status (`INDEXED`, `PROCESSING`, `ERROR`). |
+| `chunk_count` | INTEGER | DEFAULT 0 | Count of child vector chunks persisted in Chroma Cloud. |
+| `created_at` | TEXT | NOT NULL | Record creation timestamp. |
+| `updated_at` | TEXT | NOT NULL | Last update timestamp. |
+
+### 5.7 `ingestion_jobs` Table
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `job_id` | TEXT | PRIMARY KEY | Unique ingestion job identifier (`job_...`). |
+| `document_id` | TEXT | NULL, FK to `document_records` | Linked document record. |
+| `filename` | TEXT | NOT NULL | File processed by job. |
+| `plan_id` | TEXT | NOT NULL | Bound policy plan. |
+| `status` | TEXT | NOT NULL | Job state (`COMPLETED`, `FAILED`, `PROCESSING`). |
+| `stage` | TEXT | NULL | Current/final pipeline stage (Stages 1–9). |
+| `error_summary` | TEXT | NULL | Failure diagnostics if status is FAILED. |
+| `duration_ms` | REAL | DEFAULT 0 | Total pipeline execution time in milliseconds. |
+| `chunk_count` | INTEGER | DEFAULT 0 | Chunks indexed during this job. |
+| `created_at` | TEXT | NOT NULL | Timestamp job commenced. |
+
+### 5.8 `rag_request_metrics` Table
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `metric_id` | TEXT | PRIMARY KEY | Telemetry entry identifier (`met_...`). |
+| `request_id` | TEXT | NULL | Traceable HTTP request ID. |
+| `user_id` | TEXT | NULL | Requesting user identifier. |
+| `role` | TEXT | NULL | Requesting role. |
+| `plan_id` | TEXT | NULL | Plan scope targeted by query. |
+| `latency_retrieval_ms` | REAL | DEFAULT 0 | Dense + BM25 search duration. |
+| `latency_generation_ms` | REAL | DEFAULT 0 | LLM synthesis duration. |
+| `latency_total_ms` | REAL | DEFAULT 0 | End-to-end response latency. |
+| `retrieved_chunks_count` | INTEGER | DEFAULT 0 | Candidates retrieved from vector store. |
+| `citations_count` | INTEGER | DEFAULT 0 | Validated grounded citations attached to answer. |
+| `is_comparison` | INTEGER | DEFAULT 0 | 1 if multi-plan comparison query. |
+| `status` | TEXT | NOT NULL | Status code or execution outcome (`SUCCESS`, `ERROR`). |
+| `error_category` | TEXT | NULL | Diagnostic failure classification. |
+| `created_at` | TEXT | NOT NULL | UTC timestamp. |
+
+### 5.9 `audit_logs` Table
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `event_id` | TEXT | PRIMARY KEY | Unique governance event identifier (`evt_...`). |
+| `actor_id` | TEXT | NULL | User ID who initiated action. |
+| `actor_email` | TEXT | NULL | Email address of actor. |
+| `actor_role` | TEXT | NULL | Active role at time of event (`customer`, `employee`, `admin`). |
+| `action` | TEXT | NOT NULL | Operation performed (`auth_login_success`, `rag_query`, `document_indexed`, etc.). |
+| `target_resource` | TEXT | NULL | Affected endpoint, plan ID, or document name. |
+| `outcome` | TEXT | NOT NULL | Event classification (`SUCCESS`, `FORBIDDEN`, `ERROR`). |
+| `details_json` | TEXT | DEFAULT '{}' | Serialized JSON metadata (HTTP status, error codes, payloads). |
+| `timestamp` | TEXT | NOT NULL | ISO-8601 UTC event timestamp. |
 

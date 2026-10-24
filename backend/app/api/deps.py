@@ -2,7 +2,7 @@ from fastapi import Depends, Request
 from backend.app.services.ingestion_orchestrator import IngestionOrchestrator
 from backend.app.services.rag_orchestrator import RAGOrchestrator
 from backend.app.services.retrieval_service import HybridRetrievalService
-from backend.app.services.auth_service import UserIdentity, get_current_user
+from backend.app.services.auth_service import UserIdentity, get_current_user, require_admin_user
 
 # Global service singletons
 ingestion_orchestrator = IngestionOrchestrator()
@@ -19,3 +19,6 @@ def get_retrieval_service() -> HybridRetrievalService:
 
 def get_auth_user(request: Request) -> UserIdentity:
     return get_current_user(request)
+
+def get_admin_user(request: Request) -> UserIdentity:
+    return require_admin_user(request)

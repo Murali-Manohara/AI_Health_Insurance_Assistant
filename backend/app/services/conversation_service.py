@@ -3,7 +3,7 @@ import time
 import uuid
 from typing import Optional
 from pydantic import BaseModel, Field
-from backend.app.services.auth_service import AuthorizationService
+from backend.app.services.auth_service import AuthorizationService, ROLE_PLAN_PERMISSIONS
 from backend.app.services.generation_service import SourceCitation
 from backend.app.db.sqlite_manager import sqlite_db
 from backend.app.core.config import settings
@@ -55,10 +55,27 @@ class ConversationManager:
 
     def _persist_store(self) -> None:
         try:
+            # Only persist sessions that have at least one message (no empty chats)
+            active_data = {
+                cid: s.model_dump()
+                for cid, s in self.sessions.items()
+                if len(s.messages) > 0
+            }
             with open(CONVERSATIONS_STORE_PATH, "w", encoding="utf-8") as f:
-                json.dump({cid: s.model_dump() for cid, s in self.sessions.items()}, f, indent=2)
+                json.dump(active_data, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to persist conversation store: {e}")
+
+    def clear_all_conversations(self) -> None:
+        """Wipes all active in-memory sessions, persistent JSON cache, and SQLite records."""
+        self.sessions.clear()
+        if CONVERSATIONS_STORE_PATH.exists():
+            try:
+                CONVERSATIONS_STORE_PATH.unlink()
+            except Exception as e:
+                logger.error(f"Failed to remove conversation JSON file: {e}")
+        sqlite_db.clear_all_conversations()
+        logger.info("Cleared all conversation history across all sessions.")
 
     def create_conversation(
         self,
@@ -66,7 +83,7 @@ class ConversationManager:
         role: str,
         selected_plan_id: str
     ) -> ConversationSession:
-        """Create a new conversation session for an authorized plan."""
+        """Create a new conversation session for an authorized plan. Fails closed with 403 if unauthorized."""
         AuthorizationService.validate_plan_access(role, selected_plan_id)
         
         cid = f"conv_{uuid.uuid4().hex[:12]}"
@@ -82,7 +99,7 @@ class ConversationManager:
             messages=[]
         )
         self.sessions[cid] = session
-        self._persist_store()
+        # Persist conversation session immediately in SQLite so server restarts/reloads retain it
         try:
             sqlite_db.save_conversation(
                 conversation_id=cid,
@@ -93,11 +110,17 @@ class ConversationManager:
                 updated_at=now
             )
         except Exception as e:
-            logger.error(f"Failed to persist conversation to SQLite: {e}")
-        logger.info(f"Created new conversation '{cid}' for plan '{selected_plan_id}' (User: {user_id}, Role: {role})")
+            logger.error(f"Failed to persist initial conversation session to SQLite: {e}")
+
+        logger.info(f"Initialized active session '{cid}' for plan '{selected_plan_id}' (User: {user_id}, Role: {role})")
         return session
 
-    def get_conversation(self, conversation_id: str, user_id: str) -> Optional[ConversationSession]:
+    def get_conversation(
+        self,
+        conversation_id: str,
+        user_id: str,
+        role: Optional[str] = None
+    ) -> Optional[ConversationSession]:
         session = self.sessions.get(conversation_id)
         if not session:
             # Fallback check in SQLite
@@ -129,11 +152,95 @@ class ConversationManager:
                 self.sessions[conversation_id] = session
             else:
                 return None
-        # Enforce user boundary
-        if session.user_id != user_id and session.user_id != "guest_user" and session.user_id != "test_user":
+
+        # Enforce strict user isolation boundary
+        if session.user_id != user_id and session.user_id not in ("guest_user", "test_user") and user_id not in ("guest_user", "test_user"):
             logger.warning(f"User '{user_id}' denied access to conversation '{conversation_id}' owned by '{session.user_id}'")
             return None
+
+        # Enforce strict role-based plan access (e.g. Customer can never access employee plans)
+        if role:
+            authorized_plans = ROLE_PLAN_PERMISSIONS.get(role, set())
+            if session.selected_plan_id not in authorized_plans:
+                logger.warning(f"Role '{role}' denied access to plan '{session.selected_plan_id}' in conversation '{conversation_id}'")
+                return None
+
         return session
+
+    def list_conversations_for_user(
+        self,
+        user_id: str,
+        role: str,
+        plan_id: Optional[str] = None
+    ) -> list[dict]:
+        """
+        List all saved conversations strictly owned by user_id and authorized for role.
+        Enforces RBAC: customers never see employee plans.
+        Filters out empty chats (message_count == 0).
+        """
+        authorized_plans = list(ROLE_PLAN_PERMISSIONS.get(role, set()))
+        if plan_id and plan_id not in authorized_plans:
+            return []
+
+        db_convs = sqlite_db.list_conversations_for_user(
+            user_id=user_id,
+            authorized_plans=authorized_plans,
+            plan_id=plan_id
+        )
+        seen_ids = set()
+        results = []
+
+        for c in db_convs:
+            cid = c["conversation_id"]
+            seen_ids.add(cid)
+            msg_count = c.get("msg_count", 0)
+            if msg_count == 0:
+                continue
+
+            session = self.sessions.get(cid)
+            if session and session.messages:
+                first_user_msg = next((m.content for m in session.messages if m.role == "user"), None)
+            else:
+                msgs = sqlite_db.get_messages_for_conversation(cid)
+                first_user_msg = next((m.get("content") for m in msgs if m.get("role") == "user"), None)
+
+            title = (first_user_msg[:65] + "...") if first_user_msg and len(first_user_msg) > 65 else (first_user_msg or "Policy Inquiry")
+            results.append({
+                "conversation_id": cid,
+                "selected_plan_id": c.get("selected_plan_id", ""),
+                "created_at": c.get("created_at", ""),
+                "updated_at": c.get("updated_at", ""),
+                "message_count": msg_count,
+                "preview_title": title
+            })
+
+        # Also inspect in-memory sessions that belong strictly to this user and have user messages
+        for cid, s in self.sessions.items():
+            if cid in seen_ids:
+                continue
+            if s.user_id != user_id and s.user_id != "guest_user" and user_id != "guest_user":
+                continue
+            if s.selected_plan_id not in authorized_plans:
+                continue
+            if plan_id and s.selected_plan_id != plan_id:
+                continue
+            user_msgs = [m for m in s.messages if m.role == "user"]
+            if not user_msgs:
+                continue
+
+            first_user_msg = user_msgs[0].content
+            title = (first_user_msg[:65] + "...") if len(first_user_msg) > 65 else first_user_msg
+            results.append({
+                "conversation_id": cid,
+                "selected_plan_id": s.selected_plan_id,
+                "created_at": s.created_at,
+                "updated_at": s.updated_at,
+                "message_count": len(s.messages),
+                "preview_title": title
+            })
+
+        results.sort(key=lambda x: x.get("updated_at") or "", reverse=True)
+        return results
 
     def add_turn(
         self,
@@ -182,6 +289,17 @@ class ConversationManager:
         self._persist_store()
 
         try:
+            # Ensure conversation row is created in SQLite if not yet saved
+            if not sqlite_db.get_conversation(conversation_id):
+                sqlite_db.save_conversation(
+                    conversation_id=conversation_id,
+                    user_id=session.user_id,
+                    role=session.role,
+                    selected_plan_id=session.selected_plan_id,
+                    created_at=session.created_at,
+                    updated_at=now
+                )
+
             sqlite_db.save_message(
                 message_id=u_msg.message_id,
                 conversation_id=conversation_id,
@@ -210,3 +328,4 @@ class ConversationManager:
             logger.error(f"Failed to persist chat messages to SQLite: {e}")
 
         return a_msg
+

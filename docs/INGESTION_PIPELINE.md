@@ -41,9 +41,10 @@ flowchart TD
 - **Dynamic Re-Ingestion Guarantee:** Before marking a file as `SKIPPED_DUPLICATE`, the system queries Chroma Cloud to ensure records for this document actually exist in storage. If the vector store was cleared, it seamlessly proceeds with re-ingestion.
 
 ### Stage 2: Category & Plan Identity Resolution
-- Supports the two primary UI upload categories:
-  1. **Customer Insurance:** Inspects pages 1–3 for specific policy titles. Differentiates **Basic**, **Gold**, and **Premium** without confusion from section titles.
-  2. **Employee Insurance:** Binds strictly to `EMP-INS-001` and marks `data_status: illustrative_unverified` and `access_level: employee`.
+- Supports policy targeting through the operational UI dropdown (`Assign Target Policy Scope`):
+  1. **Customer Insurance:** Differentiates **Health Shield – Basic** (`HS-BASIC-001`), **Health Shield – Gold** (`HS-GOLD-001`), and **Health Shield – Premium** (`HS-PREMIUM-001`).
+  2. **Employee Insurance:** Binds strictly to **Executive Employee Insurance Plan** (`EMP-INS-001`) and marks `data_status: illustrative_unverified` and `access_level: employee`.
+- Resolves plan identity deterministically from file content, metadata, or explicit admin assignment dropdown.
 
 ### Stage 3: Hybrid Document Extraction
 - **Text & Reading Order:** PyMuPDF (`fitz`) extracts clean text streams, coordinate layouts, and physical page numbers.
@@ -85,4 +86,7 @@ flowchart TD
 ### Stage 9: ID Read-Back Verification & Audit
 - Performs immediate read-back query to ChromaDB by chunk IDs to verify persistence.
 - Updates persistent audit history in [ingestion_history.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/staging/ingestion_history.json).
+- Synchronizes with SQLite database:
+  - Inserts/updates `document_records` (`status: INDEXED`, `chunk_count`, `file_size_bytes`).
+  - Records an event in `audit_logs` (`action: document_indexed`, `outcome: SUCCESS`).
 - Returns comprehensive execution summary (pages, sections, tables, calculations, chunks, vectors).

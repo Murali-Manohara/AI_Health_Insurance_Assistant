@@ -1,6 +1,6 @@
 # System Architecture — AI Insurance Assistant Platform
 
-**Status:** Phase 1 (Ingestion) & Phase 2 (Plan Selection, RBAC, Hybrid RAG Chat) Completed  
+**Status:** Phase 1 (Ingestion), Phase 2 (Plan Selection, RBAC, Hybrid RAG Chat) & Phase 2.5 (Admin Governance & Telemetry) Completed  
 **Last Updated:** October 2026  
 **Environment:** Windows 11 / Python 3.12 / FastAPI / React + Vite / Chroma Cloud  
 
@@ -8,10 +8,11 @@
 
 ## 1. Architectural Overview
 
-The AI Insurance Assistant is an enterprise-grade, plan-scoped, role-aware RAG platform. The system operates on three primary layers:
-1. **Document Ingestion & Parent Store:** Layout-aware extraction, 17-section structure detection, hierarchical chunking, local dense embeddings (`BAAI/bge-small-en-v1.5`), and cloud-ready ChromaDB persistence.
-2. **Server-Enforced RBAC & Hybrid Retrieval:** Strict security boundaries separating Customer (`customer`) and Corporate Employee (`employee`) roles. Pre-filtering by plan ID, parallel dense vector search and BM25 lexical ranking, fused via Reciprocal Rank Fusion (RRF, $k=60$), and enriched with complete parent markdown section context.
-3. **Conversational Frontends & Grounded Generation:** Dual-screen user experience with Plan Selection (Screen A) and Plan-Scoped Chat (Screen B) featuring interactive citation drawers, quick inquiry chips, role switching, and 100% verified citation enforcement.
+The AI Insurance Assistant is an enterprise-grade, plan-scoped, role-aware RAG platform. The system operates on four primary tiers:
+1. **Document Ingestion & Parent Store:** Layout-aware extraction, 17-section structure detection, hierarchical chunking, local dense embeddings (`BAAI/bge-small-en-v1.5`), and cloud-ready ChromaDB persistence. Simplified policy assignment dropdown (`Assign Target Policy Scope`) ensures clear operational workflows.
+2. **Server-Enforced RBAC & Hybrid Retrieval:** Strict security boundaries separating Customer (`customer`), Corporate Employee (`employee`), and Enterprise Administrator (`admin`) roles. Pre-filtering by plan ID, parallel dense vector search and BM25 lexical ranking, fused via Reciprocal Rank Fusion (RRF, $k=60$), and enriched with complete parent markdown section context.
+3. **Conversational Frontends & Grounded Generation:** Dual-screen user experience with Plan Selection (Screen A) and Plan-Scoped Chat (Screen B) featuring interactive citation drawers, quick inquiry chips, streamlined workspace header controls (**New Chat** + adjacent **Menu** button), ChatGPT-style conversation history drawer, and 100% verified citation enforcement.
+4. **Administrative Governance & Telemetry:** Full admin portal featuring real-time KPI metrics, live consultation distribution charts, system activity streams with status filtering (**ALL**, **SUCCESS**, **FORBIDDEN / DENIED**, **ERROR**), user/account administration, and document records.
 
 ---
 
@@ -21,10 +22,11 @@ The AI Insurance Assistant is an enterprise-grade, plan-scoped, role-aware RAG p
 flowchart TD
     subgraph Frontend ["Client Presentation Tier (React + Vite)"]
         AuthScreens["Auth Gateway: LoginScreen & SignupScreen<br/>(Client Validation + Demo Helpers)"]
-        UserBadge["User Session Bar & Logout<br/>(Derived Role Indicator)"]
+        UserBadge["User Session Bar & Profile Drawer<br/>(Derived Role Indicator)"]
         ScreenA["Screen A: Plan Selection<br/>(Basic, Gold, Premium, Corporate)"]
-        ScreenB["Screen B: Plan-Scoped Chat<br/>(Conversational UI + Citations Drawer)"]
-        IngestionTab["Document Ingestion UI<br/>(Upload & Live 9-Stage Progress)"]
+        ScreenB["Screen B: Plan-Scoped Chat<br/>(New Chat + Menu Sidebar + Citations)"]
+        AdminUI["Admin Workspace & Governance<br/>(KPI Cards, Activity Stream, User Admin)"]
+        IngestionTab["Document Ingestion UI<br/>(Upload & Plan Assignment Dropdown)"]
     end
 
     subgraph Gateway ["FastAPI Application Gateway"]
@@ -33,6 +35,7 @@ flowchart TD
         PlansAPI["/api/plans<br/>(Filtered by Role)"]
         ConvoAPI["/api/conversations<br/>(Session Management)"]
         RetrievalAPI["/api/retrieval<br/>(Hybrid Search Endpoint)"]
+        AdminAPI["/api/admin<br/>(dashboard, activity-stream, users, documents)"]
         IngestAPI["/api/upload & /api/ingestion<br/>(Job Tracking)"]
     end
 
@@ -64,11 +67,10 @@ flowchart TD
     end
 
     subgraph StorageTier ["Persistence & Data Governance Tier"]
-        SQLiteDB[("SQLite Database: app.db<br/>users (bcrypt), sessions, profiles, chat history")]
+        SQLiteDB[("SQLite Database: app.db (WAL Mode)<br/>users, sessions, profiles, conversations,<br/>messages, audit_logs, document_records")]
         ChromaCloud[("Chroma Cloud Vector DB<br/>insurance_knowledge (119 chunks)")]
         ParentStore[("Durable Parent Store<br/>parent_store.json (68 sections)")]
         HistoryStore[("Ingestion History<br/>ingestion_history.json")]
-        SessionStore[("Conversation Staging<br/>conversations.json")]
     end
 
     %% Client Interactions
@@ -76,19 +78,23 @@ flowchart TD
     UserBadge -.-> AuthGate
     ScreenA --> PlansAPI
     ScreenB --> ConvoAPI
+    AdminUI --> AdminAPI
     IngestionTab --> IngestAPI
 
-    %% Gateway to Engine
+    %% Gateway to Engine & Storage
     AuthRoute --> SQLiteDB
+    AdminAPI --> SQLiteDB
     AuthGate --> PlansAPI
     AuthGate --> ConvoAPI
     AuthGate --> RetrievalAPI
+    AuthGate --> AdminAPI
     AuthGate --> IngestAPI
 
     IngestAPI --> IngestionPipeline
     IngestionPipeline --> ChromaCloud
     IngestionPipeline --> ParentStore
     IngestionPipeline --> HistoryStore
+    IngestionPipeline --> SQLiteDB
 
     ConvoAPI --> ConvoService
     ConvoAPI --> Orchestrator
@@ -104,7 +110,6 @@ flowchart TD
     BM25Retriever --> ChromaCloud
     ParentExpander --> ParentStore
     ConvoService --> SQLiteDB
-    ConvoService --> SessionStore
 ```
 
 ---
@@ -113,11 +118,20 @@ flowchart TD
 
 ### 3.1 Frontend Presentation Tier
 - **[PlanSelectionScreen.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/components/PlanSelectionScreen.jsx)**: Renders customer cards (**Basic**, **Gold**, **Premium**) and the exclusive **Executive Employee Plan** (only visible to authenticated employees). Displays premium, daily cash allowances, and instant navigation to plan chat.
-- **[PlanChatScreen.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/components/PlanChatScreen.jsx)**: Dynamic conversation feed with quick suggestion chips, policy badge indicators, and interactive citation tags that open full parent markdown sections in an off-canvas drawer.
-- **[App.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/App.jsx)**: Global navigation managing active screens (`selection`, `chat`, `ingestion`), role switching (`customer` vs `employee`), and backend API status polling.
+- **[PlanChatScreen.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/components/PlanChatScreen.jsx)**: Conversational workspace with redesigned header controls:
+  - **"New Chat" Button**: Modern elevated card button initiating fresh conversation sessions.
+  - **"Menu" Button**: Directly to the right of New Chat; toggles the off-canvas right drawer containing **Conversation History** (searchable & plan-scoped) and **Quick Actions**.
+  - **Modern Floating Input Dock**: Input shell with prompt prefix icon, circular gradient submit button with paper-airplane SVG, and policy grounding scope badge (`Strictly Grounded: {plan_id}`).
+  - **Interactive Citation Drawer**: Allows clicking citation tags to inspect full parent markdown sections.
+- **[AdminDashboard.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/components/AdminDashboard.jsx)**: Enterprise governance portal for Administrators. Houses 5 live KPI summary cards, SVG consultation distribution graphs, category-filtered recent activity stream, user administration, and document catalog.
+- **[DocumentIngestionScreen.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/components/DocumentIngestionScreen.jsx)**: Simplified operational document ingestion view featuring an intuitive policy scope dropdown (`Assign Target Policy Scope`) and live stage progress.
+- **[App.jsx](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/frontend/src/App.jsx)**: Global application shell managing routing, session persistence, role-based views, profile drawer, and authentication lifecycle.
 
 ### 3.2 Security & Authorization Tier
-- **[auth_service.py](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/backend/app/services/auth_service.py)**: Server-side RBAC verifying `X-User-Role`. Enforces that customer accounts cannot view, query, or initiate chats against `EMP-INS-001`.
+- **[auth_service.py](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/backend/app/services/auth_service.py)**: Server-side RBAC verifying session tokens and roles.
+  - Enforces that customers cannot access or query `EMP-INS-001`.
+  - Protects admin endpoints (`/api/admin/*`) strictly requiring `effective_role == 'admin'`.
+  - Blocks client header role spoofing and prevents self-selection of the `admin` role during public signup.
 - **[scope_resolver.py](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/backend/app/services/scope_resolver.py)**: Enforces plan retrieval boundaries. Prevents cross-plan leaks, detects explicit multi-plan comparisons (e.g. *"Compare Basic and Gold"*), strips unpermitted plan targets from customer queries, and resolves conversational pronouns to the active policy.
 
 ### 3.3 Hybrid Search & Context Expansion
@@ -136,8 +150,8 @@ flowchart TD
 
 | Store | Location / Connection | Contents & Scale |
 |---|---|---|
-| **SQLite Database** | `data/app.db` (WAL Mode) | User credentials, salted bcrypt password hashes, active session tokens, user profiles, and chat message history for data governance. |
+| **SQLite Database** | `data/app.db` (WAL Mode) | User accounts (`users`), active session tokens (`sessions`), user governance profiles (`profiles`), persistent conversations (`conversations`), verified chat message logs (`messages`), document index records (`document_records`), and security audit trails (`audit_logs`). |
 | **Chroma Cloud** | `api.trychroma.com` (`insurance_knowledge`) | **119 child chunks** across 4 plans with 384-d BGE-small embeddings. |
 | **Parent Store** | [parent_store.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/staging/parent_store.json) | **68 full parent sections** (17 sections per plan) preserving structured markdown tables and page ranges. |
 | **Ingestion History** | [ingestion_history.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/staging/ingestion_history.json) | Audit trail of processed documents, hashes, chunk counts, and execution timestamps. |
-| **Conversation Store** | [conversations.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/staging/conversations.json) | Persistent session states, turn history, and plan scopes. |
+

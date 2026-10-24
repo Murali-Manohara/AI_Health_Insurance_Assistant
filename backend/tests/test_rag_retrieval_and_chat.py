@@ -81,3 +81,57 @@ def test_employee_plan_illustrative_warning():
     msg_data = m_resp.json()["message"]
     assert msg_data["contains_unverified_notice"] is True
     assert "illustrative" in msg_data["content"].lower()
+
+def test_list_conversations_endpoint_and_rbac():
+    """Verify that empty conversations are excluded, and customer cannot see employee history."""
+    # 1. Create a customer conversation
+    c_resp = client.post(
+        "/api/conversations",
+        headers={"X-User-Role": "customer"},
+        json={"selected_plan_id": "HS-GOLD-001"}
+    )
+    assert c_resp.status_code == 201
+    conv_id = c_resp.json()["conversation_id"]
+
+    # Before any message, empty chat is NOT stored in history
+    list_resp = client.get("/api/conversations", headers={"X-User-Role": "customer"})
+    assert list_resp.status_code == 200
+    assert not any(item["conversation_id"] == conv_id for item in list_resp.json())
+
+    # Send a query
+    m_resp = client.post(
+        f"/api/conversations/{conv_id}/messages",
+        headers={"X-User-Role": "customer"},
+        json={"query": "What is the hospital cash benefit?"}
+    )
+    assert m_resp.status_code == 200
+
+    # Now it must be stored and returned in history
+    list_resp2 = client.get("/api/conversations", headers={"X-User-Role": "customer"})
+    assert list_resp2.status_code == 200
+    items = list_resp2.json()
+    assert any(item["conversation_id"] == conv_id for item in items)
+
+    # 2. RBAC check: Employee conversation with EMP-INS-001
+    emp_c_resp = client.post(
+        "/api/conversations",
+        headers={"X-User-Role": "employee"},
+        json={"selected_plan_id": "EMP-INS-001"}
+    )
+    assert emp_c_resp.status_code == 201
+    emp_conv_id = emp_c_resp.json()["conversation_id"]
+    client.post(
+        f"/api/conversations/{emp_conv_id}/messages",
+        headers={"X-User-Role": "employee"},
+        json={"query": "Staff surgery benefits"}
+    )
+
+    # Customer MUST NOT see employee conversation in history
+    cust_history = client.get("/api/conversations", headers={"X-User-Role": "customer"}).json()
+    assert not any(item.get("selected_plan_id") == "EMP-INS-001" for item in cust_history)
+
+    # Customer MUST NOT be allowed to access employee conversation directly (Fails closed 404/403)
+    forbidden_resp = client.get(f"/api/conversations/{emp_conv_id}", headers={"X-User-Role": "customer"})
+    assert forbidden_resp.status_code == 404
+
+

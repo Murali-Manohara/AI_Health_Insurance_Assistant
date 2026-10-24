@@ -15,7 +15,8 @@ class UserIdentity(BaseModel):
 # Canonical plans authorized per role
 ROLE_PLAN_PERMISSIONS: dict[str, Set[str]] = {
     "customer": {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001"},
-    "employee": {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001", "EMP-INS-001"}
+    "employee": {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001", "EMP-INS-001"},
+    "admin": {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001", "EMP-INS-001"}
 }
 
 EMPLOYEE_ONLY_PLANS: Set[str] = {"EMP-INS-001"}
@@ -55,9 +56,17 @@ def register_user(
             detail="An account with this email address already exists. Please log in."
         )
 
-    # Server-enforced employee protection:
-    # Self-selecting Employee does not grant employee access unless corporate domain is verified.
+    # Server-enforced role protection:
+    # 1. Administrator accounts cannot be created through public registration
     req_role = requested_role.strip().lower()
+    if req_role == "admin":
+        logger.warning(f"Registration attempt with restricted 'admin' role rejected for email '{clean_email}'")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Administrator accounts cannot be created via public registration. Contact system governance."
+        )
+
+    # 2. Self-selecting Employee does not grant employee access unless corporate domain is verified.
     effective_role = "customer"
     is_approved = 1
     notice_message = None
@@ -212,6 +221,13 @@ def get_current_user(request: Request) -> UserIdentity:
     if "X-User-Role" in request.headers:
         role = request.headers["X-User-Role"].lower().strip()
         user_id = request.headers.get("X-User-Id", "test_user").strip()
+        # Security: Administrator access CANNOT be granted via client headers
+        if role == "admin":
+            logger.warning(f"Rejected attempt to assume admin role via X-User-Role header by '{user_id}'.")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Administrator role cannot be assumed via client headers. Server-verified session required."
+            )
         if role not in ROLE_PLAN_PERMISSIONS:
             logger.error(f"Invalid authentication role encountered: '{role}'")
             raise HTTPException(
@@ -237,4 +253,85 @@ def get_current_user(request: Request) -> UserIdentity:
         user_id="guest_user",
         role="customer",
         full_name="Customer Member"
+    )
+
+def require_admin_user(request: Request) -> UserIdentity:
+    """
+    Enforces server-side administrator authorization.
+    Returns HTTP 401 for unauthenticated requests,
+    and HTTP 403 for authenticated non-administrators.
+    """
+    auth_header = request.headers.get("Authorization", "").strip()
+    token = None
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:].strip()
+    elif "X-Session-Token" in request.headers:
+        token = request.headers["X-Session-Token"].strip()
+
+    if not token:
+        # Check if X-User-Role was provided by a non-admin
+        if "X-User-Role" in request.headers:
+            client_role = request.headers["X-User-Role"].lower().strip()
+            sqlite_db.record_audit_event(
+                action="admin_endpoint_forbidden",
+                actor_id=request.headers.get("X-User-Id", "unknown"),
+                actor_role=client_role,
+                target_resource=str(request.url.path),
+                outcome="FORBIDDEN",
+                details={"reason": f"Role '{client_role}' lacks admin privileges"}
+            )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Forbidden: Administrator privileges required."
+            )
+        
+        sqlite_db.record_audit_event(
+            action="admin_endpoint_unauthorized",
+            actor_id="anonymous",
+            actor_role="none",
+            target_resource=str(request.url.path),
+            outcome="UNAUTHORIZED",
+            details={"reason": "Missing authentication session token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required. Please log in as an administrator."
+        )
+
+    session = sqlite_db.get_session(token)
+    if not session:
+        sqlite_db.record_audit_event(
+            action="admin_endpoint_unauthorized",
+            actor_id="invalid_session",
+            actor_role="none",
+            target_resource=str(request.url.path),
+            outcome="UNAUTHORIZED",
+            details={"reason": "Expired or invalid session token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired session. Please log in again."
+        )
+
+    effective_role = session.get("effective_role", "").lower().strip()
+    if effective_role != "admin":
+        sqlite_db.record_audit_event(
+            action="admin_endpoint_forbidden",
+            actor_id=session.get("user_id"),
+            actor_email=session.get("email"),
+            actor_role=effective_role,
+            target_resource=str(request.url.path),
+            outcome="FORBIDDEN",
+            details={"reason": f"Authenticated user has role '{effective_role}', not 'admin'"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Administrator privileges required."
+        )
+
+    return UserIdentity(
+        user_id=session["user_id"],
+        role="admin",
+        full_name=session.get("full_name") or "Administrator",
+        email=session.get("email")
     )

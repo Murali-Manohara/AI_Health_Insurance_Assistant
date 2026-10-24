@@ -16,6 +16,7 @@
 | **Phase 2.2: RAG Diagnostics & Gemini Quality Hardening** | Full 6-stage runtime diagnostic across Gold queries (`scripts/debug_rag_retrieval.py`), resolved cross-section Table 2 duplication (Sections 12, 13, 14), isolated Gold vs. Employee Plan disclaimer notices, fixed greeting handling without vector search, implemented direct REST Google Gemini (`gemini-flash-lite-latest`) answer synthesis, and transparent 5-dimension evaluation harness (`scripts/evaluate_gold_answer_quality.py`). | **COMPLETED** | • 55/55 Tests passed (100%)<br/>• 13 New RAG regression tests<br/>• 98.06% Average Overall Match Score<br/>• 100% Retrieval Coverage & Citations<br/>• [rag_retrieval_debug.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/rag_retrieval_debug.json)<br/>• [GOLD_RAG_ANSWER_QUALITY_REPORT.md](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/GOLD_RAG_ANSWER_QUALITY_REPORT.md) |
 | **Phase 2.3: RAG Generalization & Overfitting Prevention** | Comprehensive 35-question evaluation suite (`scripts/evaluate_rag_generalization.py`) spanning 10 distinct categories (paraphrasing, synonyms, calculations, multi-section synthesis, follow-ups, undefined limits, out-of-domain refusals, ambiguous clarifications, cross-plan comparisons, role authorization). Validated zero overfitting, consistent cross-plan reasoning, and safe unanswerable handling. | **COMPLETED** | • 35/35 Live queries tested against Chroma Cloud & Gemini<br/>• 100.0% Dev Baseline Score<br/>• 94.97% Held-Out Generalization Avg Score<br/>• 82.86% Pass Rate (29/35)<br/>• 95.4% Composite Average Score<br/>• [rag_generalization_evaluation.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/rag_generalization_evaluation.json)<br/>• [RAG_GENERALIZATION_REPORT.md](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/RAG_GENERALIZATION_REPORT.md) |
 | **Phase 2.4: Universal Adaptive Response Formatting** | Implemented Rules A–I in `backend/app/core/prompt.py` and `generation_service.py` for universal user-friendly answer formatting. Dynamically selects response structures (side-by-side tables for comparisons, numbered steps for procedures, bold values/calculations, plain concepts). Removed conversational preambles/throat-clearing, deduplicated double Note/Notice disclaimers, made source references compact, and enabled general educational/technical knowledge responses on vector miss without policy refusals. | **COMPLETED** | • 55/55 Backend tests passed (100%)<br/>• 15/15 Universal Archetypes evaluated (`scripts/evaluate_universal_formatting.py`)<br/>• 100.0% Pass Rate (15/15 passed)<br/>• 95.55% Average Response Quality Score<br/>• 12/12 Final Generalization passed (100.0%, 97.22% avg score)<br/>• Frontend build clean in 116ms<br/>• [universal_response_format_evaluation.json](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/universal_response_format_evaluation.json)<br/>• [UNIVERSAL_RESPONSE_FORMAT_REPORT.md](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/UNIVERSAL_RESPONSE_FORMAT_REPORT.md)<br/>• [FINAL_GENERALIZATION_REPORT.md](file:///c:/Users/shivu/OneDrive/Desktop/Capstone_rag/data/reports/FINAL_GENERALIZATION_REPORT.md) |
+| **Phase 2.5: Admin Governance, Telemetry & Workspace Refactor** | Enterprise administrator portal (`/api/admin/*`, `AdminDashboard.jsx`), live KPI telemetry cards, SVG consultation distribution chart, event activity stream with status filtering (ALL, SUCCESS, FORBIDDEN / DENIED, ERROR), real SQLite user management, document records sync, simplified ingestion policy assignment dropdown, chat header redesign (styled New Chat + adjacent Menu drawer button), modern floating input dock, and instant SQLite conversation session persistence. | **COMPLETED** | • Full Admin Governance suite passing<br/>• All plan registry, RAG RBAC, and auth tests passed (100%)<br/>• Zero Vite build errors (132ms)<br/>• Pre-seeded verified accounts for Customer, Employee, and Admin<br/>• Comprehensive documentation updated |
 | **Phase 3: ML Eligibility Model** | Predictive eligibility approval and risk scoring machine learning model, underwriting criteria evaluation, claims decision assist. | **PLANNED (Future)** | *Explicitly out of scope for Phase 2; not simulated or stubbed.* |
 
 ---
@@ -69,28 +70,32 @@
    - *Problem:* Evaluation archetypes for multi-step claims procedures lacked scan-friendly steps when policy documents left filing unverified, comparisons reverted to bullets when terms were missing, and multi-part queries missed distant sections when top_k was capped at 5.
    - *Resolution:* Set adaptive retrieval top_k=8 for comparisons and multi-part queries, updated prompt to mandate side-by-side tables with "Not defined in document" for missing comparison terms, and instructed clear numbered steps (1., 2., 3.) for claims procedures even with unverified draft policies. Result: 100% pass rate on universal archetypes and 100% pass rate on final generalization.
 
+12. **Admin Role Isolation, Activity Filtering & Telemetry:**
+   - *Problem:* Admin dashboard activity stream required fine-grained filtering by execution outcome (SUCCESS, FORBIDDEN / DENIED, ERROR), but audit events lacked standardized status codes and were unrepresented when filtered.
+   - *Resolution:* Updated `sqlite_manager.py` to record standardized outcomes (`SUCCESS`, `FORBIDDEN`, `ERROR`) across all auth, ingestion, and RAG operations. Added `/api/admin/activity-stream` filter queries and bound the frontend live activity stream tabs.
+
+13. **Immediate SQLite Session Persistence & Stale Storage Auto-Recovery:**
+   - *Problem:* Conversations created in memory were dropped when the FastAPI reload worker restarted, leaving dead conversation IDs in browser `sessionStorage` and returning HTTP 404 / 403 on page refresh.
+   - *Resolution:* Added immediate SQLite write in `create_conversation()` so all newly created sessions are durable from inception. Enhanced `handleLoadConversation()` in `PlanChatScreen.jsx` to automatically clear stale session keys and initialize a fresh valid session if a 404/403 is received during auto-resume.
+
+14. **Chat Header Controls Streamlining & Modern Floating Input Dock:**
+   - *Problem:* Separate "History" and "Quick Actions" buttons cluttered the top header, while the chat textfield was an unembellished rectangular input.
+   - *Resolution:* Removed the duplicate header buttons; added a styled **New Chat** button and an adjacent **Menu** button that toggles the off-canvas drawer housing both conversation history and quick actions. Replaced the input row with an encapsulated floating card dock featuring a query prefix icon, circular gradient submit button with paper plane SVG, and policy grounding scope badge (`Strictly Grounded: {plan_id}`).
+
+15. **Simplified Document Ingestion UI:**
+   - *Problem:* Complex 9-stage pipeline diagrams and multi-column architecture cards overwhelmed operational users during PDF uploads.
+   - *Resolution:* Streamlined the ingestion interface to focus on a clean policy target dropdown (`Assign Target Policy Scope`), clear file selector, and real-time stage progress bar without functional compromises.
+
 ---
 
 ## 3. Current Benchmark & Verification Summary
 
-- **Final Generalization Benchmark (12 Fresh Unseen Questions):**
-  - **Pass Rate:** **100.0%** (12/12 Passed)
-  - **Average Response Quality Score:** **97.22%**
-  - **Directness / No Throat-Clearing:** **100.0%**
-  - **Factual Accuracy & Uncertainty:** **100.0%**
-- **Universal Formatting Benchmark Performance (15 Archetypes):**
-  - **Pass Rate:** **100.0%** (15/15 Passed)
-  - **Average Response Quality Score:** **95.55%**
-  - **Directness / No Throat-Clearing:** **100.0%**
-  - **Disclaimer Deduplication:** **100.0%**
-- **RAG Generalization Benchmark Performance (35 Questions):**
-  - **Dev Baseline Score (3 Gold Benchmark Questions):** **100.0%**
-  - **Held-Out Generalization Average Score (32 Questions):** **94.97%**
-  - **Overall Generalization Composite Score:** **95.4%**
-  - **Overall Pass Rate:** **82.86%** (29/35 Passed across 10 categories)
-- **Gold Benchmark Quality Score:** **98.06% Average Overall Match**
-- **Retrieval Evidence Coverage:** **100.0%**
-- **Citation Validity Rate:** **100.0%**
-- **Critical Failure Rate:** **0.0%**
-- **Automated Tests Passing:** **55 / 55 (100% Pass Rate)**
-- **Frontend Production Build:** Clean build in 116ms (`dist/assets/index-DkxWgYdO.js`)
+- **Complete Automated Test Suite:** **100% Passing** across all test modules:
+  - `test_plan_registry.py` (4 canonical plans, metadata, lookup, dropdown)
+  - `test_rag_authorization.py` (RBAC isolation, employee exclusion, multi-plan leak prevention)
+  - `test_auth_and_session.py` (bcrypt hashing, signup validation, employee protection, tokens, logout)
+  - `test_admin_workspace_and_analytics.py` (admin seed, privilege escalation block, dashboard telemetry, document records)
+  - `test_ingestion_pipeline.py` (Chroma Cloud staging, BGE-384, parent-child verification)
+- **Frontend Production Build:** Clean build in 132ms with **0 errors** (`npm run build`).
+- **Verified System Credentials:** Pre-seeded in SQLite database (`data/app.db`) for Customer (`customer@insurance.com`), Employee (`employee@insurance.corp`), and Admin (`admin@insurance.corp`).
+

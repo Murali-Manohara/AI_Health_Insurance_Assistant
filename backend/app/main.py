@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.core.logging_config import logger
-from backend.app.api.routes import plans, upload, ingestion, conversations, retrieval, auth
+from backend.app.api.routes import plans, upload, ingestion, conversations, retrieval, auth, admin_dashboard
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -21,6 +21,7 @@ app.add_middleware(
 
 # Mount Routers
 app.include_router(auth.router, prefix=settings.API_PREFIX)
+app.include_router(admin_dashboard.router, prefix=settings.API_PREFIX)
 app.include_router(plans.router, prefix=settings.API_PREFIX)
 app.include_router(upload.router, prefix=settings.API_PREFIX)
 app.include_router(ingestion.router, prefix=settings.API_PREFIX)

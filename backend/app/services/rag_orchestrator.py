@@ -1,3 +1,4 @@
+import time
 from typing import Optional
 from backend.app.services.auth_service import UserIdentity, AuthorizationService
 from backend.app.services.scope_resolver import ScopeResolver, ScopeResolutionResult
@@ -81,16 +82,20 @@ class RAGOrchestrator:
             }
 
         # 3. Execute Hybrid Retrieval with contextualized resolved query
+        t_start = time.time()
         search_query = scope_result.resolved_query or query
+        t_ret_start = time.time()
         retrieval_res = self.retrieval_service.retrieve(
             query=search_query,
             role=user.role,
             effective_scope=scope_result.effective_scope,
             top_k=8 if scope_result.is_comparison else 7
         )
+        t_retrieval_ms = (time.time() - t_ret_start) * 1000.0
 
         # 4. Generate Grounded Answer with Citations
         history_list = [m.model_dump() for m in session.messages]
+        t_gen_start = time.time()
         answer_res = self.generation_service.generate_answer(
             query=query,
             role=user.role,
@@ -100,6 +105,8 @@ class RAGOrchestrator:
             denied_plans=scope_result.denied_plans,
             conversation_history=history_list
         )
+        t_generation_ms = (time.time() - t_gen_start) * 1000.0
+        t_total_ms = (time.time() - t_start) * 1000.0
 
         # 5. Persist turn to conversation session
         assistant_msg = self.conversation_manager.add_turn(
@@ -113,6 +120,27 @@ class RAGOrchestrator:
             is_clarification=False,
             contains_unverified=answer_res.contains_unverified_notice
         )
+
+        # 6. Record telemetry safely into persistent database
+        try:
+            from backend.app.db.sqlite_manager import sqlite_db
+            retrieved_chunks = retrieval_res.get("chunks", [])
+            status_val = "SUCCESS" if answer_res.citations or retrieved_chunks else "NO_EVIDENCE"
+            sqlite_db.record_rag_metric(
+                request_id=f"req_{conversation_id[:8]}",
+                user_id=user.user_id,
+                role=user.role,
+                plan_id=session.selected_plan_id,
+                latency_retrieval_ms=t_retrieval_ms,
+                latency_generation_ms=t_generation_ms,
+                latency_total_ms=t_total_ms,
+                retrieved_chunks_count=len(retrieved_chunks),
+                citations_count=len(answer_res.citations),
+                is_comparison=scope_result.is_comparison,
+                status=status_val
+            )
+        except Exception as e:
+            logger.warning(f"Telemetry recording skipped: {e}")
 
         return {
             "message": assistant_msg.model_dump(),

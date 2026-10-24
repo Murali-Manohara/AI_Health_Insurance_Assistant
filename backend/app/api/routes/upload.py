@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
-from backend.app.api.deps import get_orchestrator
+from backend.app.api.deps import get_orchestrator, get_admin_user
 from backend.app.services.ingestion_orchestrator import IngestionOrchestrator
+from backend.app.services.auth_service import UserIdentity
 from backend.app.api.schemas.ingestion import IngestionJobResponse
 from backend.app.utils.security import validate_pdf_bytes, save_to_staging
 from backend.app.registry.plans import get_plan_by_id
@@ -13,6 +14,7 @@ router = APIRouter(prefix="", tags=["Upload & Ingestion"])
 async def upload_and_ingest_pdf(
     file: UploadFile = File(...),
     plan_id: str = Form(...),
+    current_user: UserIdentity = Depends(get_admin_user),
     orchestrator: IngestionOrchestrator = Depends(get_orchestrator)
 ):
     """

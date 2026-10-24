@@ -1,7 +1,9 @@
+from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends, status
 from backend.app.api.schemas.conversations import (
     CreateConversationRequest,
     ConversationResponse,
+    ConversationSummaryItem,
     MessageRequest,
     SendMessageResponse,
     MessageResponse
@@ -12,6 +14,28 @@ from backend.app.api.deps import get_rag_orchestrator, get_auth_user
 from backend.app.core.logging_config import logger
 
 router = APIRouter(prefix="/conversations", tags=["Conversations & RAG Chat"])
+
+@router.get("", response_model=list[ConversationSummaryItem])
+def list_conversations(
+    plan_id: Optional[str] = None,
+    user: UserIdentity = Depends(get_auth_user),
+    orchestrator: RAGOrchestrator = Depends(get_rag_orchestrator)
+):
+    """
+    List past conversation history for the authenticated user and authorized role,
+    excluding empty chats and unauthorized plans.
+    """
+    try:
+        items = orchestrator.conversation_manager.list_conversations_for_user(
+            user_id=user.user_id,
+            role=user.role,
+            plan_id=plan_id
+        )
+        return [ConversationSummaryItem(**item) for item in items]
+    except Exception as e:
+        logger.error(f"Failed to list conversations: {e}")
+        return []
+
 
 @router.post("", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
 def create_conversation(
@@ -42,14 +66,19 @@ def get_conversation(
     user: UserIdentity = Depends(get_auth_user),
     orchestrator: RAGOrchestrator = Depends(get_rag_orchestrator)
 ):
-    """Retrieve an existing authorized conversation session."""
-    session = orchestrator.conversation_manager.get_conversation(conversation_id, user.user_id)
+    """Retrieve an existing authorized conversation session enforcing RBAC and user boundary."""
+    session = orchestrator.conversation_manager.get_conversation(
+        conversation_id=conversation_id,
+        user_id=user.user_id,
+        role=user.role
+    )
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Conversation '{conversation_id}' not found or access denied."
+            detail=f"Conversation '{conversation_id}' not found or access denied for role '{user.role}'."
         )
     return ConversationResponse(**session.model_dump())
+
 
 @router.get("/{conversation_id}/messages", response_model=list[MessageResponse])
 def get_conversation_messages(
@@ -58,12 +87,17 @@ def get_conversation_messages(
     orchestrator: RAGOrchestrator = Depends(get_rag_orchestrator)
 ):
     """Retrieve turn history for an authorized conversation."""
-    session = orchestrator.conversation_manager.get_conversation(conversation_id, user.user_id)
+    session = orchestrator.conversation_manager.get_conversation(
+        conversation_id=conversation_id,
+        user_id=user.user_id,
+        role=user.role
+    )
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Conversation '{conversation_id}' not found or access denied."
+            detail=f"Conversation '{conversation_id}' not found or access denied for role '{user.role}'."
         )
+
     return [MessageResponse(**m.model_dump()) for m in session.messages]
 
 @router.post("/{conversation_id}/messages", response_model=SendMessageResponse)
