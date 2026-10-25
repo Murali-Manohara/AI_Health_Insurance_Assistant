@@ -60,7 +60,6 @@ export function ChatActionsSidebar({
   const [conversations, setConversations] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [historyError, setHistoryError] = useState(null);
-  const [planFilter, setPlanFilter] = useState('all'); // 'all' | 'current'
   const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch saved conversations from backend whenever panel opens or refresh is triggered
@@ -113,14 +112,9 @@ export function ChatActionsSidebar({
     };
   }, [isOpen, activeTab, historyRefreshTrigger, authToken, userRole]);
 
-  // Filter conversations based on plan scope and search query
+  // Filter conversations based on search query
   const filteredConversations = useMemo(() => {
     let list = conversations;
-
-    if (planFilter === 'current' && selectedPlan?.plan_id) {
-      list = list.filter((c) => c.selected_plan_id === selectedPlan.plan_id);
-    }
-
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       list = list.filter((c) =>
@@ -128,9 +122,8 @@ export function ChatActionsSidebar({
         (c.selected_plan_id && c.selected_plan_id.toLowerCase().includes(q))
       );
     }
-
     return list;
-  }, [conversations, planFilter, selectedPlan, searchQuery]);
+  }, [conversations, searchQuery]);
 
   if (!isOpen) return null;
 
@@ -189,44 +182,13 @@ export function ChatActionsSidebar({
           <div className="actions-panel-content">
             <div className="history-panel-topbar">
               <div className="history-panel-headline">
-                <div>
-                  <span className="actions-panel-eyebrow">PERSISTENT MEMORY</span>
-                  <h4 className="actions-panel-title">Conversation History</h4>
-                </div>
-                {onStartNewChat && (
-                  <button
-                    type="button"
-                    className="btn btn-primary history-new-btn"
-                    onClick={onStartNewChat}
-                    title="Start fresh conversation"
-                  >
-                    + New Chat
-                  </button>
-                )}
+                <h4 className="actions-panel-title">History</h4>
               </div>
 
-              {/* Filter Pills & Search Input */}
+              {/* Search Input */}
               <div className="history-filter-bar">
-                <div className="history-scope-pills">
-                  <button
-                    type="button"
-                    className={`history-pill-btn ${planFilter === 'all' ? 'active' : ''}`}
-                    onClick={() => setPlanFilter('all')}
-                  >
-                    All Plans ({conversations.length})
-                  </button>
-                  <button
-                    type="button"
-                    className={`history-pill-btn ${planFilter === 'current' ? 'active' : ''}`}
-                    onClick={() => setPlanFilter('current')}
-                    title={`Only show chats for ${selectedPlan?.display_title || 'current plan'}`}
-                  >
-                    Current Plan ({currentPlanCount})
-                  </button>
-                </div>
-
                 <div className="history-search-box">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
@@ -275,99 +237,51 @@ export function ChatActionsSidebar({
                 </div>
                 <div className="actions-empty-text">
                   {searchQuery
-                    ? 'Try searching with different keywords or switch to All Plans.'
+                    ? 'Try searching with different keywords.'
                     : 'Any question you ask is automatically saved. Start a chat to begin building your policy history!'}
                 </div>
-                {onStartNewChat && (
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    style={{ marginTop: '12px', fontSize: '12px' }}
-                    onClick={onStartNewChat}
-                  >
-                    Start a New Chat
-                  </button>
-                )}
               </div>
             ) : (
-              /* Proper Conversation History Table */
-              <div className="history-table-wrapper">
-                <table className="conversation-history-table">
-                  <thead>
-                    <tr>
-                      <th className="th-topic">Conversation Topic</th>
-                      <th className="th-plan">Plan</th>
-                      <th className="th-action">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredConversations.map((conv) => {
-                      const isActive = conv.conversation_id === currentConversationId;
-                      const badgeClass = getPlanBadgeClass(conv.selected_plan_id);
+              /* Structured Real Chatbot History List */
+              <div className="chatbot-history-list">
+                {filteredConversations.map((conv) => {
+                  const isActive = conv.conversation_id === currentConversationId;
+                  const timeStr = formatHistoryTime(conv.updated_at || conv.created_at);
 
-                      return (
-                        <tr
-                          key={conv.conversation_id}
-                          className={`history-row ${isActive ? 'active-row' : ''}`}
-                          onClick={() => onLoadConversation && onLoadConversation(conv.conversation_id, conv.selected_plan_id)}
-                          title="Click to resume this conversation"
-                        >
-                          <td className="td-topic">
-                            <div className="history-topic-main">
-                              <span className="history-row-icon">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                </svg>
-                              </span>
-                              <div className="history-topic-text-group">
-                                <span className="history-row-title">{conv.preview_title}</span>
+                  return (
+                    <div
+                      key={conv.conversation_id}
+                      className={`chatbot-history-card ${isActive ? 'active' : ''}`}
+                      onClick={() => onLoadConversation && onLoadConversation(conv.conversation_id, conv.selected_plan_id)}
+                      title="Click to resume conversation"
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <div className="chatbot-history-card-header">
+                        <div className="chatbot-history-card-icon">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                          </svg>
+                        </div>
+                        <span className="chatbot-history-card-title">
+                          {conv.preview_title || 'Policy Discussion'}
+                        </span>
+                        {isActive && (
+                          <span className="chatbot-history-status-badge">Active</span>
+                        )}
+                      </div>
 
-                                <div className="history-row-meta">
-                                  {isActive ? (
-                                    <span className="history-active-tag">● Active Session</span>
-                                  ) : (
-                                    <span className="history-time-tag">
-                                      {formatHistoryTime(conv.updated_at || conv.created_at)}
-                                    </span>
-                                  )}
-                                  <span className="history-msg-tag">
-                                    {conv.message_count} {conv.message_count === 1 ? 'turn' : 'turns'}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-
-                          <td className="td-plan">
-                            <span className={`plan-badge-pill ${badgeClass}`} title={conv.selected_plan_id}>
-                              {formatPlanLabel(conv.selected_plan_id)}
-                            </span>
-                          </td>
-
-                          <td className="td-action">
-                            {isActive ? (
-                              <span className="history-current-indicator">Open</span>
-                            ) : (
-                              <button
-                                type="button"
-                                className="history-open-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (onLoadConversation) {
-                                    onLoadConversation(conv.conversation_id, conv.selected_plan_id);
-                                  }
-                                }}
-                                title="Open past chat"
-                              >
-                                Resume →
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      <div className="chatbot-history-card-footer">
+                        <span className="chatbot-history-card-time">{timeStr}</span>
+                        {conv.selected_plan_id && (
+                          <span className="chatbot-history-plan-pill">
+                            {formatPlanLabel(conv.selected_plan_id)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

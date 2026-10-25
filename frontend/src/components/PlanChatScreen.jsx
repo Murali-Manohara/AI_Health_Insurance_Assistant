@@ -8,7 +8,11 @@ export function PlanChatScreen({
   authToken,
   onBackToPlans,
   onSwitchPlan,
-  onUnauthorized
+  onUnauthorized,
+  isActionsSidebarOpen: propIsActionsSidebarOpen,
+  onCloseActionsSidebar,
+  newChatTrigger,
+  onMessageCountChange
 }) {
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -16,11 +20,296 @@ export function PlanChatScreen({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [expandedSources, setExpandedSources] = useState({});
-  const [isActionsSidebarOpen, setIsActionsSidebarOpen] = useState(false);
+  const [localIsActionsSidebarOpen, setLocalIsActionsSidebarOpen] = useState(false);
+  const isActionsSidebarOpen = propIsActionsSidebarOpen !== undefined ? propIsActionsSidebarOpen : localIsActionsSidebarOpen;
   const [actionsSidebarTab, setActionsSidebarTab] = useState('history'); // Default to history tab
   const [historyRefreshTrigger, setHistoryRefreshTrigger] = useState(0);
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+  const recognitionRef = useRef(null);
+  const baseSpeechTextRef = useRef('');
+  const activeUtteranceRef = useRef(null);
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [feedback, setFeedback] = useState({});
+  const [copiedId, setCopiedId] = useState(null);
+  const [speakingId, setSpeakingId] = useState(null);
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editContent, setEditContent] = useState('');
+  const [isListening, setIsListening] = useState(false);
 
+  // Auto-resize textarea height as content grows vertically
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollH = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = `${Math.min(Math.max(scrollH, 24), 140)}px`;
+    }
+  }, [inputText]);
+
+  // Pre-load synthesis voices for English Text-to-Speech
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+    const loadVoices = () => {
+      const v = window.speechSynthesis.getVoices();
+      if (v && v.length) {
+        setAvailableVoices(v);
+      }
+    };
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }, []);
+
+  // Cleanup active audio/speech on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (_) {}
+        recognitionRef.current = null;
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  // Speech-to-Text: Click once to activate and listen, click again to stop
+  const handleToggleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Speech recognition is not supported in this browser. Please use Google Chrome, Microsoft Edge, or Safari.');
+      return;
+    }
+
+    // If currently listening, stop it cleanly
+    if (isListening) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          try {
+            recognitionRef.current.abort();
+          } catch (_) {}
+        }
+        recognitionRef.current = null;
+      }
+      setIsListening(false);
+      return;
+    }
+
+    // Cancel any active speaker TTS so microphone does not pick up synthesized audio
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingId(null);
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      recognition.maxAlternatives = 1;
+
+      // Remember existing text so speech appends smoothly
+      baseSpeechTextRef.current = inputText ? (inputText.endsWith(' ') ? inputText : inputText + ' ') : '';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const res = event.results[i];
+          if (res.isFinal) {
+            finalTranscript += res[0].transcript;
+          } else {
+            interimTranscript += res[0].transcript;
+          }
+        }
+        const sessionSpeech = finalTranscript || interimTranscript;
+        setInputText(baseSpeechTextRef.current + sessionSpeech);
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Speech recognition status/error:', event.error);
+        if (event.error === 'not-allowed') {
+          alert('Microphone access was denied. Please allow microphone permissions in your browser to use voice input.');
+        }
+        setIsListening(false);
+        recognitionRef.current = null;
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        recognitionRef.current = null;
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error('Failed to start speech recognition:', err);
+      setIsListening(false);
+      recognitionRef.current = null;
+    }
+  };
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!loading && inputText.trim()) {
+        if (isListening && recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch (_) {}
+          recognitionRef.current = null;
+          setIsListening(false);
+        }
+        handleSendMessage();
+      }
+    }
+  };
+
+  const handleCopy = (messageId, text) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedId(messageId);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
+  };
+
+  const handleToggleFeedback = (messageId, type) => {
+    setFeedback((prev) => ({
+      ...prev,
+      [messageId]: prev[messageId] === type ? null : type
+    }));
+  };
+
+  const handleStartEdit = (message) => {
+    setEditingMessageId(message.message_id);
+    setEditContent(message.content);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditContent('');
+  };
+
+  const handleSaveAndResend = () => {
+    if (!editContent.trim()) return;
+    const query = editContent.trim();
+    setEditingMessageId(null);
+    setEditContent('');
+    handleSendMessage(query);
+  };
+
+  const handleRegenerateResponse = (msgIndex) => {
+    for (let i = msgIndex - 1; i >= 0; i--) {
+      if (messages[i]?.role === 'user') {
+        handleSendMessage(messages[i].content);
+        break;
+      }
+    }
+  };
+
+  const handleToggleSpeech = (messageId, rawText) => {
+    if (!('speechSynthesis' in window)) {
+      alert('Text-to-speech is not supported in this browser. Please use Chrome, Edge, or Safari.');
+      return;
+    }
+
+    // If currently speaking this message, toggle off
+    if (speakingId === messageId) {
+      window.speechSynthesis.cancel();
+      activeUtteranceRef.current = null;
+      setSpeakingId(null);
+      return;
+    }
+
+    // Stop microphone if currently listening
+    if (isListening && recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (_) {}
+      recognitionRef.current = null;
+      setIsListening(false);
+    }
+
+    // Cancel any previous speech
+    window.speechSynthesis.cancel();
+    activeUtteranceRef.current = null;
+    setSpeakingId(null);
+
+    // Clean markdown, evidence codes, and tables so it reads natural English sentences
+    const cleanEnglishText = (rawText || '')
+      .replace(/```[\s\S]*?```/g, '') // remove code blocks
+      .replace(/\[HS-[A-Z0-9_\-]+(\s+p\.\d+)?\]/gi, '') // remove citation codes like [HS-BASIC-001]
+      .replace(/\[Evidence[^\]]*\]/gi, '')
+      .replace(/\[Claim[^\]]*\]/gi, '')
+      .replace(/\[http[^\]]*\]/gi, '')
+      .replace(/\(([A-Z0-9_\-\.]+)\)/g, '')
+      .replace(/[*#_~`>]/g, ' ')
+      .replace(/[-•]\s+/g, '. ')
+      .replace(/\|/g, ', ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!cleanEnglishText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanEnglishText);
+    activeUtteranceRef.current = utterance; // Prevent Chromium garbage collection bug mid-speech
+
+    // Select the best available English voice
+    const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
+    const englishVoice =
+      voices.find(v => (v.lang === 'en-US' || v.lang === 'en_US') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('David') || v.name.includes('Guy') || v.name.includes('Aria') || v.name.includes('Jenny') || v.name.includes('Zira'))) ||
+      voices.find(v => v.lang.startsWith('en-US') || v.lang.startsWith('en_US')) ||
+      voices.find(v => v.lang.startsWith('en-GB') || v.lang.startsWith('en_GB')) ||
+      voices.find(v => v.lang.toLowerCase().startsWith('en')) ||
+      null;
+
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+      utterance.lang = englishVoice.lang;
+    } else {
+      utterance.lang = 'en-US';
+    }
+
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    utterance.onstart = () => {
+      setSpeakingId(messageId);
+    };
+
+    utterance.onend = () => {
+      setSpeakingId(null);
+      activeUtteranceRef.current = null;
+    };
+
+    utterance.onerror = (e) => {
+      console.warn('SpeechSynthesis error:', e);
+      setSpeakingId(null);
+      activeUtteranceRef.current = null;
+    };
+
+    // Small timeout ensures cancel() completes cleanly before speak() in Chromium
+    setTimeout(() => {
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+        window.speechSynthesis.speak(utterance);
+        setSpeakingId(messageId);
+      } catch (err) {
+        console.error('Failed to speak text:', err);
+        setSpeakingId(null);
+        activeUtteranceRef.current = null;
+      }
+    }, 50);
+  };
 
   useEffect(() => {
     // Session preservation across page refresh:
@@ -34,6 +323,16 @@ export function PlanChatScreen({
     }
   }, [selectedPlan?.plan_id, userRole, authToken]);
 
+  useEffect(() => {
+    if (newChatTrigger && newChatTrigger > 0) {
+      startNewConversation();
+    }
+  }, [newChatTrigger]);
+
+  useEffect(() => {
+    const userCount = messages.filter((m) => m.role === 'user').length;
+    onMessageCountChange?.(userCount);
+  }, [messages, onMessageCountChange]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -45,7 +344,8 @@ export function PlanChatScreen({
     setError(null);
     setMessages([]);
     setExpandedSources({});
-    setIsActionsSidebarOpen(false);
+    if (onCloseActionsSidebar) onCloseActionsSidebar();
+    setLocalIsActionsSidebarOpen(false);
 
     try {
       const headers = {
@@ -361,79 +661,10 @@ export function PlanChatScreen({
   ];
 
 
-  const userMessages = messages.filter((m) => m.role === 'user');
-
-  const handleToggleMenu = () => {
-    setIsActionsSidebarOpen((prev) => !prev);
-  };
-
   return (
     <div className={`chat-workspace-shell ${isActionsSidebarOpen ? 'actions-open' : ''}`}>
       {/* Primary Chat Column */}
       <div className="chat-main-column">
-        {/* Top Header / Action Bar */}
-        <div className="chat-workspace-header">
-          <div className="chat-header-left">
-            <div className="chat-header-info">
-              <div className="chat-header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <h3 className="chat-header-title" style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>
-                  {selectedPlan.plan_name}
-                </h3>
-                <span
-                  className="plan-code-badge"
-                  style={{
-                    background: '#f1f5f9',
-                    color: '#334155',
-                    padding: '2px 7px',
-                    borderRadius: '4px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    fontFamily: 'monospace'
-                  }}
-                >
-                  {selectedPlan.plan_id}
-                </span>
-                <span className="pipeline-chip" style={{ fontSize: '11px', padding: '2px 8px' }}>
-                  <span className="chip-dot emerald"></span> Plan-Scoped Grounding
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Header Controls: Styled "New Chat" & adjacent "Menu" button to toggle the right-side chat panel */}
-          <div className="chat-header-right">
-            <button
-              type="button"
-              className="chat-hdr-btn chat-new-chat-btn"
-              onClick={startNewConversation}
-              title="Start a fresh conversation session"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span>New Chat</span>
-            </button>
-
-            <button
-              type="button"
-              className={`chat-hdr-btn chat-menu-toggle-btn ${isActionsSidebarOpen ? 'active' : ''}`}
-              onClick={handleToggleMenu}
-              title={isActionsSidebarOpen ? "Close side menu" : "Open side menu (History & Quick Actions)"}
-              aria-label="Toggle chat side menu"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-              <span>Menu</span>
-              {userMessages.length > 0 && (
-                <span className="chat-menu-badge">{userMessages.length}</span>
-              )}
-            </button>
-          </div>
-        </div>
 
         {error && (
           <div className="chat-error-banner" role="alert">
@@ -457,7 +688,7 @@ export function PlanChatScreen({
         {/* Scrollable Messages Container */}
         <div className="chat-messages-scroll-area">
           <div className="chat-messages-container">
-            {messages.map((m) => {
+            {messages.map((m, index) => {
               const isUser = m.role === 'user';
               const hasCitations = m.citations && m.citations.length > 0;
               const isSourcesOpen = !!expandedSources[m.message_id];
@@ -474,22 +705,88 @@ export function PlanChatScreen({
                   {/* Message Bubble Card */}
                   <div className={`chat-message-bubble ${isUser ? 'user' : 'assistant'}`}>
                     {isUser ? (
-                      <div className="chat-user-text">{m.content}</div>
+                      editingMessageId === m.message_id ? (
+                        <div className="chat-user-edit-container">
+                          <textarea
+                            className="chat-user-edit-textarea"
+                            value={editContent}
+                            onChange={(e) => setEditContent(e.target.value)}
+                            rows={3}
+                            autoFocus
+                          />
+                          <div className="chat-user-edit-actions">
+                            <button
+                              type="button"
+                              className="chat-edit-cancel-btn"
+                              onClick={handleCancelEdit}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              className="chat-edit-submit-btn"
+                              onClick={handleSaveAndResend}
+                              disabled={!editContent.trim()}
+                            >
+                              Save & Submit
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="chat-user-bubble-inner">
+                          <div className="chat-user-text">{m.content}</div>
+                          <div className="chat-msg-actions-row user-actions">
+                            <button
+                              type="button"
+                              className="chat-action-btn user-btn"
+                              onClick={() => handleStartEdit(m)}
+                              title="Edit query"
+                              aria-label="Edit query"
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                              </svg>
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              className={`chat-action-btn user-btn ${copiedId === m.message_id ? 'copied' : ''}`}
+                              onClick={() => handleCopy(m.message_id, m.content)}
+                              title={copiedId === m.message_id ? "Copied!" : "Copy query"}
+                              aria-label="Copy query"
+                            >
+                              {copiedId === m.message_id ? (
+                                <>
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                  </svg>
+                                  <span>Copied</span>
+                                </>
+                              ) : (
+                                <>
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                  </svg>
+                                  <span>Copy</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )
                     ) : (
                       <div className="chat-assistant-body">
-                        <MarkdownContent content={m.content} />
-
-                        {/* Unverified employee disclaimer banner if applicable */}
-                        {m.contains_unverified_notice && (
-                          <div className="unverified-banner">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
-                              <line x1="12" y1="9" x2="12" y2="13"></line>
-                              <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                            <span>Contains illustrative demonstration data.</span>
-                          </div>
-                        )}
+                        <MarkdownContent
+                          content={
+                            (m.content || '')
+                              .replace(/>\s*\*\*Notice:\*\*.*?illustrative demonstration data[^\n]*\n?/gi, '')
+                              .replace(/Contains illustrative demonstration data\.?\n?/gi, '')
+                              .replace(/The.*?cited above is illustrative demonstration data and does not constitute an official insurance policy contract\.?\n?/gi, '')
+                              .trim()
+                          }
+                        />
 
                         {/* Expandable Citations Drawer */}
                         {hasCitations && (
@@ -503,7 +800,6 @@ export function PlanChatScreen({
                                 </svg>
                               </span>
                             </div>
-
 
                             {isSourcesOpen && (
                               <div style={{ marginTop: '6px' }}>
@@ -522,6 +818,84 @@ export function PlanChatScreen({
                             )}
                           </div>
                         )}
+
+                        {/* Assistant Response Actions Toolbar */}
+                        <div className="chat-msg-actions-row assistant-actions">
+                          <button
+                            type="button"
+                            className={`chat-action-btn ${feedback[m.message_id] === 'up' ? 'active-up' : ''}`}
+                            onClick={() => handleToggleFeedback(m.message_id, 'up')}
+                            title="Helpful response"
+                            aria-label="Good response"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[m.message_id] === 'up' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                            </svg>
+                          </button>
+
+                          <button
+                            type="button"
+                            className={`chat-action-btn ${feedback[m.message_id] === 'down' ? 'active-down' : ''}`}
+                            onClick={() => handleToggleFeedback(m.message_id, 'down')}
+                            title="Unhelpful response"
+                            aria-label="Bad response"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[m.message_id] === 'down' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+                            </svg>
+                          </button>
+
+                          <button
+                            type="button"
+                            className={`chat-action-btn ${copiedId === m.message_id ? 'copied' : ''}`}
+                            onClick={() => handleCopy(m.message_id, m.content)}
+                            title={copiedId === m.message_id ? "Copied to clipboard" : "Copy response"}
+                            aria-label="Copy response"
+                          >
+                            {copiedId === m.message_id ? (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            ) : (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                              </svg>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            className="chat-action-btn"
+                            onClick={() => handleRegenerateResponse(index)}
+                            title="Regenerate response"
+                            aria-label="Regenerate response"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="23 4 23 10 17 10"></polyline>
+                              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                          </button>
+
+                          <button
+                            type="button"
+                            className={`chat-action-btn ${speakingId === m.message_id ? 'speaking' : ''}`}
+                            onClick={() => handleToggleSpeech(m.message_id, m.content)}
+                            title={speakingId === m.message_id ? "Stop English speech" : "Read response aloud in English"}
+                            aria-label={speakingId === m.message_id ? "Stop English speech" : "Read response aloud in English"}
+                          >
+                            {speakingId === m.message_id ? (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                              </svg>
+                            ) : (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                              </svg>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -566,40 +940,68 @@ export function PlanChatScreen({
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
               </span>
-              <input
-                type="text"
+              <textarea
+                ref={textareaRef}
                 className="chat-input-field"
                 placeholder={`Ask about ${selectedPlan.display_title || 'policy'} terms, waiting periods, or limits...`}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !loading && handleSendMessage()}
+                onKeyDown={handleInputKeyDown}
+                rows={1}
                 disabled={loading}
               />
-              <button
-                type="button"
-                className={`chat-submit-circle-btn ${inputText.trim() ? 'has-content' : ''}`}
-                onClick={() => handleSendMessage()}
-                disabled={loading || !inputText.trim()}
-                title={inputText.trim() ? "Send query" : "Enter a question about this policy"}
-              >
-                {loading ? (
-                  <div className="chat-submit-spinner" />
-                ) : (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                )}
-              </button>
-            </div>
-            <div className="chat-input-footer-hint">
-              <span className="hint-pill">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                Strictly Grounded: <strong>{selectedPlan.plan_id}</strong>
-              </span>
-              <span className="hint-text">Press <strong>Enter ↵</strong> to send query</span>
+              <div className="chat-input-actions-group">
+                {/* Speech to text mic button: click once to listen, click again to stop */}
+                <button
+                  type="button"
+                  className={`chat-mic-btn ${isListening ? 'listening' : ''}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleToggleVoiceInput();
+                  }}
+                  disabled={loading}
+                  title={isListening ? "Listening... Click to stop" : "Click to speak your input (Speech to Text)"}
+                  aria-label={isListening ? "Stop listening" : "Start speaking"}
+                >
+                  {isListening ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                  ) : (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                      <line x1="12" y1="19" x2="12" y2="23"></line>
+                      <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                  )}
+                </button>
+
+                {/* Send Button */}
+                <button
+                  type="button"
+                  className={`chat-submit-circle-btn ${inputText.trim() ? 'has-content' : ''}`}
+                  onClick={() => {
+                    if (isListening && recognitionRef.current) {
+                      recognitionRef.current.stop();
+                      setIsListening(false);
+                    }
+                    handleSendMessage();
+                  }}
+                  disabled={loading || !inputText.trim()}
+                  title={inputText.trim() ? "Send query (Enter)" : "Enter a question about this policy"}
+                >
+                  {loading ? (
+                    <div className="chat-submit-spinner" />
+                  ) : (
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -610,7 +1012,10 @@ export function PlanChatScreen({
         isOpen={isActionsSidebarOpen}
         activeTab={actionsSidebarTab}
         onSelectTab={(tab) => setActionsSidebarTab(tab)}
-        onClose={() => setIsActionsSidebarOpen(false)}
+        onClose={() => {
+          if (onCloseActionsSidebar) onCloseActionsSidebar();
+          setLocalIsActionsSidebarOpen(false);
+        }}
         messages={messages}
         quickActions={quickActionsList}
         currentConversationId={conversationId}

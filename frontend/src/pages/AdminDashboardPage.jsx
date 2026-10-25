@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { adminApi } from '../services/adminApi';
 
 // Professional SVG Vector Icons for Tabs and Section Accents
@@ -115,7 +115,8 @@ export function AdminDashboardPage() {
         const data = await adminApi.fetchUsers(25, userPage * 25, userSearch, userRoleFilter);
         setUsersData(data);
       } else if (activeTab === 'documents') {
-        const data = await adminApi.fetchDocuments(30, 0, docPlanFilter, '', dateRange, start, end);
+        // Document inventory loads complete knowledge base assets from SQLite
+        const data = await adminApi.fetchDocuments(50, 0, docPlanFilter, '', '', null, null);
         setDocsData(data);
       } else if (activeTab === 'conversations') {
         const data = await adminApi.fetchConversations(dateRange, start, end);
@@ -173,11 +174,7 @@ export function AdminDashboardPage() {
       {/* 1. Global Controls Header */}
       <header className="admin-dash-header">
         <div className="admin-dash-title-group">
-          <div className="admin-badge-tag">ADMINISTRATOR GOVERNANCE WORKSPACE</div>
           <h1 className="admin-dash-heading">Executive Analytics & System Intelligence</h1>
-          <p className="admin-dash-subheading">
-            Live operational telemetry across user accounts, knowledge base ingestion, and multi-turn conversations.
-          </p>
         </div>
 
         <div className="admin-dash-controls">
@@ -195,7 +192,7 @@ export function AdminDashboardPage() {
             ))}
           </div>
 
-          {/* Refresh Button */}
+          {/* Refresh Button in same row */}
           <button
             type="button"
             className="admin-refresh-btn"
@@ -206,12 +203,6 @@ export function AdminDashboardPage() {
             {TabIcons.refresh}
             <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
           </button>
-
-          {lastUpdated && (
-            <span className="admin-last-updated-text">
-              {TabIcons.clock} Updated {lastUpdated}
-            </span>
-          )}
         </div>
       </header>
 
@@ -246,13 +237,6 @@ export function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Global Timeline Status Indicator */}
-      <div className="admin-timeline-banner">
-        <span className="admin-timeline-indicator">
-          {TabIcons.filter} Active Timeline Filter: <strong>{formatRangeLabel(dateRange)}</strong>
-        </span>
-        <span className="admin-timeline-note">Timeline applies across Executive Overview, Knowledge Base, and Conversations</span>
-      </div>
 
       {/* Notice Banner */}
       {docActionNotice && (
@@ -348,19 +332,89 @@ export function AdminDashboardPage() {
 function OverviewSection({ data, rangeLabel, onRefresh }) {
   const { kpis, time_series, recent_activity, total_activity } = data;
 
-  // Exactly 5 KPI Cards in a single row (removed Latency, Successful Chat Requests, and Backend Error Rate)
+  // 5 Most Important Executive KPI Cards in Single Row
   const kpiCards = [
-    { label: 'Total Registered Users', value: kpis.total_registered_users, sub: `${kpis.total_customers} Customers`, color: '#2563eb' },
-    { label: 'Active Users (Period)', value: kpis.active_users, sub: `${kpis.new_user_registrations} In ${rangeLabel}`, color: '#059669' },
-    { label: 'Indexed Documents', value: kpis.indexed_documents, sub: `${kpis.total_chunks_indexed} Total Chunks`, color: '#7c3aed' },
-    { label: 'Ingestion Jobs', value: kpis.indexed_documents + kpis.failed_ingestion_jobs, sub: `${kpis.failed_ingestion_jobs} Failures`, color: '#d97706' },
-    { label: 'Total Conversations', value: kpis.total_conversations, sub: `${kpis.total_messages} Messages Stored`, color: '#0284c7' }
+    {
+      label: 'Registered Users',
+      value: kpis.total_registered_users ?? 0,
+      sub: `${kpis.total_customers || 0} Customers · ${kpis.total_employees || 0} Staff`,
+      color: '#007aff',
+      iconBg: 'rgba(0, 122, 255, 0.1)',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      )
+    },
+    {
+      label: 'Assessed for Eligibility',
+      value: kpis.total_assessed_users ?? 0,
+      sub: `${kpis.underwriting_eligibility_rate_pct ?? kpis.funnel_rates?.eligibility_rate_pct ?? 0}% Pass Rate`,
+      color: '#0284c7',
+      iconBg: 'rgba(2, 132, 199, 0.1)',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+          <path d="m9 14 2 2 4-4" />
+        </svg>
+      )
+    },
+    {
+      label: 'Eligible Users',
+      value: kpis.eligible_users ?? 0,
+      sub: 'Qualified for Policy Coverage',
+      color: '#059669',
+      iconBg: 'rgba(16, 185, 129, 0.1)',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+      )
+    },
+    {
+      label: 'Plan Selected',
+      value: kpis.users_selected_plan ?? kpis.plan_selected_users ?? 0,
+      sub: `${kpis.plan_selection_conversion_rate_pct ?? kpis.funnel_rates?.plan_selection_rate_pct ?? 0}% of Eligible`,
+      color: '#d97706',
+      iconBg: 'rgba(245, 158, 11, 0.12)',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+      )
+    },
+    {
+      label: 'Policy Chat Active',
+      value: kpis.users_proceeded_to_chat ?? kpis.policy_chat_active_users ?? 0,
+      sub: `${kpis.chat_engagement_conversion_rate_pct ?? kpis.funnel_rates?.chat_engagement_rate_pct ?? 0}% Engaged`,
+      color: '#7c3aed',
+      iconBg: 'rgba(124, 58, 237, 0.1)',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      )
+    }
   ];
 
   // Dynamic filter state for logs stream
   const [logSearch, setLogSearch] = useState('');
   const [logOutcome, setLogOutcome] = useState('ALL');
   const [expandedLogId, setExpandedLogId] = useState(null);
+
+  // Format raw snake_case actions into clean Title Case
+  const formatActionLabel = (action = '') => {
+    if (!action) return 'Action';
+    return action
+      .split('_')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+  };
 
   // Semantic category matching helper
   const matchesOutcome = useCallback((outcomeRaw, category) => {
@@ -409,13 +463,22 @@ function OverviewSection({ data, rangeLabel, onRefresh }) {
 
   return (
     <div className="admin-overview-grid">
-      {/* Exactly 5 KPI Cards Row (Single Row Layout) */}
+      {/* 5 Core Executive KPI Cards in a Single Row */}
       <div className="admin-kpi-grid five-cards-row">
         {kpiCards.map((kpi, idx) => (
-          <div key={idx} className="admin-kpi-card" style={{ borderTop: `3px solid ${kpi.color}` }}>
-            <span className="admin-kpi-label">{kpi.label}</span>
-            <span className="admin-kpi-value">{kpi.value}</span>
-            <span className="admin-kpi-sub">{kpi.sub}</span>
+          <div key={idx} className="admin-kpi-card">
+            <div className="admin-kpi-top-row">
+              <span className="admin-kpi-label">{kpi.label}</span>
+              <div className="admin-kpi-icon-pill" style={{ background: kpi.iconBg, color: kpi.color }}>
+                {kpi.icon}
+              </div>
+            </div>
+            <div className="admin-kpi-value">{kpi.value}</div>
+            <div className="admin-kpi-sub">
+              <span className="admin-kpi-sub-badge" style={{ background: kpi.iconBg, color: kpi.color }}>
+                {kpi.sub}
+              </span>
+            </div>
           </div>
         ))}
       </div>
@@ -437,16 +500,16 @@ function OverviewSection({ data, rangeLabel, onRefresh }) {
       </div>
 
       {/* Dynamic System Activity & Governance Stream (Shows all logs dynamically with filters) */}
-      <div className="admin-card">
+      <div className="admin-card admin-log-stream-card">
         <div className="admin-card-header">
           <div>
             <h3 className="admin-card-title">Recent System Activity & Governance Stream</h3>
-            <p className="admin-card-subtitle">
-              Verified operational events recorded during the current execution window ({total_activity || recent_activity.length} total events)
-            </p>
           </div>
           <div className="admin-log-controls">
-            <span className="admin-pill-tag">Live Activity</span>
+            <span className="admin-live-stream-badge">
+              <span className="admin-live-dot"></span>
+              Live Activity
+            </span>
             <button
               type="button"
               className="admin-mini-refresh-btn"
@@ -513,20 +576,35 @@ function OverviewSection({ data, rangeLabel, onRefresh }) {
               <tbody>
                 {filteredLogs.map((ev) => {
                   const isExpanded = expandedLogId === ev.event_id;
+                  const outcomeKey = (ev.outcome || '').toLowerCase().replace(/\s+/g, '_');
                   return (
                     <React.Fragment key={ev.event_id}>
                       <tr className={isExpanded ? 'expanded-row' : ''}>
-                        <td className="admin-log-time">{new Date(ev.timestamp).toLocaleString()}</td>
-                        <td><code>{ev.action}</code></td>
+                        <td className="admin-log-time">
+                          {new Date(ev.timestamp).toLocaleString()}
+                        </td>
+                        <td>
+                          <span className="admin-action-pill">
+                            {formatActionLabel(ev.action)}
+                          </span>
+                        </td>
                         <td>
                           <div className="admin-actor-cell">
-                            <span>{ev.actor_email || ev.actor_id || 'system'}</span>
-                            <span className={`admin-role-badge ${ev.actor_role}`}>{ev.actor_role || 'system'}</span>
+                            <span className="admin-actor-email">
+                              {ev.actor_email || ev.actor_id || 'system'}
+                            </span>
+                            <span className={`admin-role-badge ${(ev.actor_role || 'system').toLowerCase()}`}>
+                              {ev.actor_role || 'system'}
+                            </span>
                           </div>
                         </td>
-                        <td>{ev.target_resource || '—'}</td>
                         <td>
-                          <span className={`admin-status-badge ${ev.outcome.toLowerCase()}`}>
+                          <span className="admin-log-resource">
+                            {ev.target_resource || '—'}
+                          </span>
+                        </td>
+                        <td>
+                          <span className={`admin-status-badge ${outcomeKey}`}>
                             {ev.outcome}
                           </span>
                         </td>
@@ -566,7 +644,92 @@ function OverviewSection({ data, rangeLabel, onRefresh }) {
   );
 }
 
-// --- 2. Users & Customers Section (Strictly Real Database Accounts) ---
+// --- Custom Liquid Glass Dropdown Component ---
+function LiquidGlassSelect({ value, onChange, options = [], placeholder = 'Select...' }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const selectedOption = options.find((o) => o.value === value) || options[0];
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="admin-liquid-dropdown-wrapper" ref={dropdownRef}>
+      <button
+        type="button"
+        className={`admin-liquid-dropdown-btn ${isOpen ? 'active' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+      >
+        <span className="admin-liquid-dropdown-val">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <svg
+          className={`admin-dropdown-chevron ${isOpen ? 'rotate' : ''}`}
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="admin-liquid-dropdown-menu" role="listbox">
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                className={`admin-liquid-dropdown-item ${isSelected ? 'selected' : ''}`}
+                onClick={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                }}
+                role="option"
+                aria-selected={isSelected}
+              >
+                <span>{opt.label}</span>
+                {isSelected && (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#007aff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- 2. Users & Customers Section (Clean 7-Column Layout with Liquid Glass Audit Modal) ---
 function UsersSection({
   users,
   total,
@@ -578,14 +741,20 @@ function UsersSection({
   onPageChange,
   onToggleStatus
 }) {
+  const [modalUser, setModalUser] = useState(null);
+
+  const roleOptions = [
+    { value: '', label: 'All Roles' },
+    { value: 'customer', label: 'Customer' },
+    { value: 'employee', label: 'Corporate Employee' },
+    { value: 'admin', label: 'Administrator' }
+  ];
+
   return (
-    <div className="admin-card">
+    <div className="admin-card admin-log-stream-card">
       <div className="admin-card-header">
         <div>
           <h2 className="admin-card-title">User & Account Administration</h2>
-          <p className="admin-card-subtitle">
-            Real registered accounts from SQLite database ({total} total registered accounts)
-          </p>
         </div>
 
         <div className="admin-table-filters">
@@ -602,82 +771,105 @@ function UsersSection({
             />
           </div>
 
-          <select
+          <LiquidGlassSelect
             value={roleFilter}
-            onChange={(e) => {
-              onRoleFilterChange(e.target.value);
+            onChange={(val) => {
+              onRoleFilterChange(val);
               onPageChange(0);
             }}
-            className="admin-select"
-          >
-            <option value="">All Roles</option>
-            <option value="customer">Customer</option>
-            <option value="employee">Corporate Employee</option>
-            <option value="admin">Administrator</option>
-          </select>
+            options={roleOptions}
+            placeholder="Filter by Role"
+          />
         </div>
       </div>
 
-      <div className="admin-table-wrapper">
-        <table className="admin-data-table">
+      <div className="admin-table-wrapper admin-log-scroll-wrapper">
+        <table className="admin-data-table admin-log-table">
           <thead>
             <tr>
-              <th>User ID</th>
-              <th>Display Name</th>
-              <th>Email Address</th>
+              <th>User</th>
               <th>Role</th>
               <th>Status</th>
-              <th>Created At</th>
-              <th>Authorized Policy Scopes</th>
-              <th>Access Governance</th>
+              <th>Eligibility</th>
+              <th>Selected Plan</th>
+              <th>Joined</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="8" style={{ textAlign: 'center', padding: '36px', color: '#64748b' }}>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '36px', color: '#64748b' }}>
                   No user accounts found matching the search criteria.
                 </td>
               </tr>
             ) : (
-              users.map((u) => (
-                <tr key={u.user_id}>
-                  <td><code>{u.user_id}</code></td>
-                  <td><strong>{u.full_name || u.email.split('@')[0]}</strong></td>
-                  <td>{u.email}</td>
-                  <td>
-                    <span className={`admin-role-badge ${u.role}`}>
-                      {u.role.toUpperCase()}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`admin-status-badge ${u.is_approved ? 'success' : 'warning'}`}>
-                      {u.is_approved ? 'Active' : 'Pending'}
-                    </span>
-                  </td>
-                  <td>{new Date(u.created_at).toLocaleDateString()}</td>
-                  <td>
-                    <span className="admin-plan-pills-list">
-                      {(u.authorized_plans || []).map((p) => (
-                        <span key={p} className="admin-mini-plan-tag">{p}</span>
-                      ))}
-                    </span>
-                  </td>
-                  <td>
-                    {u.role !== 'admin' ? (
-                      <button
-                        type="button"
-                        className="admin-action-btn"
-                        onClick={() => onToggleStatus(u.user_id, u.is_approved)}
-                      >
-                        {u.is_approved ? 'Suspend' : 'Approve'}
-                      </button>
-                    ) : (
-                      <span className="admin-immutable-tag">Immutable Admin</span>
-                    )}
-                  </td>
-                </tr>
-              ))
+              users.map((u) => {
+                const eligOutcome = u.latest_eligibility_outcome;
+                return (
+                  <tr key={u.user_id}>
+                    <td>
+                      <strong className="admin-actor-email">{u.full_name || u.email.split('@')[0]}</strong>
+                      <div className="admin-subtext">{u.email}</div>
+                    </td>
+                    <td>
+                      <span className={`admin-role-badge ${u.role}`}>
+                        {u.role.toUpperCase()}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`admin-status-badge ${u.is_approved ? 'approved' : 'pending'}`}>
+                        {u.is_approved ? 'Active' : 'Pending'}
+                      </span>
+                    </td>
+                    <td>
+                      {eligOutcome ? (
+                        <span className={`admin-elig-badge ${eligOutcome.toLowerCase()}`}>
+                          {eligOutcome.replace('_', ' ')}
+                          {u.latest_risk_score !== null && u.latest_risk_score !== undefined && (
+                            <span style={{ opacity: 0.85, fontSize: '10.5px' }}> ({u.latest_risk_score}/100)</span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="admin-elig-badge not_assessed">Not Assessed</span>
+                      )}
+                    </td>
+                    <td>
+                      {u.selected_plan_id ? (
+                        <span className="admin-mini-plan-tag">{u.selected_plan_id}</span>
+                      ) : (
+                        <span style={{ color: '#94a3b8', fontSize: '12px' }}>None</span>
+                      )}
+                    </td>
+                    <td>
+                      <span className="admin-log-time">{new Date(u.created_at).toLocaleDateString()}</span>
+                    </td>
+                    <td>
+                      <div className="admin-btn-group">
+                        <button
+                          type="button"
+                          className="admin-action-btn"
+                          onClick={() => setModalUser(u)}
+                          title="View complete user profile, UUID, underwriting audit and policy scopes"
+                        >
+                          Details
+                        </button>
+                        {u.role !== 'admin' ? (
+                          <button
+                            type="button"
+                            className={`admin-action-btn ${u.is_approved ? 'danger' : ''}`}
+                            onClick={() => onToggleStatus(u.user_id, u.is_approved)}
+                          >
+                            {u.is_approved ? 'Suspend' : 'Approve'}
+                          </button>
+                        ) : (
+                          <span className="admin-immutable-tag">Admin</span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -705,6 +897,150 @@ function UsersSection({
           </button>
         </div>
       </div>
+
+      {/* User Detail Liquid Glass Modal */}
+      {modalUser && (
+        <UserDetailModal
+          user={modalUser}
+          onClose={() => setModalUser(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+// User Detail Modal: View full UUID, complete underwriting assessment record, and authorized policy scopes
+function UserDetailModal({ user, onClose }) {
+  if (!user) return null;
+  return (
+    <div className="admin-modal-backdrop" onClick={onClose}>
+      <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="admin-modal-header">
+          <div>
+            <h3 className="admin-modal-title">User Account & Underwriting Audit</h3>
+            <p className="admin-modal-subtitle">Full database record, persistent policy scopes, and underwriting history</p>
+          </div>
+          <button type="button" className="admin-modal-close-btn" onClick={onClose} aria-label="Close">
+            ✕
+          </button>
+        </div>
+
+        <div className="admin-modal-grid">
+          <div className="admin-modal-field full-width">
+            <div className="admin-modal-field-label">User ID (Database UUID)</div>
+            <div className="admin-modal-field-value"><code>{user.user_id}</code></div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Display Name</div>
+            <div className="admin-modal-field-value">{user.full_name || 'N/A'}</div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Email Address</div>
+            <div className="admin-modal-field-value">{user.email}</div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Account Role</div>
+            <div className="admin-modal-field-value">
+              <span className={`admin-role-badge ${user.role}`}>{user.role?.toUpperCase()}</span>
+            </div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Account Status</div>
+            <div className="admin-modal-field-value">
+              <span className={`admin-status-badge ${user.is_approved ? 'success' : 'warning'}`}>
+                {user.is_approved ? 'Active & Approved' : 'Suspended / Pending'}
+              </span>
+            </div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Eligibility Outcome</div>
+            <div className="admin-modal-field-value">
+              {user.eligibility_outcome || user.latest_eligibility_outcome ? (
+                <span className={`admin-elig-badge ${(user.eligibility_outcome || user.latest_eligibility_outcome).toLowerCase()}`}>
+                  {(user.eligibility_outcome || user.latest_eligibility_outcome).replace('_', ' ')}
+                  {(user.eligibility_score !== null && user.eligibility_score !== undefined) ? (
+                    <span> (Confidence: {Math.round(user.eligibility_score * 100)}%)</span>
+                  ) : null}
+                </span>
+              ) : (
+                <span className="admin-elig-badge not_assessed">Not Assessed</span>
+              )}
+            </div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Assessed At</div>
+            <div className="admin-modal-field-value">
+              {(user.eligibility_date || user.latest_assessed_at) ? new Date(user.eligibility_date || user.latest_assessed_at).toLocaleString() : 'N/A'}
+            </div>
+          </div>
+
+          {user.eligibility_input && Object.keys(user.eligibility_input).length > 0 && (
+            <div className="admin-modal-field full-width" style={{ background: 'rgba(241, 245, 249, 0.9)' }}>
+              <div className="admin-modal-field-label">Underwriting Features Evaluated</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginTop: '6px', fontSize: '12px' }}>
+                <div><strong>Age:</strong> {user.eligibility_input.age} yrs</div>
+                <div><strong>Height:</strong> {user.eligibility_input.height_cm} cm</div>
+                <div><strong>Weight:</strong> {user.eligibility_input.weight_kg} kg</div>
+                <div><strong>BMI:</strong> {user.eligibility_input.bmi}</div>
+                <div><strong>Smoker:</strong> {user.eligibility_input.smoker}</div>
+                <div><strong>Alcohol:</strong> {user.eligibility_input.alcoholic}</div>
+                <div style={{ gridColumn: 'span 2' }}>
+                  <strong>Condition:</strong> {user.eligibility_input.pre_existing_condition}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Selected Plan</div>
+            <div className="admin-modal-field-value">
+              {(user.active_plan_id || user.selected_plan_id) ? (
+                <span className="admin-mini-plan-tag">{user.active_plan_id || user.selected_plan_id}</span>
+              ) : (
+                <span style={{ color: '#94a3b8' }}>None Selected</span>
+              )}
+            </div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Plan Selected At</div>
+            <div className="admin-modal-field-value">
+              {(user.plan_selected_date || user.plan_selected_at) ? new Date(user.plan_selected_date || user.plan_selected_at).toLocaleString() : 'N/A'}
+            </div>
+          </div>
+
+          <div className="admin-modal-field full-width">
+            <div className="admin-modal-field-label">Authorized Policy Scopes</div>
+            <div className="admin-modal-field-value" style={{ marginTop: '6px' }}>
+              <div className="admin-plan-pills-list">
+                {(user.authorized_plans || []).length > 0 ? (
+                  user.authorized_plans.map((p) => (
+                    <span key={p} className="admin-mini-plan-tag">{p}</span>
+                  ))
+                ) : (
+                  <span style={{ color: '#94a3b8' }}>No explicit policy restrictions assigned</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">AI Consultations / Chats</div>
+            <div className="admin-modal-field-value">{user.total_conversations ?? 0} Sessions</div>
+          </div>
+
+          <div className="admin-modal-field">
+            <div className="admin-modal-field-label">Total Messages Stored</div>
+            <div className="admin-modal-field-value">{user.total_messages ?? 0} Messages</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -723,32 +1059,30 @@ function DocumentsSection({
   return (
     <div className="admin-documents-stack">
       {/* Document Inventory Table */}
-      <div className="admin-card">
+      <div className="admin-card admin-log-stream-card">
         <div className="admin-card-header">
           <div>
             <h2 className="admin-card-title">Document Inventory & Vector Knowledge Store</h2>
-            <p className="admin-card-subtitle">
-              Source documents updated or ingested during <strong>{rangeLabel}</strong> ({total} total in scope)
-            </p>
           </div>
 
           <div className="admin-table-filters">
-            <select
+            <LiquidGlassSelect
               value={planFilter}
-              onChange={(e) => onPlanFilterChange(e.target.value)}
-              className="admin-select"
-            >
-              <option value="">All Insurance Plans</option>
-              <option value="HS-BASIC-001">Health Shield – Basic (HS-BASIC-001)</option>
-              <option value="HS-GOLD-001">Health Shield – Gold (HS-GOLD-001)</option>
-              <option value="HS-PREMIUM-001">Health Shield – Premium (HS-PREMIUM-001)</option>
-              <option value="EMP-INS-001">Executive Employee Plan (EMP-INS-001)</option>
-            </select>
+              onChange={(val) => onPlanFilterChange(val)}
+              options={[
+                { value: '', label: 'All Insurance Plans' },
+                { value: 'HS-BASIC-001', label: 'Health Shield – Basic (HS-BASIC-001)' },
+                { value: 'HS-GOLD-001', label: 'Health Shield – Gold (HS-GOLD-001)' },
+                { value: 'HS-PREMIUM-001', label: 'Health Shield – Premium (HS-PREMIUM-001)' },
+                { value: 'EMP-INS-001', label: 'Executive Employee Plan (EMP-INS-001)' }
+              ]}
+              placeholder="Filter by Plan"
+            />
           </div>
         </div>
 
-        <div className="admin-table-wrapper">
-          <table className="admin-data-table">
+        <div className="admin-table-wrapper admin-log-scroll-wrapper">
+          <table className="admin-data-table admin-log-table">
             <thead>
               <tr>
                 <th>Document Name</th>
@@ -771,18 +1105,27 @@ function DocumentsSection({
                 documents.map((d) => (
                   <tr key={d.document_id}>
                     <td>
-                      <strong>{d.filename}</strong>
+                      <strong className="admin-actor-email">{d.filename}</strong>
                       <div className="admin-subtext">ID: {d.document_id}</div>
                     </td>
-                    <td><code>{d.plan_id}</code></td>
-                    <td>{(d.file_size_bytes / 1024).toFixed(1)} KB</td>
-                    <td><strong>{d.chunk_count}</strong> chunks</td>
+                    <td>
+                      <span className="admin-action-pill" style={{ fontFamily: 'monospace' }}>{d.plan_id}</span>
+                    </td>
+                    <td>
+                      <span style={{ color: '#000000', fontWeight: 600 }}>{(d.file_size_bytes / 1024).toFixed(1)} KB</span>
+                    </td>
+                    <td>
+                      <strong style={{ color: '#000000', fontWeight: 700 }}>{d.chunk_count}</strong>{' '}
+                      <span style={{ color: '#475569', fontSize: '11px' }}>chunks</span>
+                    </td>
                     <td>
                       <span className={`admin-status-badge ${d.status.toLowerCase()}`}>
                         {d.status}
                       </span>
                     </td>
-                    <td>{new Date(d.updated_at).toLocaleString()}</td>
+                    <td>
+                      <span className="admin-log-time">{new Date(d.updated_at).toLocaleString()}</span>
+                    </td>
                     <td>
                       {d.status !== 'DELETED' ? (
                         <div className="admin-btn-group">
@@ -814,16 +1157,15 @@ function DocumentsSection({
       </div>
 
       {/* Ingestion Jobs History Table */}
-      <div className="admin-card">
+      <div className="admin-card admin-log-stream-card">
         <div className="admin-card-header">
           <div>
             <h3 className="admin-card-title">Recent Ingestion Pipeline Jobs</h3>
-            <p className="admin-card-subtitle">Execution runs across PDF parsing, structure extraction, and Chroma embeddings</p>
           </div>
         </div>
 
-        <div className="admin-table-wrapper">
-          <table className="admin-data-table">
+        <div className="admin-table-wrapper admin-log-scroll-wrapper">
+          <table className="admin-data-table admin-log-table">
             <thead>
               <tr>
                 <th>Job ID</th>
@@ -845,12 +1187,24 @@ function DocumentsSection({
               ) : (
                 recentJobs.map((j) => (
                   <tr key={j.job_id}>
-                    <td><code>{j.job_id}</code></td>
-                    <td>{j.filename}</td>
-                    <td><code>{j.plan_id}</code></td>
-                    <td>{j.stage || 'Completed'}</td>
-                    <td>{(j.duration_ms / 1000).toFixed(2)}s</td>
-                    <td>{j.chunk_count}</td>
+                    <td>
+                      <span className="admin-action-pill" style={{ fontFamily: 'monospace', fontSize: '11px' }}>{j.job_id}</span>
+                    </td>
+                    <td>
+                      <strong className="admin-actor-email">{j.filename}</strong>
+                    </td>
+                    <td>
+                      <span className="admin-mini-plan-tag">{j.plan_id}</span>
+                    </td>
+                    <td>
+                      <strong style={{ color: '#000000', fontWeight: 700 }}>{j.stage || 'Completed'}</strong>
+                    </td>
+                    <td>
+                      <span style={{ color: '#000000', fontWeight: 600 }}>{(j.duration_ms / 1000).toFixed(2)}s</span>
+                    </td>
+                    <td>
+                      <strong style={{ color: '#000000', fontWeight: 700 }}>{j.chunk_count}</strong>
+                    </td>
                     <td>
                       <span className={`admin-status-badge ${j.status.toLowerCase()}`}>
                         {j.status}
@@ -874,32 +1228,46 @@ function ConversationsSection({ data, rangeLabel }) {
   return (
     <div className="admin-conversations-stack">
       {/* KPI Row */}
-      <div className="admin-kpi-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-        <div className="admin-kpi-card" style={{ borderTop: '3px solid #0284c7' }}>
-          <span className="admin-kpi-label">Conversations in Period</span>
-          <span className="admin-kpi-value">{total_conversations}</span>
+      <div className="admin-kpi-grid three-cards-row">
+        <div className="admin-kpi-card">
+          <div className="admin-kpi-top">
+            <span className="admin-kpi-label">Conversations in Period</span>
+            <span className="admin-kpi-icon-pill blue">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+          </div>
+          <span className="admin-kpi-value">{total_conversations?.toLocaleString() || 0}</span>
           <span className="admin-kpi-sub">Within {rangeLabel}</span>
         </div>
-        <div className="admin-kpi-card" style={{ borderTop: '3px solid #2563eb' }}>
-          <span className="admin-kpi-label">Chat Messages in Period</span>
-          <span className="admin-kpi-value">{total_messages}</span>
+
+        <div className="admin-kpi-card">
+          <div className="admin-kpi-top">
+            <span className="admin-kpi-label">Chat Messages in Period</span>
+            <span className="admin-kpi-icon-pill indigo">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </span>
+          </div>
+          <span className="admin-kpi-value">{total_messages?.toLocaleString() || 0}</span>
           <span className="admin-kpi-sub">Grounded Q&A Queries & Responses</span>
         </div>
-        <div className="admin-kpi-card" style={{ borderTop: '3px solid #059669' }}>
-          <span className="admin-kpi-label">Avg Messages / Session</span>
-          <span className="admin-kpi-value">{avg_messages_per_conversation}</span>
+
+        <div className="admin-kpi-card">
+          <div className="admin-kpi-top">
+            <span className="admin-kpi-label">Avg Messages / Session</span>
+            <span className="admin-kpi-icon-pill emerald">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+          </div>
+          <span className="admin-kpi-value">{avg_messages_per_conversation || 0}</span>
           <span className="admin-kpi-sub">Consultation Interaction Depth</span>
         </div>
       </div>
 
       {/* Professional Matching Plan Distribution Graph */}
-      <div className="admin-card">
+      <div className="admin-card admin-log-stream-card">
         <div className="admin-card-header">
           <div>
             <h3 className="admin-card-title">Consultation Distribution by Policy Plan</h3>
-            <p className="admin-card-subtitle">
-              Volume of conversational interactions scoped to specific policies ({rangeLabel})
-            </p>
           </div>
           <span className="admin-scope-badge">{rangeLabel}</span>
         </div>
@@ -914,16 +1282,15 @@ function ConversationsSection({ data, rangeLabel }) {
       </div>
 
       {/* Privacy-Preserved Diagnostics */}
-      <div className="admin-card">
+      <div className="admin-card admin-log-stream-card">
         <div className="admin-card-header">
           <div>
             <h3 className="admin-card-title">Recent Conversations (Privacy Minimized)</h3>
-            <p className="admin-card-subtitle">Metadata-only view without exposing confidential policyholder inquiries ({rangeLabel})</p>
           </div>
         </div>
 
-        <div className="admin-table-wrapper">
-          <table className="admin-data-table">
+        <div className="admin-table-wrapper admin-log-scroll-wrapper">
+          <table className="admin-data-table admin-log-table">
             <thead>
               <tr>
                 <th>Conversation ID</th>
@@ -944,12 +1311,24 @@ function ConversationsSection({ data, rangeLabel }) {
               ) : (
                 recent_conversations.map((c) => (
                   <tr key={c.conversation_id}>
-                    <td><code>{c.conversation_id}</code></td>
-                    <td>{c.anonymized_user}</td>
-                    <td><span className={`admin-role-badge ${c.role}`}>{c.role}</span></td>
-                    <td><code>{c.selected_plan_id}</code></td>
-                    <td><strong>{c.message_count}</strong></td>
-                    <td>{new Date(c.updated_at).toLocaleString()}</td>
+                    <td>
+                      <span className="admin-action-pill" style={{ fontFamily: 'monospace', fontSize: '11.5px' }}>{c.conversation_id}</span>
+                    </td>
+                    <td>
+                      <strong className="admin-actor-email">{c.anonymized_user}</strong>
+                    </td>
+                    <td>
+                      <span className={`admin-role-badge ${c.role}`}>{c.role?.toUpperCase()}</span>
+                    </td>
+                    <td>
+                      <span className="admin-mini-plan-tag">{c.selected_plan_id}</span>
+                    </td>
+                    <td>
+                      <strong style={{ color: '#000000', fontWeight: 700 }}>{c.message_count}</strong>
+                    </td>
+                    <td>
+                      <span className="admin-log-time">{new Date(c.updated_at).toLocaleString()}</span>
+                    </td>
                   </tr>
                 ))
               )}
@@ -965,13 +1344,40 @@ function ConversationsSection({ data, rangeLabel }) {
 
 function PlanDistributionGraph({ breakdown = [], totalConversations = 0, rangeLabel = '7 Days' }) {
   const PLAN_METADATA = {
-    'HS-BASIC-001': { name: 'Health Shield – Basic', color: '#0284c7', gradient: 'gradBasic', badge: '#e0f2fe', text: '#0369a1' },
-    'HS-GOLD-001': { name: 'Health Shield – Gold', color: '#d97706', gradient: 'gradGold', badge: '#fef3c7', text: '#b45309' },
-    'HS-PREMIUM-001': { name: 'Health Shield – Premium', color: '#7c3aed', gradient: 'gradPremium', badge: '#ede9fe', text: '#6d28d9' },
-    'EMP-INS-001': { name: 'Executive Employee Plan', color: '#059669', gradient: 'gradEmployee', badge: '#ecfdf5', text: '#065f46' }
+    'HS-BASIC-001': {
+      name: 'Health Shield – Basic',
+      color: '#0284c7',
+      gradient: 'linear-gradient(90deg, #0284c7 0%, #38bdf8 100%)',
+      badgeBg: 'rgba(2, 132, 199, 0.12)',
+      badgeBorder: 'rgba(2, 132, 199, 0.3)',
+      text: '#0284c7'
+    },
+    'HS-GOLD-001': {
+      name: 'Health Shield – Gold',
+      color: '#d97706',
+      gradient: 'linear-gradient(90deg, #d97706 0%, #fbbf24 100%)',
+      badgeBg: 'rgba(217, 119, 6, 0.12)',
+      badgeBorder: 'rgba(217, 119, 6, 0.3)',
+      text: '#b45309'
+    },
+    'HS-PREMIUM-001': {
+      name: 'Health Shield – Premium',
+      color: '#7c3aed',
+      gradient: 'linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%)',
+      badgeBg: 'rgba(124, 58, 237, 0.12)',
+      badgeBorder: 'rgba(124, 58, 237, 0.3)',
+      text: '#6d28d9'
+    },
+    'EMP-INS-001': {
+      name: 'Executive Employee Plan',
+      color: '#059669',
+      gradient: 'linear-gradient(90deg, #059669 0%, #34d399 100%)',
+      badgeBg: 'rgba(5, 150, 105, 0.12)',
+      badgeBorder: 'rgba(5, 150, 105, 0.3)',
+      text: '#047857'
+    }
   };
 
-  // Harmonize plans: ensure active ones are ranked, and unrepresented canonical plans are present if empty
   const items = useMemo(() => {
     if (!breakdown || breakdown.length === 0) {
       return [
@@ -1022,95 +1428,78 @@ function PlanDistributionGraph({ breakdown = [], totalConversations = 0, rangeLa
         </div>
       </div>
 
-      {/* Professional Horizontal SVG Bar Graph */}
-      <div className="admin-plan-svg-container">
-        <svg viewBox="0 0 880 230" className="admin-plan-svg" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="gradBasic" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#38bdf8" />
-            </linearGradient>
-            <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#d97706" />
-              <stop offset="100%" stopColor="#fbbf24" />
-            </linearGradient>
-            <linearGradient id="gradPremium" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#7c3aed" />
-              <stop offset="100%" stopColor="#a78bfa" />
-            </linearGradient>
-            <linearGradient id="gradEmployee" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#059669" />
-              <stop offset="100%" stopColor="#34d399" />
-            </linearGradient>
-            <filter id="barDrop" x="-10%" y="-10%" width="120%" height="140%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.1" />
-            </filter>
-          </defs>
+      {/* Responsive Liquid Glass Plan Bar Rows */}
+      <div className="admin-plan-bars-container">
+        {items.map((item) => {
+          const planMeta = PLAN_METADATA[item.selected_plan_id] || {
+            name: item.selected_plan_id,
+            color: '#475569',
+            gradient: 'linear-gradient(90deg, #64748b 0%, #94a3b8 100%)',
+            badgeBg: 'rgba(100, 116, 139, 0.1)',
+            badgeBorder: 'rgba(100, 116, 139, 0.25)',
+            text: '#334155'
+          };
+          const count = item.conv_count || 0;
+          const barPct = maxCount > 0 ? Math.min(100, (count / maxCount) * 100) : 0;
+          const percentage = ((count / effectiveTotal) * 100).toFixed(1);
 
-          {/* Grid Guideline Ticks */}
-          {[0, 0.25, 0.5, 0.75, 1].map((pct, idx) => {
-            const x = 240 + pct * 540;
-            return (
-              <g key={idx}>
-                <line x1={x} y1={10} x2={x} y2={205} stroke="#f1f5f9" strokeWidth="1" strokeDasharray="3 3" />
-                <text x={x} y={222} textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="500">
-                  {Math.round(maxCount * pct)}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Plan Rows */}
-          {items.map((item, idx) => {
-            const planMeta = PLAN_METADATA[item.selected_plan_id] || {
-              name: item.selected_plan_id,
-              color: '#475569',
-              gradient: 'gradBasic',
-              badge: '#f1f5f9',
-              text: '#334155'
-            };
-            const y = 20 + idx * 46;
-            const barWidth = Math.max(12, ((item.conv_count || 0) / (maxCount || 1)) * 540);
-            const percentage = ((item.conv_count / effectiveTotal) * 100).toFixed(1);
-
-            return (
-              <g key={item.selected_plan_id} className="admin-plan-svg-row">
-                {/* Plan Badge and Title */}
-                <rect x={15} y={y} width={90} height={22} rx={4} fill={planMeta.badge} />
-                <text x={60} y={y + 15} textAnchor="middle" fill={planMeta.text} fontSize="10.5" fontWeight="700">
+          return (
+            <div key={item.selected_plan_id} className="admin-plan-bar-row">
+              {/* Left Column: Badge + Plan Name */}
+              <div className="admin-plan-bar-left">
+                <span
+                  className="admin-plan-bar-badge"
+                  style={{
+                    color: planMeta.text,
+                    background: planMeta.badgeBg,
+                    border: `1px solid ${planMeta.badgeBorder}`
+                  }}
+                >
                   {item.selected_plan_id}
-                </text>
-                <text x={115} y={y + 16} fill="#1e293b" fontSize="11.5" fontWeight="600">
+                </span>
+                <span className="admin-plan-bar-title" title={planMeta.name}>
                   {planMeta.name}
-                </text>
+                </span>
+              </div>
 
-                {/* Track Background */}
-                <rect x={240} y={y + 2} width={540} height={18} rx={9} fill="#f1f5f9" />
-
-                {/* Active Gradient Bar */}
-                {item.conv_count > 0 && (
-                  <rect
-                    x={240}
-                    y={y + 2}
-                    width={barWidth}
-                    height={18}
-                    rx={9}
-                    fill={`url(#${planMeta.gradient})`}
-                    filter="url(#barDrop)"
+              {/* Middle Column: Liquid Glass Progress Track & Glow Fill */}
+              <div className="admin-plan-bar-track-wrap">
+                <div className="admin-plan-bar-track">
+                  <div
+                    className="admin-plan-bar-fill"
+                    style={{
+                      width: count > 0 ? `${Math.max(4, barPct)}%` : '0%',
+                      background: planMeta.gradient,
+                      boxShadow: count > 0 ? `0 2px 10px ${planMeta.color}45` : 'none'
+                    }}
                   />
-                )}
+                </div>
+              </div>
 
-                {/* Count and Percentage Badges */}
-                <text x={795} y={y + 16} fill="#0f172a" fontSize="12" fontWeight="700">
-                  {item.conv_count}
-                </text>
-                <text x={840} y={y + 16} fill="#64748b" fontSize="10.5" fontWeight="500">
-                  ({percentage}%)
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+              {/* Right Column: Count & Percentage Chip */}
+              <div className="admin-plan-bar-right">
+                <strong className="admin-plan-bar-count">{count}</strong>
+                <span className="admin-plan-bar-pct">({percentage}%)</span>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Ticks Grid Guideline Scale */}
+        <div className="admin-plan-ticks-scale">
+          <div className="admin-plan-ticks-spacer"></div>
+          <div className="admin-plan-ticks-wrap">
+            {[0, 25, 50, 75, 100].map((pct) => (
+              <div key={pct} className="admin-plan-tick-item" style={{ left: `${pct}%` }}>
+                <span className="admin-plan-tick-line"></span>
+                <span className="admin-plan-tick-label">
+                  {Math.round((maxCount * pct) / 100)}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="admin-plan-ticks-right-spacer"></div>
+        </div>
       </div>
 
       <div className="admin-plan-graph-footer">
@@ -1187,7 +1576,7 @@ function ProfessionalDashboardChart({ series = [], rangeLabel = '7 Days' }) {
       label: 'Avg Response Latency',
       color: '#7c3aed',
       gradientId: 'gradLatency',
-      format: (val) => `${val} ms`,
+      format: (val) => (val === null || val === undefined || val === 0 ? 'N/A' : `${val} ms`),
       unit: 'ms'
     },
     dual: {

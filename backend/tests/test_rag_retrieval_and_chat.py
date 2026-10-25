@@ -32,8 +32,18 @@ def test_scope_resolver_ambiguous_comparison():
 
 def test_silver_never_silently_mapped_to_premium():
     """Unknown or unverified 'Silver' plan ID fails validation and is rejected."""
+    # Unauthenticated request fails closed with 401
+    resp_unauth = client.post(
+        "/api/conversations",
+        json={"selected_plan_id": "HS-SILVER-001"}
+    )
+    assert resp_unauth.status_code == 401
+
+    # Authenticated customer request fails closed with 403
+    cust_headers = _get_cust_session("HS-GOLD-001")
     resp = client.post(
         "/api/conversations",
+        headers=cust_headers,
         json={"selected_plan_id": "HS-SILVER-001"}
     )
     assert resp.status_code == 403
@@ -62,11 +72,36 @@ def test_hybrid_rrf_and_citation_provenance():
         assert "source_page_start" in chunk["metadata"]
         assert "source_page_end" in chunk["metadata"]
 
+def _get_cust_session(plan_id="HS-GOLD-001"):
+    import uuid
+    email = f"chat_cust_{uuid.uuid4().hex[:8]}@example.com"
+    signup = client.post("/api/auth/signup", json={
+        "email": email, "password": "Password123!", "role": "customer", "full_name": "Chat Customer"
+    })
+    token = signup.json()["token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    client.post("/api/eligibility/assess", headers=headers, json={
+        "age": 28, "height_cm": 172, "weight_kg": 68,
+        "smoker": "No", "alcoholic": "No", "pre_existing_condition": "None"
+    })
+    client.post("/api/eligibility/select-plan", headers=headers, json={"selected_plan_id": plan_id})
+    return headers
+
+def _get_emp_session():
+    import uuid
+    email = f"chat_emp_{uuid.uuid4().hex[:8]}@insurance.corp"
+    signup = client.post("/api/auth/signup", json={
+        "email": email, "password": "Password123!", "role": "employee", "full_name": "Chat Staff"
+    })
+    token = signup.json()["token"]
+    return {"Authorization": f"Bearer {token}"}
+
 def test_employee_plan_illustrative_warning():
     """Employee conversation preserves illustrative_unverified notice."""
+    emp_headers = _get_emp_session()
     c_resp = client.post(
         "/api/conversations",
-        headers={"X-User-Role": "employee"},
+        headers=emp_headers,
         json={"selected_plan_id": "EMP-INS-001"}
     )
     assert c_resp.status_code == 201
@@ -74,7 +109,7 @@ def test_employee_plan_illustrative_warning():
 
     m_resp = client.post(
         f"/api/conversations/{conv_id}/messages",
-        headers={"X-User-Role": "employee"},
+        headers=emp_headers,
         json={"query": "What are the surgery benefits?"}
     )
     assert m_resp.status_code == 200
@@ -84,54 +119,56 @@ def test_employee_plan_illustrative_warning():
 
 def test_list_conversations_endpoint_and_rbac():
     """Verify that empty conversations are excluded, and customer cannot see employee history."""
+    cust_headers = _get_cust_session("HS-GOLD-001")
     # 1. Create a customer conversation
     c_resp = client.post(
         "/api/conversations",
-        headers={"X-User-Role": "customer"},
+        headers=cust_headers,
         json={"selected_plan_id": "HS-GOLD-001"}
     )
     assert c_resp.status_code == 201
     conv_id = c_resp.json()["conversation_id"]
 
     # Before any message, empty chat is NOT stored in history
-    list_resp = client.get("/api/conversations", headers={"X-User-Role": "customer"})
+    list_resp = client.get("/api/conversations", headers=cust_headers)
     assert list_resp.status_code == 200
     assert not any(item["conversation_id"] == conv_id for item in list_resp.json())
 
     # Send a query
     m_resp = client.post(
         f"/api/conversations/{conv_id}/messages",
-        headers={"X-User-Role": "customer"},
+        headers=cust_headers,
         json={"query": "What is the hospital cash benefit?"}
     )
     assert m_resp.status_code == 200
 
     # Now it must be stored and returned in history
-    list_resp2 = client.get("/api/conversations", headers={"X-User-Role": "customer"})
+    list_resp2 = client.get("/api/conversations", headers=cust_headers)
     assert list_resp2.status_code == 200
     items = list_resp2.json()
     assert any(item["conversation_id"] == conv_id for item in items)
 
     # 2. RBAC check: Employee conversation with EMP-INS-001
+    emp_headers = _get_emp_session()
     emp_c_resp = client.post(
         "/api/conversations",
-        headers={"X-User-Role": "employee"},
+        headers=emp_headers,
         json={"selected_plan_id": "EMP-INS-001"}
     )
     assert emp_c_resp.status_code == 201
     emp_conv_id = emp_c_resp.json()["conversation_id"]
     client.post(
         f"/api/conversations/{emp_conv_id}/messages",
-        headers={"X-User-Role": "employee"},
+        headers=emp_headers,
         json={"query": "Staff surgery benefits"}
     )
 
     # Customer MUST NOT see employee conversation in history
-    cust_history = client.get("/api/conversations", headers={"X-User-Role": "customer"}).json()
+    cust_history = client.get("/api/conversations", headers=cust_headers).json()
     assert not any(item.get("selected_plan_id") == "EMP-INS-001" for item in cust_history)
 
     # Customer MUST NOT be allowed to access employee conversation directly (Fails closed 404/403)
-    forbidden_resp = client.get(f"/api/conversations/{emp_conv_id}", headers={"X-User-Role": "customer"})
-    assert forbidden_resp.status_code == 404
+    forbidden_resp = client.get(f"/api/conversations/{emp_conv_id}", headers=cust_headers)
+    assert forbidden_resp.status_code in (403, 404)
 
 

@@ -9,7 +9,7 @@ from backend.app.api.schemas.conversations import (
     MessageResponse
 )
 from backend.app.services.rag_orchestrator import RAGOrchestrator
-from backend.app.services.auth_service import UserIdentity
+from backend.app.services.auth_service import UserIdentity, AuthorizationService
 from backend.app.api.deps import get_rag_orchestrator, get_auth_user
 from backend.app.core.logging_config import logger
 
@@ -37,6 +37,9 @@ def list_conversations(
         return []
 
 
+from datetime import datetime, timezone
+from backend.app.db.sqlite_manager import sqlite_db
+
 @router.post("", response_model=ConversationResponse, status_code=status.HTTP_201_CREATED)
 def create_conversation(
     req: CreateConversationRequest,
@@ -45,8 +48,65 @@ def create_conversation(
 ):
     """
     Create a fresh plan-scoped conversation session.
-    Fails closed with 403 Forbidden if plan is unauthorized for the user role.
+    Enforces server-side eligibility assessment and active plan selection before conversation initialization.
+    Fails closed with 403 Forbidden if unassessed, ineligible, plan mismatched, or unauthorized.
     """
+    # 0. Enforce role-based plan authorization first
+    if not AuthorizationService.is_plan_authorized(user.role, req.selected_plan_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access denied: Plan '{req.selected_plan_id}' is not authorized for role '{user.role}'."
+        )
+
+    # For customer users, enforce eligibility assessment and plan selection workflow
+    if user.role == "customer":
+        # 1. User must have a completed, current, non-expired eligibility assessment
+        assessment = sqlite_db.get_current_assessment_for_user(user.user_id)
+        if not assessment:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Eligibility assessment required. Please complete an underwriting evaluation before starting a conversation."
+            )
+        if assessment.get("status") != "COMPLETED" or assessment.get("outcome") != "ELIGIBLE":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Eligibility assessment outcome is '{assessment.get('outcome')}'. Policy conversations are restricted to verified eligible applicants."
+            )
+        expires_at = assessment.get("expires_at")
+        if expires_at:
+            now_iso = datetime.now(timezone.utc).isoformat()
+            if expires_at < now_iso:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Your eligibility assessment has expired. Please re-evaluate your eligibility before starting a conversation."
+                )
+
+        # 2. User must have an active plan selection matching the requested plan
+        active_selection = sqlite_db.get_active_plan_selection_for_user(user.user_id)
+        if not active_selection:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No active plan selection found. Please select an eligible plan before initiating policy consultation."
+            )
+        if active_selection.get("selected_plan_id") != req.selected_plan_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Requested plan '{req.selected_plan_id}' does not match your active selected plan '{active_selection.get('selected_plan_id')}'."
+            )
+        if active_selection.get("assessment_id") != assessment.get("assessment_id"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Active plan selection is not associated with your current eligibility assessment."
+            )
+
+        # 3. Requested plan must be in the assessment's qualifying plans
+        qualifying_plans = assessment.get("qualifying_plans", [])
+        if req.selected_plan_id not in qualifying_plans:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Requested plan '{req.selected_plan_id}' is not covered by your qualified plan tiers: {qualifying_plans}."
+            )
+
     try:
         session = orchestrator.conversation_manager.create_conversation(
             user_id=user.user_id,

@@ -159,100 +159,93 @@ export function IngestionPage() {
   return (
     <div className="admin-ingestion-workspace">
       {/* Executive Header */}
-      <header className="ingestion-header">
+      <header className="ingestion-header" style={{ maxWidth: '680px', margin: '0 auto 16px auto' }}>
         <div className="ingestion-title-group">
-          <div className="admin-badge-tag">ADMINISTRATOR GOVERNANCE • DOCUMENT INGESTION</div>
           <h1 className="ingestion-heading">Policy Document Ingestion</h1>
-          <p className="ingestion-subheading">
-            Upload official insurance policy PDF documents to parse, embed, and index into the RAG vector knowledge base.
-          </p>
         </div>
       </header>
 
       {/* Error & Warning Alert Display */}
-      <ErrorDisplay
-        errors={errors}
-        warnings={warnings}
-        onDismiss={() => {
-          setErrors([]);
-          setWarnings([]);
-        }}
-      />
+      <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+        <ErrorDisplay
+          errors={errors}
+          warnings={warnings}
+          onDismiss={() => {
+            setErrors([]);
+            setWarnings([]);
+          }}
+        />
+      </div>
 
       {/* Main Ingestion Form or Completed Summary */}
       {!currentJob ? (
-        <div className="ingestion-card" style={{ marginBottom: '28px' }}>
-          <div className="ingestion-card-header">
+        <div className="admin-card admin-log-stream-card" style={{ maxWidth: '680px', margin: '0 auto 28px auto' }}>
+          <div className="admin-card-header">
             <div>
-              <h2 className="ingestion-card-title">Upload Policy Document</h2>
-              <p className="ingestion-card-subtitle">
-                Select the insurance category and upload the policy PDF document for vector ingestion.
-              </p>
+              <h2 className="admin-card-title">Upload Policy Document</h2>
             </div>
           </div>
 
           {/* Insurance Category Dropdown */}
-          <div className="form-group" style={{ marginBottom: '22px' }}>
-            <label id="category-select-label" className="form-label" style={{ fontWeight: 600, fontSize: '13px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <label id="category-select-label" className="form-label" style={{ fontWeight: 800, fontSize: '13.5px', color: '#000000', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
               </svg>
               <span>Insurance Category</span>
             </label>
 
-            <div className="custom-pro-dropdown-container" ref={dropdownRef}>
+            <div className="admin-liquid-dropdown-wrapper" ref={dropdownRef} style={{ width: 'auto', display: 'inline-block' }}>
               <button
                 id="category-select"
                 type="button"
-                className={`custom-pro-dropdown-trigger ${dropdownOpen ? 'is-open' : ''}`}
+                className={`admin-liquid-dropdown-btn ${dropdownOpen ? 'active' : ''}`}
                 onClick={() => !isProcessing && setDropdownOpen((prev) => !prev)}
                 disabled={isProcessing}
                 aria-haspopup="listbox"
                 aria-expanded={dropdownOpen}
                 aria-labelledby="category-select-label"
+                style={{ minWidth: '260px', justifyContent: 'space-between' }}
               >
-                <div className="dropdown-trigger-left">
-                  <div className="dropdown-trigger-icon-wrap">
-                    {activeOption.icon}
-                  </div>
-                  <div className="dropdown-trigger-info">
-                    <span className="dropdown-trigger-title">{activeOption.label}</span>
-                    <span className="dropdown-trigger-desc">{activeOption.description}</span>
-                  </div>
-                </div>
-
-                <div className="dropdown-trigger-right">
-                  <span
-                    className="dropdown-trigger-badge"
-                    style={{ color: activeOption.badgeColor, background: activeOption.badgeBg }}
-                  >
-                    {activeOption.badge}
-                  </span>
-                  <svg
-                    className={`dropdown-chevron ${dropdownOpen ? 'rotated' : ''}`}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#64748b"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
+                <span className="admin-liquid-dropdown-val" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: selectedCategory === 'customer' ? '#007aff' : '#8b5cf6' }}></span>
+                  {activeOption.label}
+                </span>
+                <svg
+                  className={`admin-dropdown-chevron ${dropdownOpen ? 'rotate' : ''}`}
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </button>
 
               {dropdownOpen && (
-                <div className="custom-pro-dropdown-menu" role="listbox">
+                <div
+                  className="admin-liquid-dropdown-menu"
+                  role="listbox"
+                  style={{
+                    left: 0,
+                    right: 'auto',
+                    minWidth: '260px',
+                    width: 'auto',
+                    boxSizing: 'border-box'
+                  }}
+                >
                   {CATEGORY_OPTIONS.map((opt) => {
                     const isSelected = selectedCategory === opt.value;
                     return (
-                      <div
+                      <button
                         key={opt.value}
-                        className={`custom-pro-dropdown-item ${isSelected ? 'selected' : ''}`}
+                        type="button"
+                        className={`admin-liquid-dropdown-item ${isSelected ? 'selected' : ''}`}
                         onClick={() => {
                           setSelectedCategory(opt.value);
                           setDropdownOpen(false);
@@ -260,44 +253,27 @@ export function IngestionPage() {
                         role="option"
                         aria-selected={isSelected}
                       >
-                        <div className="dropdown-item-icon-wrap">
-                          {opt.icon}
-                        </div>
-                        <div className="dropdown-item-details">
-                          <div className="dropdown-item-header-row">
-                            <strong className="dropdown-item-title">{opt.label}</strong>
-                            <span
-                              className="dropdown-item-badge"
-                              style={{ color: opt.badgeColor, background: opt.badgeBg }}
-                            >
-                              {opt.badge}
-                            </span>
-                          </div>
-                          <span className="dropdown-item-desc">{opt.description}</span>
-                        </div>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: isSelected ? 800 : 600, color: '#000000', fontSize: '13px' }}>
+                          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: opt.value === 'customer' ? '#007aff' : '#8b5cf6' }}></span>
+                          {opt.label}
+                        </span>
                         {isSelected && (
-                          <div className="dropdown-item-check">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                          </div>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#007aff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
                         )}
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
               )}
             </div>
-
-            <span style={{ fontSize: '12px', color: '#64748b', marginTop: '6px', display: 'block' }}>
-              Select whether this document applies to customer policies or employee group insurance.
-            </span>
           </div>
 
           {/* File Upload Dropzone */}
-          <div className="form-group" style={{ marginBottom: '22px' }}>
-            <label className="form-label" style={{ fontWeight: 600, fontSize: '13px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <label className="form-label" style={{ fontWeight: 800, fontSize: '13.5px', color: '#000000', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
               </svg>
@@ -306,6 +282,7 @@ export function IngestionPage() {
 
             <div
               className={`pro-dropzone ${isDragOver ? 'drag-active' : ''} ${selectedFile ? 'has-file' : ''}`}
+              style={{ padding: '24px 20px', borderRadius: '14px' }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -322,8 +299,8 @@ export function IngestionPage() {
 
               {selectedFile ? (
                 <div className="dropzone-file-preview">
-                  <div className="pdf-icon-wrap">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="pdf-icon-wrap" style={{ width: '42px', height: '42px' }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                       <polyline points="14 2 14 8 20 8" />
                       <line x1="9" y1="15" x2="15" y2="15" />
@@ -331,11 +308,11 @@ export function IngestionPage() {
                     </svg>
                   </div>
                   <div className="file-info-col">
-                    <strong className="file-preview-name">{selectedFile.name}</strong>
-                    <span className="file-preview-meta">
-                      {(selectedFile.size / 1024).toFixed(1)} KB • Target: <strong>{selectedCategory === 'customer' ? 'Customer Insurance' : 'Employee Insurance'}</strong>
+                    <strong className="file-preview-name" style={{ fontSize: '13.5px', color: '#000000' }}>{selectedFile.name}</strong>
+                    <span className="file-preview-meta" style={{ fontSize: '12px', color: '#64748b' }}>
+                      {(selectedFile.size / 1024).toFixed(1)} KB • Target: <strong style={{ color: '#000000' }}>{selectedCategory === 'customer' ? 'Customer Insurance' : 'Employee Insurance'}</strong>
                     </span>
-                    <span className="file-ready-tag">✓ Ready for Processing</span>
+                    <span className="file-ready-tag" style={{ fontSize: '11.5px', color: '#059669', fontWeight: 700 }}>✓ Ready for Processing</span>
                   </div>
                   <button
                     type="button"
@@ -351,15 +328,19 @@ export function IngestionPage() {
                 </div>
               ) : (
                 <div className="dropzone-empty-state">
-                  <div className="upload-cloud-icon">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="upload-cloud-icon" style={{ width: '44px', height: '44px', marginBottom: '2px' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#007aff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
                       <path d="M12 12v9" />
                       <path d="m16 16-4-4-4 4" />
                     </svg>
                   </div>
-                  <strong className="dropzone-main-text">Click or drag a policy PDF document here</strong>
-                  <span className="dropzone-sub-text">PDF format only, up to 25 MB</span>
+                  <strong className="dropzone-main-text" style={{ fontSize: '14px', fontWeight: 700, color: '#000000' }}>
+                    Click or drag a policy PDF document here
+                  </strong>
+                  <span className="dropzone-sub-text" style={{ fontSize: '12px', color: '#64748b' }}>
+                    PDF format only, up to 25 MB
+                  </span>
                 </div>
               )}
             </div>
@@ -369,13 +350,13 @@ export function IngestionPage() {
           {isProcessing && (
             <div className="ingestion-live-progress" style={{ marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12.5px', fontWeight: 600 }}>
-                <span style={{ color: '#0284c7' }}>Extracting sections, tables, and generating embeddings...</span>
+                <span style={{ color: '#007aff' }}>Extracting sections, tables, and generating embeddings...</span>
                 <span style={{ color: '#64748b' }}>In Progress</span>
               </div>
               <div className="progress-bar-bg" style={{ height: '6px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
                 <div
                   className="progress-bar-fill animated-bar"
-                  style={{ width: '75%', height: '100%', background: '#0284c7', borderRadius: '4px' }}
+                  style={{ width: '75%', height: '100%', background: '#007aff', borderRadius: '4px' }}
                 ></div>
               </div>
             </div>
@@ -400,7 +381,7 @@ export function IngestionPage() {
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
+                    <line x1="12" y1="21" x2="12" y2="3" />
                   </svg>
                   <span>Process Document</span>
                 </>
@@ -410,7 +391,7 @@ export function IngestionPage() {
         </div>
       ) : (
         /* Completed Job Summary Screen */
-        <div className="ingestion-summary-view" style={{ marginBottom: '28px' }}>
+        <div className="ingestion-summary-view" style={{ maxWidth: '680px', margin: '0 auto 28px auto' }}>
           <div className="ingestion-card summary-card">
             <div className="summary-header">
               <div className="summary-success-badge">
@@ -462,22 +443,19 @@ export function IngestionPage() {
       )}
 
       {/* Processed Documents History Table */}
-      <div className="ingestion-card">
-        <div className="ingestion-card-header">
+      <div className="admin-card admin-log-stream-card">
+        <div className="admin-card-header">
           <div>
-            <h2 className="ingestion-card-title">Processed Documents</h2>
-            <p className="ingestion-card-subtitle">
-              Persistent history of parsed, chunked, and vector-embedded policy documents ({filteredHistory.length} records)
-            </p>
+            <h2 className="admin-card-title">Processed Documents</h2>
           </div>
 
-          <div className="ingestion-table-controls">
+          <div className="admin-table-filters">
             <input
               type="search"
               placeholder="Filter documents..."
               value={historySearch}
               onChange={(e) => setHistorySearch(e.target.value)}
-              className="ingestion-search-input"
+              className="admin-search-input"
             />
             <button
               type="button"
@@ -496,8 +474,8 @@ export function IngestionPage() {
           </div>
         </div>
 
-        <div className="admin-table-wrapper">
-          <table className="admin-data-table">
+        <div className="admin-table-wrapper admin-log-scroll-wrapper">
+          <table className="admin-data-table admin-log-table">
             <thead>
               <tr>
                 <th>Document</th>
@@ -523,11 +501,11 @@ export function IngestionPage() {
                     <tr key={idx}>
                       <td>
                         <div className="doc-name-cell">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                             <polyline points="14 2 14 8 20 8" />
                           </svg>
-                          <strong>{item.source_document || item.filename || 'policy_document.pdf'}</strong>
+                          <strong className="admin-actor-email">{item.source_document || item.filename || 'policy_document.pdf'}</strong>
                         </div>
                       </td>
                       <td>
@@ -541,12 +519,14 @@ export function IngestionPage() {
                         </span>
                       </td>
                       <td>
-                        <strong>{item.chunks_stored || item.chunk_count || 0}</strong>
+                        <strong style={{ color: '#000000', fontWeight: 700 }}>{item.chunks_stored || item.chunk_count || 0}</strong>
                       </td>
-                      <td style={{ color: 'var(--text-muted)' }}>
-                        {item.timestamp
-                          ? new Date(item.timestamp).toLocaleDateString() + ' ' + new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                          : new Date().toLocaleDateString()}
+                      <td>
+                        <span className="admin-log-time">
+                          {item.timestamp
+                            ? new Date(item.timestamp).toLocaleDateString() + ' ' + new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : new Date().toLocaleDateString()}
+                        </span>
                       </td>
                     </tr>
                   );

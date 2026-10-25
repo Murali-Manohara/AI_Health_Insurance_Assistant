@@ -217,42 +217,11 @@ def get_current_user(request: Request) -> UserIdentity:
             email=session["email"]
         )
 
-    # 2. Backwards compatibility fallback for existing test suite
-    if "X-User-Role" in request.headers:
-        role = request.headers["X-User-Role"].lower().strip()
-        user_id = request.headers.get("X-User-Id", "test_user").strip()
-        # Security: Administrator access CANNOT be granted via client headers
-        if role == "admin":
-            logger.warning(f"Rejected attempt to assume admin role via X-User-Role header by '{user_id}'.")
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Administrator role cannot be assumed via client headers. Server-verified session required."
-            )
-        if role not in ROLE_PLAN_PERMISSIONS:
-            logger.error(f"Invalid authentication role encountered: '{role}'")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Invalid or unrecognized user role: '{role}'."
-            )
-        return UserIdentity(
-            user_id=user_id,
-            role=role,
-            full_name="Employee Member" if role == "employee" else "Customer Member"
-        )
-
-    # 3. Dedicated protected identity endpoint requires explicit authentication
-    if request.url.path.endswith("/me"):
-        logger.warning("Unauthenticated request to user identity endpoint.")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required. Please log in to access this resource."
-        )
-
-    # 4. Safe default for backwards compatibility with un-authenticated test queries
-    return UserIdentity(
-        user_id="guest_user",
-        role="customer",
-        full_name="Customer Member"
+    # Unauthenticated requests to any protected endpoint are rejected with 401
+    logger.warning(f"Unauthenticated request to protected endpoint '{request.url.path}'.")
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Authentication required. Please provide a valid session token."
     )
 
 def require_admin_user(request: Request) -> UserIdentity:

@@ -58,9 +58,13 @@ export function AdminSidebar({ activeTab, onNavigate }) {
 
   return (
     <aside className="process-sidebar admin-sidebar" aria-label="Administrator Navigation">
-      <div className="process-sidebar-header">
-        <span className="process-sidebar-label">Admin Workspace</span>
-        <span className="admin-status-pill">Secure</span>
+      <div className="sidebar-top-header" style={{ display: 'flex', alignItems: 'center', height: '56px', minHeight: '56px', padding: '0 8px', borderBottom: '1px solid rgba(214, 214, 216, 0.40)', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#007aff', boxShadow: '0 0 8px rgba(0, 122, 255, 0.6)' }} />
+          <span style={{ fontSize: '13px', fontWeight: 800, color: '#000000', letterSpacing: '-0.01em' }}>
+            Administrator Mode
+          </span>
+        </div>
       </div>
 
       <nav className="process-nav-list admin-nav-list" role="navigation">
@@ -85,21 +89,11 @@ export function AdminSidebar({ activeTab, onNavigate }) {
                   <span className="process-nav-title admin-nav-title">{item.title}</span>
                   {isActive && <span className="admin-active-dot" aria-hidden="true">•</span>}
                 </div>
-                <div className="process-nav-desc admin-nav-desc">{item.subtitle}</div>
               </div>
             </button>
           );
         })}
       </nav>
-
-      <div className="admin-sidebar-footer">
-        <div className="admin-scope-badge">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-          </svg>
-          <span>Admin Authorization Active</span>
-        </div>
-      </div>
     </aside>
   );
 }

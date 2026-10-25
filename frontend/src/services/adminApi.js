@@ -1,6 +1,7 @@
 import { authApi } from './authApi';
 
-const API_BASE = 'http://127.0.0.1:8000/api/admin';
+const API_BASE = '/api/admin';
+const DIRECT_BACKEND = 'http://127.0.0.1:8000/api/admin';
 
 function getHeaders() {
   const token = authApi.getToken();
@@ -8,6 +9,25 @@ function getHeaders() {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {})
   };
+}
+
+async function safeFetch(endpoint, options = {}) {
+  const headers = {
+    ...getHeaders(),
+    ...(options.headers || {})
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+    return res;
+  } catch (err) {
+    try {
+      const directUrl = `${DIRECT_BACKEND}${endpoint}`;
+      return await fetch(directUrl, { ...options, headers });
+    } catch {
+      throw err;
+    }
+  }
 }
 
 async function handleResponse(res, fallbackError) {
@@ -28,9 +48,7 @@ export const adminApi = {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
 
-    const res = await fetch(`${API_BASE}/overview?${params.toString()}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/overview?${params.toString()}`);
     return handleResponse(res, 'Failed to fetch executive overview');
   },
 
@@ -42,16 +60,13 @@ export const adminApi = {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
 
-    const res = await fetch(`${API_BASE}/users?${params.toString()}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/users?${params.toString()}`);
     return handleResponse(res, 'Failed to fetch user list');
   },
 
   async updateUserStatus(userId, isApproved) {
-    const res = await fetch(`${API_BASE}/users/${userId}/status`, {
+    const res = await safeFetch(`/users/${userId}/status`, {
       method: 'PATCH',
-      headers: getHeaders(),
       body: JSON.stringify({ is_approved: isApproved })
     });
     return handleResponse(res, 'Failed to update user status');
@@ -65,24 +80,20 @@ export const adminApi = {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
 
-    const res = await fetch(`${API_BASE}/documents?${params.toString()}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/documents?${params.toString()}`);
     return handleResponse(res, 'Failed to fetch document inventory');
   },
 
   async deleteDocument(documentId) {
-    const res = await fetch(`${API_BASE}/documents/${documentId}`, {
-      method: 'DELETE',
-      headers: getHeaders()
+    const res = await safeFetch(`/documents/${documentId}`, {
+      method: 'DELETE'
     });
     return handleResponse(res, 'Failed to delete document');
   },
 
   async reindexDocument(documentId) {
-    const res = await fetch(`${API_BASE}/documents/${documentId}/reindex`, {
-      method: 'POST',
-      headers: getHeaders()
+    const res = await safeFetch(`/documents/${documentId}/reindex`, {
+      method: 'POST'
     });
     return handleResponse(res, 'Failed to request document reindexing');
   },
@@ -92,16 +103,12 @@ export const adminApi = {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
 
-    const res = await fetch(`${API_BASE}/conversations?${params.toString()}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/conversations?${params.toString()}`);
     return handleResponse(res, 'Failed to fetch conversation analytics');
   },
 
   async fetchRagMetrics(rangePreset = '7d') {
-    const res = await fetch(`${API_BASE}/rag-metrics?range=${rangePreset}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/rag-metrics?range=${rangePreset}`);
     return handleResponse(res, 'Failed to fetch RAG metrics');
   },
 
@@ -110,16 +117,12 @@ export const adminApi = {
     if (action) params.append('action', action);
     if (outcome) params.append('outcome', outcome);
 
-    const res = await fetch(`${API_BASE}/audit-logs?${params.toString()}`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/audit-logs?${params.toString()}`);
     return handleResponse(res, 'Failed to fetch audit logs');
   },
 
   async fetchSystemHealth() {
-    const res = await fetch(`${API_BASE}/system-health`, {
-      headers: getHeaders()
-    });
+    const res = await safeFetch(`/system-health`);
     return handleResponse(res, 'Failed to fetch system health status');
   }
 };

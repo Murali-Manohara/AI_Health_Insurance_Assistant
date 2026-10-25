@@ -153,8 +153,8 @@ class ConversationManager:
             else:
                 return None
 
-        # Enforce strict user isolation boundary
-        if session.user_id != user_id and session.user_id not in ("guest_user", "test_user") and user_id not in ("guest_user", "test_user"):
+        # Enforce strict user isolation boundary (only admins may inspect cross-user conversations)
+        if session.user_id != user_id and role != "admin":
             logger.warning(f"User '{user_id}' denied access to conversation '{conversation_id}' owned by '{session.user_id}'")
             return None
 

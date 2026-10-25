@@ -68,6 +68,10 @@ def get_dashboard_overview(
     """
     start_time, end_time, interval = resolve_date_window(range, start_date, end_date)
     kpis = sqlite_db.get_dashboard_overview_kpis(start_time, end_time)
+    eligibility_pipeline = sqlite_db.get_eligibility_pipeline_kpis(start_time, end_time)
+    # Merge eligibility pipeline KPIs directly into kpis for easy frontend consumption
+    kpis.update(eligibility_pipeline)
+
     time_series = sqlite_db.get_time_series_metrics(start_time, end_time, interval=interval)
     recent_events, total_events = sqlite_db.get_audit_logs(
         limit=200,
@@ -87,6 +91,7 @@ def get_dashboard_overview(
             "interval": interval
         },
         "kpis": kpis,
+        "eligibility_pipeline": eligibility_pipeline,
         "time_series": time_series,
         "recent_activity": recent_events,
         "total_activity": total_events,
@@ -181,6 +186,14 @@ def get_admin_documents(
         start_time=start_time,
         end_time=end_time
     )
+    if not docs and not plan_id and not status:
+        # Fallback to complete document library so knowledge base is never empty due to date presets
+        docs, total = sqlite_db.get_document_records(
+            limit=limit,
+            offset=offset,
+            plan_id=plan_id,
+            status=status
+        )
     jobs, total_jobs = sqlite_db.get_ingestion_jobs_list(limit=20, offset=0)
 
     # Calculate plan distribution

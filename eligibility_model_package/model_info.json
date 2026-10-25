@@ -1,0 +1,59 @@
+{
+  "model_name": "Gradient Boosting",
+  "task": "Binary classification: is the applicant eligible to claim health insurance?",
+  "target": {
+    "column": "eligible",
+    "1": "Yes (eligible)",
+    "0": "No (not eligible)"
+  },
+  "feature_columns": [
+    "age",
+    "bmi",
+    "smoker",
+    "alcoholic",
+    "pre_existing_condition"
+  ],
+  "numeric_features": [
+    "age",
+    "bmi"
+  ],
+  "categorical_features": [
+    "smoker",
+    "alcoholic",
+    "pre_existing_condition"
+  ],
+  "bmi_formula": "bmi = weight_kg / (height_cm / 100) ** 2",
+  "allowed_values": {
+    "smoker": [
+      "No",
+      "Yes"
+    ],
+    "alcoholic": [
+      "No",
+      "Yes"
+    ],
+    "pre_existing_condition": [
+      "Diabetes",
+      "Heart_Disease",
+      "Hypertension",
+      "Multiple",
+      "None",
+      "Not sure",
+      "Other condition",
+      "Thyroid_Disorder"
+    ]
+  },
+  "test_scores": {
+    "accuracy": 0.891,
+    "precision": 0.9126,
+    "recall": 0.8982,
+    "f1": 0.9053
+  },
+  "library_versions": {
+    "python": "3.13.5",
+    "scikit-learn": "1.6.1",
+    "pandas": "2.2.3",
+    "numpy": "2.1.3",
+    "joblib": "1.4.2"
+  }
+}

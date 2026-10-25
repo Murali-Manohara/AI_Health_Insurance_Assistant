@@ -59,6 +59,7 @@ data/staging/conversations.json
 data/staging/ingestion_history.json
 data/reports/prompt_scenarios_results.json
 prompt.txt
+code.txt
 
 # ==========================================
 # IDE & Operating System Caches

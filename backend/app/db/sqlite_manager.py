@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import uuid
 import time
@@ -24,7 +25,20 @@ class SQLiteManager:
         self._init_tables()
         self._seed_default_accounts()
 
+    def rebind_db(self, new_path: Path) -> None:
+        """Rebinds SQLite manager to an isolated database path (used for tests/migrations)."""
+        self.db_path = Path(new_path)
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._init_tables()
+        self._seed_default_accounts()
+
     def _get_connection(self) -> sqlite3.Connection:
+        # Strict Test Isolation Safeguard: Prevent any test from using runtime data/app.db
+        if os.environ.get("PYTEST_CURRENT_TEST") and Path(self.db_path).resolve() == DB_PATH.resolve():
+            raise RuntimeError(
+                f"CRITICAL SAFETY VIOLATION: Automated test attempted to connect to runtime database '{DB_PATH}'! "
+                "All tests must execute against an isolated test database."
+            )
         conn = sqlite3.connect(str(self.db_path), timeout=15.0)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON;")
@@ -142,6 +156,56 @@ class SQLiteManager:
                     timestamp TEXT NOT NULL
                 );
 
+                CREATE TABLE IF NOT EXISTS eligibility_assessments (
+                    assessment_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    outcome TEXT NOT NULL,
+                    qualifying_plans_json TEXT DEFAULT '[]',
+                    input_provenance_json TEXT DEFAULT '{}',
+                    model_id TEXT,
+                    model_version TEXT,
+                    confidence_score REAL,
+                    reason_codes_json TEXT DEFAULT '[]',
+                    review_status TEXT DEFAULT 'NONE',
+                    error_category TEXT,
+                    previous_assessment_id TEXT,
+                    is_current INTEGER NOT NULL DEFAULT 1,
+                    created_at TEXT NOT NULL,
+                    completed_at TEXT,
+                    expires_at TEXT,
+                    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+                    FOREIGN KEY (previous_assessment_id) REFERENCES eligibility_assessments(assessment_id) ON DELETE SET NULL
+                );
+
+                CREATE TABLE IF NOT EXISTS plan_selections (
+                    selection_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    assessment_id TEXT NOT NULL,
+                    selected_plan_id TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'ACTIVE',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+                    FOREIGN KEY (assessment_id) REFERENCES eligibility_assessments(assessment_id) ON DELETE RESTRICT
+                );
+
+                CREATE TABLE IF NOT EXISTS agent_contact_requests (
+                    request_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    assessment_id TEXT,
+                    full_name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    phone TEXT,
+                    preferred_contact_method TEXT DEFAULT 'EMAIL',
+                    notes TEXT,
+                    status TEXT NOT NULL DEFAULT 'PENDING',
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+                    FOREIGN KEY (assessment_id) REFERENCES eligibility_assessments(assessment_id) ON DELETE SET NULL
+                );
+
                 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
                 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
                 CREATE INDEX IF NOT EXISTS idx_conv_user ON conversations(user_id);
@@ -150,6 +214,13 @@ class SQLiteManager:
                 CREATE INDEX IF NOT EXISTS idx_jobs_created ON ingestion_jobs(created_at);
                 CREATE INDEX IF NOT EXISTS idx_rag_metrics_time ON rag_request_metrics(created_at);
                 CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_logs(timestamp);
+                CREATE INDEX IF NOT EXISTS idx_asmt_user_current ON eligibility_assessments(user_id, is_current);
+                CREATE INDEX IF NOT EXISTS idx_asmt_outcome ON eligibility_assessments(outcome);
+                CREATE INDEX IF NOT EXISTS idx_asmt_status ON eligibility_assessments(status);
+                CREATE INDEX IF NOT EXISTS idx_asmt_completed ON eligibility_assessments(completed_at);
+                CREATE INDEX IF NOT EXISTS idx_psel_user_status ON plan_selections(user_id, status);
+                CREATE INDEX IF NOT EXISTS idx_agent_req_user ON agent_contact_requests(user_id);
+                CREATE INDEX IF NOT EXISTS idx_agent_req_status ON agent_contact_requests(status);
             """)
             conn.commit()
 
@@ -888,7 +959,7 @@ class SQLiteManager:
             met_row = cur.fetchone()
             total_chat_reqs = met_row["total_reqs"] or total_messages
             successful_chat_reqs = met_row["success_reqs"] or total_messages
-            avg_latency = round(met_row["avg_latency"] or 450.0, 1)
+            avg_latency = round(float(met_row["avg_latency"]), 1) if met_row["avg_latency"] is not None else None
 
             # 5. Error rate
             cur.execute(f"""
@@ -915,6 +986,7 @@ class SQLiteManager:
                 "total_messages": total_messages,
                 "successful_chat_requests": successful_chat_reqs,
                 "average_response_latency_ms": avg_latency,
+                "average_latency_ms": avg_latency,
                 "backend_error_rate_pct": error_rate
             }
 
@@ -1048,16 +1120,34 @@ class SQLiteManager:
                     u.is_approved,
                     u.created_at,
                     p.last_login,
-                    p.governance_status
+                    p.governance_status,
+                    ea.outcome as eligibility_outcome,
+                    ea.confidence_score as eligibility_score,
+                    ea.completed_at as eligibility_date,
+                    ea.input_provenance_json as eligibility_input_json,
+                    ps.selected_plan_id as active_plan_id,
+                    ps.created_at as plan_selected_date
                 FROM users u
                 LEFT JOIN profiles p ON u.user_id = p.user_id
+                LEFT JOIN eligibility_assessments ea ON u.user_id = ea.user_id AND ea.is_current = 1
+                LEFT JOIN plan_selections ps ON u.user_id = ps.user_id AND ps.status = 'ACTIVE'
                 {where_clause}
                 ORDER BY u.created_at DESC
                 LIMIT ? OFFSET ?
             """
             params.extend([limit, offset])
             cur.execute(query, params)
-            rows = [dict(r) for r in cur.fetchall()]
+            rows = []
+            for r in cur.fetchall():
+                d = dict(r)
+                if d.get("eligibility_input_json"):
+                    try:
+                        d["eligibility_input"] = json.loads(d["eligibility_input_json"])
+                    except Exception:
+                        d["eligibility_input"] = {}
+                else:
+                    d["eligibility_input"] = {}
+                rows.append(d)
             return rows, total
 
     def update_user_status_admin(self, user_id: str, is_approved: int) -> bool:
@@ -1067,6 +1157,253 @@ class SQLiteManager:
             cur.execute("UPDATE users SET is_approved = ? WHERE user_id = ?", (is_approved, user_id))
             conn.commit()
             return cur.rowcount > 0
+
+    # ==================== ELIGIBILITY & PLAN SELECTION MANAGEMENT ====================
+
+    def save_eligibility_assessment(
+        self,
+        user_id: str,
+        status: str,
+        outcome: str,
+        qualifying_plans: list[str],
+        input_provenance: dict,
+        model_id: str = "ruleset_underwrite_v1",
+        model_version: str = "1.0.0",
+        confidence_score: Optional[float] = 1.0,
+        reason_codes: Optional[list[str]] = None,
+        review_status: str = "NONE",
+        error_category: Optional[str] = None,
+        expires_at: Optional[str] = None
+    ) -> str:
+        """
+        Records a new eligibility assessment atomically.
+        Supersedes any prior current assessment by setting is_current = 0.
+        """
+        assessment_id = f"asmt_{uuid.uuid4().hex[:12]}"
+        now = datetime.now(timezone.utc).isoformat()
+        reason_codes = reason_codes or []
+
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            # 1. Fetch previous current assessment ID
+            cur.execute("SELECT assessment_id FROM eligibility_assessments WHERE user_id = ? AND is_current = 1", (user_id,))
+            prev_row = cur.fetchone()
+            prev_id = prev_row["assessment_id"] if prev_row else None
+
+            # 2. Demote previous assessments
+            cur.execute("UPDATE eligibility_assessments SET is_current = 0 WHERE user_id = ?", (user_id,))
+
+            # 3. Insert new current assessment
+            cur.execute("""
+                INSERT INTO eligibility_assessments (
+                    assessment_id, user_id, status, outcome, qualifying_plans_json,
+                    input_provenance_json, model_id, model_version, confidence_score,
+                    reason_codes_json, review_status, error_category, previous_assessment_id,
+                    is_current, created_at, completed_at, expires_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)
+            """, (
+                assessment_id, user_id, status, outcome,
+                json.dumps(qualifying_plans), json.dumps(input_provenance),
+                model_id, model_version, confidence_score,
+                json.dumps(reason_codes), review_status, error_category,
+                prev_id, now, now if status in ("COMPLETED", "FAILED") else None, expires_at
+            ))
+            conn.commit()
+            return assessment_id
+
+    def get_current_assessment_for_user(self, user_id: str) -> Optional[dict]:
+        """Returns the current valid assessment for the user with deserialized JSON fields."""
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT * FROM eligibility_assessments
+                WHERE user_id = ? AND is_current = 1
+                ORDER BY created_at DESC LIMIT 1
+            """, (user_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            data = dict(row)
+            data["qualifying_plans"] = json.loads(data.get("qualifying_plans_json") or "[]")
+            data["input_provenance"] = json.loads(data.get("input_provenance_json") or "{}")
+            data["reason_codes"] = json.loads(data.get("reason_codes_json") or "[]")
+            return data
+
+    def save_plan_selection(self, user_id: str, assessment_id: str, selected_plan_id: str) -> str:
+        """
+        Records a plan selection linked to a valid assessment.
+        Marks any prior active selection as SWITCHED.
+        """
+        selection_id = f"psel_{uuid.uuid4().hex[:12]}"
+        now = datetime.now(timezone.utc).isoformat()
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("UPDATE plan_selections SET status = 'SWITCHED', updated_at = ? WHERE user_id = ? AND status = 'ACTIVE'", (now, user_id))
+            cur.execute("""
+                INSERT INTO plan_selections (
+                    selection_id, user_id, assessment_id, selected_plan_id, status, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)
+            """, (selection_id, user_id, assessment_id, selected_plan_id, now, now))
+            conn.commit()
+            return selection_id
+
+    def get_active_plan_selection_for_user(self, user_id: str) -> Optional[dict]:
+        """Returns the active plan selection for a user."""
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT * FROM plan_selections
+                WHERE user_id = ? AND status = 'ACTIVE'
+                ORDER BY created_at DESC LIMIT 1
+            """, (user_id,))
+            row = cur.fetchone()
+            return dict(row) if row else None
+
+    def save_agent_contact_request(
+        self,
+        user_id: str,
+        assessment_id: Optional[str],
+        full_name: str,
+        email: str,
+        phone: Optional[str],
+        preferred_contact_method: str = "EMAIL",
+        notes: Optional[str] = None
+    ) -> str:
+        """Records a user request for licensed human agent assistance."""
+        request_id = f"agtr_{uuid.uuid4().hex[:12]}"
+        now = datetime.now(timezone.utc).isoformat()
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT INTO agent_contact_requests (
+                    request_id, user_id, assessment_id, full_name, email, phone,
+                    preferred_contact_method, notes, status, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?)
+            """, (
+                request_id, user_id, assessment_id, full_name, email, phone,
+                preferred_contact_method, notes, now, now
+            ))
+            conn.commit()
+            return request_id
+
+    def get_agent_contact_requests(self, limit: int = 50, offset: int = 0) -> tuple[list[dict], int]:
+        """Returns paginated agent assistance requests and total count."""
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) as cnt FROM agent_contact_requests")
+            total = cur.fetchone()["cnt"]
+            cur.execute("""
+                SELECT * FROM agent_contact_requests
+                ORDER BY created_at DESC LIMIT ? OFFSET ?
+            """, (limit, offset))
+            rows = [dict(r) for r in cur.fetchall()]
+            return rows, total
+
+    def get_eligibility_pipeline_kpis(self, start_time: Optional[str] = None, end_time: Optional[str] = None) -> dict:
+        """Calculates accurate, real-time analytics across the entire workflow funnel."""
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+
+            # 1. Total Registered Users
+            cur.execute("SELECT COUNT(*) as cnt FROM users")
+            total_registered = cur.fetchone()["cnt"]
+
+            # 2. Total Users Assessed (completed)
+            cur.execute("SELECT COUNT(DISTINCT user_id) as cnt FROM eligibility_assessments WHERE status = 'COMPLETED'")
+            total_assessed_users = cur.fetchone()["cnt"]
+
+            # 3. Eligible Users (current valid assessment is ELIGIBLE)
+            cur.execute("""
+                SELECT COUNT(DISTINCT user_id) as cnt
+                FROM eligibility_assessments
+                WHERE is_current = 1 AND status = 'COMPLETED' AND outcome = 'ELIGIBLE'
+            """)
+            eligible_users = cur.fetchone()["cnt"]
+
+            # 4. Ineligible Users
+            cur.execute("""
+                SELECT COUNT(DISTINCT user_id) as cnt
+                FROM eligibility_assessments
+                WHERE is_current = 1 AND status = 'COMPLETED' AND outcome = 'INELIGIBLE'
+            """)
+            ineligible_users = cur.fetchone()["cnt"]
+
+            # 5. Pending Review
+            cur.execute("""
+                SELECT COUNT(DISTINCT user_id) as cnt
+                FROM eligibility_assessments
+                WHERE is_current = 1 AND outcome = 'NEEDS_REVIEW'
+            """)
+            pending_review_users = cur.fetchone()["cnt"]
+
+            # 6. Users Never Assessed
+            cur.execute("""
+                SELECT COUNT(*) as cnt FROM users
+                WHERE user_id NOT IN (SELECT DISTINCT user_id FROM eligibility_assessments WHERE status = 'COMPLETED')
+            """)
+            not_assessed_users = cur.fetchone()["cnt"]
+
+            # 7. Failed Assessment Attempts
+            cur.execute("SELECT COUNT(*) as cnt FROM eligibility_assessments WHERE status = 'FAILED'")
+            failed_assessments = cur.fetchone()["cnt"]
+
+            # 8. Eligible Users Who Have Not Selected a Plan
+            cur.execute("""
+                SELECT COUNT(DISTINCT ea.user_id) as cnt
+                FROM eligibility_assessments ea
+                WHERE ea.is_current = 1 AND ea.outcome = 'ELIGIBLE'
+                  AND ea.user_id NOT IN (SELECT DISTINCT user_id FROM plan_selections WHERE status = 'ACTIVE')
+            """)
+            eligible_no_plan = cur.fetchone()["cnt"]
+
+            # 9. Users Who Selected a Plan
+            cur.execute("SELECT COUNT(DISTINCT user_id) as cnt FROM plan_selections WHERE status = 'ACTIVE'")
+            plan_selected_users = cur.fetchone()["cnt"]
+
+            # 10. Users Who Proceeded to Policy Chat
+            cur.execute("""
+                SELECT COUNT(DISTINCT c.user_id) as cnt
+                FROM conversations c
+                JOIN messages m ON c.conversation_id = m.conversation_id
+                WHERE c.user_id IN (SELECT DISTINCT user_id FROM plan_selections WHERE status = 'ACTIVE')
+            """)
+            chat_active_users = cur.fetchone()["cnt"]
+
+            # 11. Agent Assistance Requests
+            cur.execute("SELECT COUNT(*) as cnt FROM agent_contact_requests")
+            agent_requests = cur.fetchone()["cnt"]
+
+            # Funnel Conversion Rates (Safe division guarding against division by zero)
+            assessment_rate = round((total_assessed_users / total_registered * 100), 1) if total_registered > 0 else 0.0
+            eligibility_rate = round((eligible_users / total_assessed_users * 100), 1) if total_assessed_users > 0 else 0.0
+            plan_selection_rate = round((plan_selected_users / eligible_users * 100), 1) if eligible_users > 0 else 0.0
+            chat_rate = round((chat_active_users / plan_selected_users * 100), 1) if plan_selected_users > 0 else 0.0
+
+            return {
+                "total_registered_users": total_registered,
+                "total_users_assessed": total_assessed_users,
+                "eligible_users": eligible_users,
+                "ineligible_users": ineligible_users,
+                "pending_review_users": pending_review_users,
+                "not_assessed_users": not_assessed_users,
+                "users_not_assessed": not_assessed_users,
+                "failed_assessments": failed_assessments,
+                "eligible_without_plan_selection": eligible_no_plan,
+                "plan_selected_users": plan_selected_users,
+                "users_selected_plan": plan_selected_users,
+                "policy_chat_active_users": chat_active_users,
+                "users_proceeded_to_chat": chat_active_users,
+                "agent_assistance_requests": agent_requests,
+                "underwriting_eligibility_rate_pct": eligibility_rate,
+                "plan_selection_conversion_rate_pct": plan_selection_rate,
+                "chat_engagement_conversion_rate_pct": chat_rate,
+                "funnel_rates": {
+                    "assessment_rate_pct": assessment_rate,
+                    "eligibility_rate_pct": eligibility_rate,
+                    "plan_selection_rate_pct": plan_selection_rate,
+                    "chat_engagement_rate_pct": chat_rate
+                }
+            }
 
 # Global singleton
 sqlite_db = SQLiteManager()

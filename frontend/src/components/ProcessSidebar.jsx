@@ -10,7 +10,9 @@ import React from 'react';
 export function ProcessSidebar({
   activeStage,
   selectedPlan,
+  assessment,
   onNavigate,
+  onBack,
   userRole,
   currentUser
 }) {
@@ -18,29 +20,44 @@ export function ProcessSidebar({
 
   const stages = [
     {
-      id: 'plans',
+      id: 'eligibility',
       number: '1',
-      title: 'Choose Plan',
-      desc: selectedPlan ? selectedPlan.plan_name : 'Select active policy portfolio',
-      badge: selectedPlan ? (selectedPlan.display_title || selectedPlan.plan_category) : null,
-      badgeClass: selectedPlan ? selectedPlan.plan_category.toLowerCase() : null,
+      title: 'Eligibility Assessment',
+      desc: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'Qualified (Underwriting Passed)' : assessment.outcome.replace('_', ' ')) : 'Risk evaluation',
+      badge: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'Qualified' : 'Assessed') : null,
+      badgeClass: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'gold' : 'basic') : null,
       icon: (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          <path d="m9 12 2 2 4-4" />
+          <path d="M9 12l2 2 4-4" />
         </svg>
       ),
       disabled: false
     },
     {
-      id: 'chat',
+      id: 'plans',
       number: '2',
+      title: 'Choose Plan',
+      desc: selectedPlan ? selectedPlan.plan_name : 'Select active policy portfolio',
+      badge: selectedPlan ? (selectedPlan.display_title || selectedPlan.plan_category) : null,
+      badgeClass: selectedPlan ? selectedPlan.plan_category.toLowerCase() : null,
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        </svg>
+      ),
+      disabled: !assessment && !isEmployee
+    },
+    {
+      id: 'chat',
+      number: '3',
       title: 'Policy Chat',
       desc: selectedPlan ? `Grounded Q&A (${selectedPlan.plan_id})` : 'Select a plan to start chat',
       badge: activeStage === 'chat' ? 'Active Scope' : null,
       badgeClass: 'active-stage',
       icon: (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           <line x1="9" y1="10" x2="15" y2="10" />
         </svg>
@@ -51,17 +68,38 @@ export function ProcessSidebar({
 
   return (
     <aside className="process-sidebar" aria-label="Process Navigation">
-      <div className="process-sidebar-header">
-        <span className="process-sidebar-label">
-          {isEmployee ? 'Corporate Workspace' : 'Insurance Assistant'}
-        </span>
-        <span className="admin-status-pill">Active Session</span>
+      {/* Top Header of Sidebar: Back button on top left when in chat */}
+      <div className="sidebar-top-header">
+        {activeStage === 'chat' ? (
+          <button
+            type="button"
+            className="sidebar-back-btn"
+            onClick={onBack}
+            title="Back"
+            aria-label="Back"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back</span>
+          </button>
+        ) : (
+          <div className="sidebar-brand-mark">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span>Policy Assistant</span>
+          </div>
+        )}
       </div>
 
       <nav className="process-nav-list" role="navigation">
         {stages.map((stage) => {
           const isActive = activeStage === stage.id;
-          const isCompleted = stage.id === 'plans' && selectedPlan && activeStage !== 'plans';
+          const isCompleted =
+            (stage.id === 'eligibility' && assessment && activeStage !== 'eligibility') ||
+            (stage.id === 'plans' && selectedPlan && activeStage === 'chat');
 
           return (
             <button
@@ -89,31 +127,12 @@ export function ProcessSidebar({
                 <div className="process-nav-title-row">
                   <span className="process-nav-title">{stage.title}</span>
                   {isActive && <span className="admin-active-dot" aria-hidden="true">•</span>}
-                  {stage.badge && !isActive && (
-                    <span className={`process-mini-badge ${stage.badgeClass || ''}`}>
-                      {stage.badge}
-                    </span>
-                  )}
                 </div>
-                <div className="process-nav-desc">{stage.desc}</div>
               </div>
             </button>
           );
         })}
       </nav>
-
-      {/* Matching Enterprise Footer Authorization Scope Badge */}
-      <div className="admin-sidebar-footer" style={{ marginTop: 'auto' }}>
-        <div
-          className="admin-scope-badge"
-          style={isEmployee ? { color: '#065f46', background: '#ecfdf5' } : { color: '#0369a1', background: '#e0f2fe' }}
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          <span>{isEmployee ? 'Corporate Scope Active' : 'Customer Grounding Active'}</span>
-        </div>
-      </div>
     </aside>
   );
 }

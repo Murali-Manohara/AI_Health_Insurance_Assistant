@@ -134,52 +134,19 @@ class AnswerGenerationService:
         if denied_notice:
             answer_text = f"> **Access Restriction Notice:** {denied_notice}\n\n" + answer_text
 
-        if contains_unverified and verified_citations:
-            # Determine plan-specific unverified banner strictly from retrieved chunks and plan scope
-            unverified_plan_ids = {
-                c.get("metadata", {}).get("plan_id")
-                for c in chunks
-                if c.get("metadata", {}).get("data_status") == "illustrative_unverified"
-            }
-            if not unverified_plan_ids and selected_plan_id:
-                unverified_plan_ids.add(selected_plan_id)
+        has_unverified = bool(contains_unverified or any(
+            c.get("metadata", {}).get("data_status") == "illustrative_unverified"
+            for c in chunks
+        ))
 
-            has_existing_notice = any(
-                term in answer_text.lower()
-                for term in ["illustrative", "demonstration data", "not official", "not an official", "notice:"]
-            )
-            # Avoid attaching policy disclaimers to pure educational or conversational responses
-            has_substantive_terms = any(
-                term in answer_text.lower()
-                for term in ["benefit", "coverage", "hospital stay", "premium", "payout", "waiting period", "icu", "surgery", "₹"]
-            )
-            is_conversational_greeting = any(
-                g in answer_text.lower()
-                for g in ["good morning", "good afternoon", "how can i assist", "how can i help you"]
-            ) and len(answer_text.strip().split("\n")) <= 2
-
-            if not has_existing_notice and has_substantive_terms and not is_conversational_greeting:
-                if "EMP-INS-001" in unverified_plan_ids:
-                    unverified_banner = (
-                        "\n\n> **Notice:** The Executive Employee Insurance Plan content cited above is illustrative "
-                        "demonstration data and does not constitute an official insurance policy contract."
-                    )
-                elif "HS-GOLD-001" in unverified_plan_ids:
-                    unverified_banner = (
-                        "\n\n> **Notice:** The Health Shield – Gold content cited above is illustrative "
-                        "demonstration data and does not constitute an official insurance policy contract."
-                    )
-                else:
-                    unverified_banner = (
-                        "\n\n> **Notice:** The policy content cited above is illustrative "
-                        "demonstration data and does not constitute an official insurance policy contract."
-                    )
-                answer_text += unverified_banner
+        if has_unverified and verified_citations:
+            if not any(term in answer_text.lower() for term in ["illustrative", "demonstration data"]):
+                answer_text += "\n\n> **Notice:** Contains illustrative demonstration data."
 
         return GroundedAnswerResult(
             answer_text=answer_text,
             citations=verified_citations,
-            contains_unverified_notice=contains_unverified,
+            contains_unverified_notice=has_unverified,
             denied_notice=denied_notice,
             provider_used=actual_provider
         )

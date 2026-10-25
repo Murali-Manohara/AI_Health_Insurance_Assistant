@@ -11,8 +11,8 @@ PLAN_DISPLAY_CONFIG = {
         "display_title": "Basic",
         "highlights": [
             "Entry-level fixed-benefit health protection",
-            "Hospital Cash: ₹2,000/day (up to 30 days/year)",
-            "Day-Care Surgery & Major Surgery coverage up to ₹50,000",
+            "Hospital Cash: \u20b92,000/day (up to 30 days/year)",
+            "Day-Care Surgery & Major Surgery coverage up to \u20b950,000",
             "Initial 30-day waiting period; 2-year specific illness"
         ]
     },
@@ -20,8 +20,8 @@ PLAN_DISPLAY_CONFIG = {
         "display_title": "Gold",
         "highlights": [
             "Comprehensive customer healthcare coverage",
-            "Hospital Cash: ₹4,000/day | ICU: ₹8,000/day",
-            "Major Surgery benefit up to ₹1,00,000 across Category 1-4",
+            "Hospital Cash: \u20b94,000/day | ICU: \u20b98,000/day",
+            "Major Surgery benefit up to \u20b91,00,000 across Category 1-4",
             "Claim-free annual daily benefit increase of 5%"
         ]
     },
@@ -29,8 +29,8 @@ PLAN_DISPLAY_CONFIG = {
         "display_title": "Premium",
         "highlights": [
             "Highest-tier customer fixed-benefit coverage",
-            "Hospital Cash: ₹6,000/day | ICU: ₹12,000/day",
-            "Major Surgery benefit up to ₹1,50,000 with recovery bonus",
+            "Hospital Cash: \u20b96,000/day | ICU: \u20b912,000/day",
+            "Major Surgery benefit up to \u20b91,50,000 with recovery bonus",
             "Premium waiver on critical diagnosis & auto-health increase"
         ]
     },

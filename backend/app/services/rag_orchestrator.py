@@ -29,9 +29,9 @@ class RAGOrchestrator:
         user: UserIdentity,
         query: str
     ) -> dict:
-        session = self.conversation_manager.get_conversation(conversation_id, user.user_id)
+        session = self.conversation_manager.get_conversation(conversation_id, user.user_id, role=user.role)
         if not session:
-            raise ValueError(f"Conversation session '{conversation_id}' not found for user '{user.user_id}'.")
+            raise ValueError(f"Conversation session '{conversation_id}' not found or access denied for user '{user.user_id}'.")
 
         logger.info(f"[{conversation_id}] Processing query for role='{user.role}', plan='{session.selected_plan_id}': '{query[:80]}'")
 
