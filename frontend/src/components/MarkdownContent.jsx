@@ -1,11 +1,21 @@
 import React from 'react';
 
-// Helper to render inline markdown: **bold**, *italic*, `code`
+// Sanitize link URLs to prevent XSS (javascript:, data:, vbscript:)
+function sanitizeUrl(url) {
+  if (!url) return null;
+  const clean = url.trim().toLowerCase();
+  if (clean.startsWith('https://') || clean.startsWith('http://') || clean.startsWith('/')) {
+    return url.trim();
+  }
+  return null;
+}
+
+// Helper to render inline markdown: **bold**, *italic*, `code`, [link](url)
 function renderInline(text) {
   if (!text) return null;
 
-  // Split by inline markdown tokens: `code`, **bold**, *italic*
-  const regex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  // Split by inline markdown tokens: `code`, **bold**, *italic*, [link](url)
+  const regex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
   const parts = text.split(regex);
 
   return parts.map((part, index) => {
@@ -31,6 +41,29 @@ function renderInline(text) {
           {part.slice(1, -1)}
         </em>
       );
+    }
+    // Markdown link: [label](url)
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (linkMatch) {
+      const label = linkMatch[1];
+      const rawUrl = linkMatch[2];
+      const safeHref = sanitizeUrl(rawUrl);
+      if (safeHref) {
+        return (
+          <a
+            key={index}
+            href={safeHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="chat-link"
+            style={{ color: 'var(--accent, #2563eb)', textDecoration: 'underline' }}
+          >
+            {label}
+          </a>
+        );
+      }
+      // If URL scheme is untrusted, render label as safe plain text
+      return <span key={index}>{label}</span>;
     }
     return part;
   });

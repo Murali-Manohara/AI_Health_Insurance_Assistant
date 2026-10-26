@@ -1,10 +1,11 @@
 import time
 from typing import Optional
-from backend.app.services.auth_service import UserIdentity, AuthorizationService
+from backend.app.services.auth_service import UserIdentity, AuthorizationService, ROLE_PLAN_PERMISSIONS
 from backend.app.services.scope_resolver import ScopeResolver, ScopeResolutionResult
 from backend.app.services.retrieval_service import HybridRetrievalService
 from backend.app.services.generation_service import AnswerGenerationService, GroundedAnswerResult
 from backend.app.services.conversation_service import ConversationManager, ConversationSession, ChatMessage
+from backend.app.core.guardrails import InputGuardrail, OutputGuardrail
 from backend.app.core.logging_config import logger
 
 class RAGOrchestrator:
@@ -35,9 +36,51 @@ class RAGOrchestrator:
 
         logger.info(f"[{conversation_id}] Processing query for role='{user.role}', plan='{session.selected_plan_id}': '{query[:80]}'")
 
-        # 1. Resolve effective retrieval scope and comparisons
+        # 0. Input Guardrail: length enforcement, Unicode sanitization, Trojan Source stripping, and injection detection
+        sanitized_query, is_injection, refusal_reason = InputGuardrail.validate_user_query(query)
+        if is_injection:
+            logger.warning(f"[{conversation_id}] Prompt injection blocked for user='{user.user_id}'. Reason: {refusal_reason}")
+            try:
+                from backend.app.db.sqlite_manager import sqlite_db
+                sqlite_db.record_audit_event(
+                    action="prompt_injection_blocked",
+                    actor_id=user.user_id,
+                    actor_email=user.email,
+                    actor_role=user.role,
+                    target_resource=conversation_id,
+                    outcome="BLOCKED",
+                    details={"sanitized_query_preview": sanitized_query[:80]}
+                )
+            except Exception as e:
+                logger.warning(f"Failed to record prompt injection audit event: {e}")
+
+            assistant_msg = self.conversation_manager.add_turn(
+                conversation_id=conversation_id,
+                user_id=user.user_id,
+                user_query=sanitized_query,
+                assistant_answer=refusal_reason or "I cannot process this request because it violates security boundaries.",
+                citations=[],
+                effective_scope=[session.selected_plan_id],
+                is_comparison=False,
+                is_clarification=False,
+                contains_unverified=False
+            )
+            return {
+                "message": assistant_msg.model_dump(),
+                "scope_resolution": {
+                    "effective_scope": [session.selected_plan_id],
+                    "is_comparison": False,
+                    "is_ambiguous": False,
+                    "denied_plans": [],
+                    "is_greeting": False,
+                    "is_injection_blocked": True
+                },
+                "retrieval_diagnostics": {"security_guardrail": "prompt_injection_blocked"}
+            }
+
+        # 1. Resolve effective retrieval scope and comparisons using sanitized query
         scope_result = ScopeResolver.resolve_scope(
-            query=query,
+            query=sanitized_query,
             selected_plan_id=session.selected_plan_id,
             role=user.role,
             conversation_history=[m.model_dump() for m in session.messages]
@@ -93,11 +136,11 @@ class RAGOrchestrator:
         )
         t_retrieval_ms = (time.time() - t_ret_start) * 1000.0
 
-        # 4. Generate Grounded Answer with Citations
+        # 4. Generate Grounded Answer with Citations using sanitized query
         history_list = [m.model_dump() for m in session.messages]
         t_gen_start = time.time()
         answer_res = self.generation_service.generate_answer(
-            query=query,
+            query=sanitized_query,
             role=user.role,
             selected_plan_id=session.selected_plan_id,
             retrieval_result=retrieval_res,
@@ -108,13 +151,25 @@ class RAGOrchestrator:
         t_generation_ms = (time.time() - t_gen_start) * 1000.0
         t_total_ms = (time.time() - t_start) * 1000.0
 
+        # Output Guardrail: Validate and prune any fabricated or unauthorized plan citations
+        authorized_plans = ROLE_PLAN_PERMISSIONS.get(user.role, set())
+        retrieved_chunk_ids = {c.get("chunk_id") for c in retrieval_res.get("chunks", []) if c.get("chunk_id")}
+        for idx in range(1, len(retrieval_res.get("chunks", [])) + 1):
+            retrieved_chunk_ids.add(f"SRC-{idx}")
+
+        filtered_citations = OutputGuardrail.validate_citations_against_scope(
+            citations=answer_res.citations,
+            authorized_plans=authorized_plans,
+            retrieved_chunk_ids=retrieved_chunk_ids
+        )
+
         # 5. Persist turn to conversation session
         assistant_msg = self.conversation_manager.add_turn(
             conversation_id=conversation_id,
             user_id=user.user_id,
-            user_query=query,
+            user_query=sanitized_query,
             assistant_answer=answer_res.answer_text,
-            citations=answer_res.citations,
+            citations=filtered_citations,
             effective_scope=scope_result.effective_scope,
             is_comparison=scope_result.is_comparison,
             is_clarification=False,

@@ -59,6 +59,15 @@ class Settings(BaseSettings):
     # Upload limits & security
     MAX_UPLOAD_SIZE_BYTES: int = 25 * 1024 * 1024  # 25 MB
     ALLOWED_EXTENSIONS: set[str] = {".pdf"}
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ]
+    MAX_QUERY_CHARS: int = 2000
+    MAX_CONTEXT_TOKENS: int = 4000
+    MAX_HISTORY_TURNS: int = 5
 
 settings = Settings()
 

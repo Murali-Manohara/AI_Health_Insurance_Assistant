@@ -3314,35 +3314,91 @@ html, body, #root {
   }
 }
 
-/* Loading state bubble */
-.chat-message-bubble.assistant.loading {
+/* Containerless Thinking Orb Indicator (No white container, No glass box) */
+.chat-message-row.assistant.thinking-loading-row {
+  display: flex !important;
+  align-items: center !important;
+  padding: 6px 4px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.naked-thinking-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 2px 0 !important;
+  margin: 0 !important;
+  animation: thinkingFadeIn 0.3s ease-out forwards;
+}
+
+.naked-thinking-orb-canvas {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid var(--glass-level-2-border);
+  justify-content: center;
+  width: 51px;
+  height: 51px;
+  flex-shrink: 0;
+  overflow: visible;
+  background: transparent !important;
 }
 
-.chat-loading-dots {
+.naked-thinking-orb-canvas canvas {
+  width: 51px !important;
+  height: 51px !important;
+}
+
+.naked-thinking-text-group {
   display: inline-flex;
-  gap: 4px;
+  align-items: baseline;
+  gap: 2px;
 }
 
-.chat-loading-dots span {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  animation: bounceDot 1.4s infinite ease-in-out both;
+.naked-thinking-label {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700 !important; /* Bold black */
+  color: #000000 !important;   /* Bold black */
+  letter-spacing: -0.01em;
+  line-height: 1.4;
 }
 
-.chat-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
-.chat-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+.naked-thinking-dots {
+  display: inline-flex;
+  gap: 1px;
+  color: #007aff !important;  /* Present theme blue */
+  font-weight: 800 !important;
+  font-size: 16px;
+}
 
-@keyframes bounceDot {
-  0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
-  40% { transform: scale(1); opacity: 1; }
+.naked-thinking-dots span {
+  animation: orbDotPulse 1.4s infinite ease-in-out both;
+}
+
+.naked-thinking-dots span:nth-child(1) { animation-delay: 0s; }
+.naked-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.naked-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes orbDotPulse {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-1px); }
+}
+
+@keyframes thinkingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Bottom Pinned Dock for Input (Level 1 Glass) */

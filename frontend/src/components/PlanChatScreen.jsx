@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MarkdownContent from './MarkdownContent';
 import { ChatActionsSidebar } from './ChatActionsSidebar';
 import { ClaimPredictorDrawer } from './ClaimPredictorDrawer';
+import { LiquidThinkingOrb } from './ui/orb_animation';
 
 export function PlanChatScreen({
   selectedPlan,
@@ -21,6 +22,7 @@ export function PlanChatScreen({
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMode, setLoadingMode] = useState('rag');
   const [loadingStatusText, setLoadingStatusText] = useState('Retrieving authorized policy evidence & generating grounded answer...');
   const [error, setError] = useState(null);
   const [expandedSources, setExpandedSources] = useState({});
@@ -523,9 +525,11 @@ export function PlanChatScreen({
 
     setMessages((prev) => [...prev, userMessage]);
     setInputText('');
-    setLoadingStatusText('Retrieving authorized policy evidence & generating grounded answer...');
+    setLoadingMode('rag');
     setLoading(true);
     setError(null);
+
+    const startTime = Date.now();
 
     try {
       const headers = {
@@ -566,9 +570,21 @@ export function PlanChatScreen({
         throw new Error(data.detail || `Server error (HTTP ${res.status})`);
       }
 
+      // Enforce the full 12 seconds of thinking animation (4 steps, 3s per step)
+      const elapsed = Date.now() - startTime;
+      const remainingDelay = Math.max(0, 12000 - elapsed);
+      if (remainingDelay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingDelay));
+      }
+
       setMessages((prev) => [...prev, data.message]);
       setHistoryRefreshTrigger((prev) => prev + 1);
     } catch (err) {
+      const elapsed = Date.now() - startTime;
+      const remainingDelay = Math.max(0, 12000 - elapsed);
+      if (remainingDelay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingDelay));
+      }
       setError(err.message);
     } finally {
       setLoading(false);
@@ -920,16 +936,8 @@ export function PlanChatScreen({
             })}
 
             {loading && (
-              <div className="chat-message-row assistant">
-                <div className="chat-avatar-badge assistant" title="AI Insurance Assistant">AI</div>
-                <div className="chat-message-bubble assistant loading">
-                  <div className="chat-loading-dots">
-                    <span></span><span></span><span></span>
-                  </div>
-                  <span style={{ fontStyle: 'italic', color: 'var(--text-muted)', fontSize: '12.5px' }}>
-                    {loadingStatusText}
-                  </span>
-                </div>
+              <div className="chat-message-row assistant thinking-loading-row">
+                <LiquidThinkingOrb size={51} color="#007AFF" theme="auto" mode={loadingMode} />
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -1043,6 +1051,7 @@ export function PlanChatScreen({
           currentConversationId={conversationId}
           selectedPlan={selectedPlan}
           onPredictionStart={() => {
+            setLoadingMode('claim');
             setLoadingStatusText('Estimating claim payout & evaluating parameters...');
             setLoading(true);
             setError(null);

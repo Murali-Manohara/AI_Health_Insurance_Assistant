@@ -31,14 +31,33 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware allowing Vite frontend
+from backend.app.core.security_headers import SecurityHeadersMiddleware
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+# Security headers middleware
+app.add_middleware(SecurityHeadersMiddleware)
+
+# CORS middleware allowing whitelisted frontend origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    req_id = getattr(request.state, "request_id", "unknown")
+    logger.error(f"[ReqID: {req_id}] Unhandled server exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "An internal server error occurred. Please contact support with the request ID.",
+            "request_id": req_id
+        }
+    )
 
 # Mount Routers
 app.include_router(auth.router, prefix=settings.API_PREFIX)

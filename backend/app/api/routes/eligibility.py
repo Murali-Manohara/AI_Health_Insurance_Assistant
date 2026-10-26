@@ -302,6 +302,15 @@ def request_agent_contact(
     """
     Submits a persisted assistance request to connect with a licensed human insurance agent.
     """
+    # Verify assessment ownership if assessment_id is provided
+    if payload.assessment_id:
+        assessment = sqlite_db.get_assessment_by_id(payload.assessment_id)
+        if not assessment or assessment.get("user_id") != current_user.user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied: The specified assessment does not belong to the authenticated user."
+            )
+
     try:
         request_id = sqlite_db.save_agent_contact_request(
             user_id=current_user.user_id,

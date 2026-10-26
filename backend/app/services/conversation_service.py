@@ -119,7 +119,8 @@ class ConversationManager:
         self,
         conversation_id: str,
         user_id: str,
-        role: Optional[str] = None
+        role: Optional[str] = None,
+        allow_admin_inspection: bool = False
     ) -> Optional[ConversationSession]:
         session = self.sessions.get(conversation_id)
         if not session:
@@ -153,9 +154,9 @@ class ConversationManager:
             else:
                 return None
 
-        # Enforce strict user isolation boundary (only admins may inspect cross-user conversations)
-        if session.user_id != user_id and role != "admin":
-            logger.warning(f"User '{user_id}' denied access to conversation '{conversation_id}' owned by '{session.user_id}'")
+        # Enforce strict user isolation boundary (prevent cross-user conversation snooping)
+        if session.user_id != user_id and not (role == "admin" and allow_admin_inspection):
+            logger.warning(f"User '{user_id}' (role='{role}') denied access to conversation '{conversation_id}' owned by '{session.user_id}'")
             return None
 
         # Enforce strict role-based plan access (e.g. Customer can never access employee plans)
@@ -301,18 +302,19 @@ class ConversationManager:
                     updated_at=now
                 )
 
-            sqlite_db.save_message(
-                message_id=u_msg.message_id,
-                conversation_id=conversation_id,
-                role=u_msg.role,
-                content=u_msg.content,
-                citations_json="[]",
-                effective_scope_json="[]",
-                is_comparison=False,
-                is_clarification=False,
-                contains_unverified_notice=False,
-                timestamp=u_msg.timestamp
-            )
+            if user_query:
+                sqlite_db.save_message(
+                    message_id=u_msg.message_id,
+                    conversation_id=conversation_id,
+                    role=u_msg.role,
+                    content=u_msg.content,
+                    citations_json="[]",
+                    effective_scope_json="[]",
+                    is_comparison=False,
+                    is_clarification=False,
+                    contains_unverified_notice=False,
+                    timestamp=u_msg.timestamp
+                )
             sqlite_db.save_message(
                 message_id=a_msg.message_id,
                 conversation_id=conversation_id,

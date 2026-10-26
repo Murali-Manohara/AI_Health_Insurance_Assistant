@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from backend.app.core.prompt import RAG_SYSTEM_PROMPT, format_rag_prompt
 from backend.app.registry.plans import get_plan_by_id
 from backend.app.core.config import settings
+from backend.app.core.guardrails import OutputGuardrail
 from backend.app.core.logging_config import logger
 
 class SourceCitation(BaseModel):
@@ -142,6 +143,10 @@ class AnswerGenerationService:
         if has_unverified and verified_citations:
             if not any(term in answer_text.lower() for term in ["illustrative", "demonstration data"]):
                 answer_text += "\n\n> **Notice:** Contains illustrative demonstration data."
+
+        # Output Guardrail: Redact exposed credentials/secrets and sanitize unsafe markdown link schemes
+        answer_text = OutputGuardrail.redact_secrets(answer_text)
+        answer_text = OutputGuardrail.sanitize_links(answer_text)
 
         return GroundedAnswerResult(
             answer_text=answer_text,

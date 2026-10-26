@@ -43,6 +43,39 @@ def validate_pdf_bytes(file_bytes: bytes, original_filename: str) -> None:
             detail="Invalid file format. The file does not have a valid PDF header signature."
         )
 
+    # 3. Active content and embedded script scanning (malware & malicious macro mitigation)
+    dangerous_pdf_tokens = [
+        b"/JavaScript", b"/JS", b"/Launch", b"/EmbeddedFiles", b"/SubmitForm", b"/ImportData"
+    ]
+    for token in dangerous_pdf_tokens:
+        if token in file_bytes:
+            logger.warning(f"File {original_filename} contains dangerous PDF active token: {token.decode('ascii', errors='ignore')}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Security rejection: Uploaded PDF contains active scripting or executable actions ({token.decode('ascii', errors='ignore')})."
+            )
+
+def scan_text_for_document_poisoning(text: str) -> None:
+    """
+    Scans extracted document text for prompt-poisoning or adversarial instructions
+    intended to hijack system instructions upon retrieval.
+    """
+    if not text:
+        return
+    
+    poison_patterns = [
+        re.compile(r"ignore\s+(all\s+)?(previous|prior|above)\s+(instructions|directives)", re.IGNORECASE),
+        re.compile(r"system\s+prompt\s*:\s*you\s+must", re.IGNORECASE),
+        re.compile(r"disregard\s+(the\s+)?(guardrails|instructions)", re.IGNORECASE),
+        re.compile(r"<\s*/?\s*(system|instruction|developer)\s*>", re.IGNORECASE),
+        re.compile(r"secret\s+override\s+code", re.IGNORECASE),
+    ]
+    
+    for pat in poison_patterns:
+        if pat.search(text):
+            logger.error(f"Document poisoning detected matching pattern: {pat.pattern}")
+            raise ValueError(f"Document contains suspicious instructions attempting prompt poisoning ({pat.pattern}). Ingestion halted.")
+
 def save_to_staging(file_bytes: bytes, original_filename: str) -> Path:
     """Safely write uploaded PDF to isolated staging directory with randomized name."""
     clean_name = sanitize_filename(original_filename)

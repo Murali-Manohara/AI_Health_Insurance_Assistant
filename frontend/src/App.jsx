@@ -625,5 +625,96 @@ export function App() {
   );
 }
 
-export default App;
+class AppErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Unhandled application render error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f8fafc',
+          padding: '24px',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            background: '#ffffff',
+            padding: '32px 40px',
+            borderRadius: '16px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+            maxWidth: '480px',
+            width: '100%'
+          }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              background: '#fee2e2',
+              color: '#ef4444',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </div>
+            <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+              Interface Recovered
+            </h2>
+            <p style={{ fontSize: '14px', color: '#64748b', marginBottom: '24px', lineHeight: 1.5 }}>
+              A temporary display error occurred. Your session and data remain safe.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                background: '#007aff',
+                color: '#ffffff',
+                border: 'none',
+                padding: '10px 24px',
+                borderRadius: '10px',
+                fontSize: '14px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0, 122, 255, 0.3)'
+              }}
+            >
+              Reload Application
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export function AppWithErrorBoundary() {
+  return (
+    <AppErrorBoundary>
+      <App />
+    </AppErrorBoundary>
+  );
+}
+
+export default AppWithErrorBoundary;
 

@@ -17,7 +17,7 @@ from backend.app.services.metadata_service import MetadataService
 from backend.app.services.pdf_extractor import PDFExtractor
 from backend.app.services.table_extractor import TableExtractor
 from backend.app.services.validation_service import ValidationService
-from backend.app.utils.security import compute_sha256
+from backend.app.utils.security import compute_sha256, scan_text_for_document_poisoning
 
 class IngestionJob:
     def __init__(self, job_id: str, filename: str, plan_id: str):
@@ -126,6 +126,8 @@ class IngestionOrchestrator:
             # Quick sample check of initial page text for identity resolution
             page_texts_sample, ocr_pages, total_pages = self.pdf_extractor.extract_pdf_pages(pdf_path)
             sample_text = " ".join([page_texts_sample.get(p, "") for p in range(1, min(4, total_pages + 1))])
+            # Document poisoning screening on sample text
+            scan_text_for_document_poisoning(sample_text)
 
             from backend.app.registry.plans import resolve_plan_from_selection
             plan_info = resolve_plan_from_selection(selected_plan_id, sample_text)
@@ -191,6 +193,10 @@ class IngestionOrchestrator:
             job.current_stage = "Stage 6: Chunk Validation"
             logger.info(f"[{job_id}] {job.current_stage}")
             
+            # Defense-in-depth: Scan every chunk for document poisoning directives
+            for c in children:
+                scan_text_for_document_poisoning(c.content)
+
             chunk_res = self.validator.validate_chunks_before_storage(children)
             if not chunk_res.is_valid:
                 raise ValueError("\n".join(chunk_res.errors))

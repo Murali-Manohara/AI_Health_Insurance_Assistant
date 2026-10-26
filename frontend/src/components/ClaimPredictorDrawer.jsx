@@ -311,20 +311,27 @@ export function ClaimPredictorDrawer({
       const res = await apiFn.call(claimPredictorApi, payload, authToken);
       setLastResult(res);
 
-      // Enforce proper 6 seconds of animation duration
+      // Enforce proper 12 seconds of animation duration (4 steps, 3s per step)
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 6000 - elapsed);
+      const remainingDelay = Math.max(0, 12000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }
 
-      const assistantMsg = res?.message || res?.assistant_message;
-      if (assistantMsg && onPredictionSuccess) {
+      const formattedVal = res?.formatted_prediction || (res?.prediction != null ? `₹${Number(res.prediction).toLocaleString('en-IN')}` : '₹0.00');
+      const assistantMsg = res?.message || res?.assistant_message || {
+        message_id: 'pred-' + Date.now(),
+        role: 'assistant',
+        content: `Based on the provided criteria, the machine learning model estimates a claim payout of approximately **${formattedVal}** for **${formData.claim_type}** under **Health Shield – ${formData.plan}**.`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        citations: []
+      };
+      if (onPredictionSuccess) {
         onPredictionSuccess(assistantMsg);
       }
     } catch (err) {
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 6000 - elapsed);
+      const remainingDelay = Math.max(0, 12000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }

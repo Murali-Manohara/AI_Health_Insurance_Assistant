@@ -1367,6 +1367,20 @@ class SQLiteManager:
             data["reason_codes"] = json.loads(data.get("reason_codes_json") or "[]")
             return data
 
+    def get_assessment_by_id(self, assessment_id: str) -> Optional[dict]:
+        """Returns the assessment matching the given ID."""
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM eligibility_assessments WHERE assessment_id = ?", (assessment_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            data = dict(row)
+            data["qualifying_plans"] = json.loads(data.get("qualifying_plans_json") or "[]")
+            data["input_provenance"] = json.loads(data.get("input_provenance_json") or "{}")
+            data["reason_codes"] = json.loads(data.get("reason_codes_json") or "[]")
+            return data
+
     def save_plan_selection(self, user_id: str, assessment_id: str, selected_plan_id: str) -> str:
         """
         Records a plan selection linked to a valid assessment.
