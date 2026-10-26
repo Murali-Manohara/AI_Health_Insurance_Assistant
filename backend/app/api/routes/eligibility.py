@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 
 from backend.app.api.deps import get_auth_user
-from backend.app.services.auth_service import UserIdentity
+from backend.app.services.auth_service import UserIdentity, AuthorizationService
 from backend.app.services.eligibility_model_service import (
     eligibility_model_service,
     ApplicantEvaluationInput,
@@ -11,12 +11,16 @@ from backend.app.services.eligibility_model_service import (
 )
 from backend.app.db.sqlite_manager import sqlite_db
 from backend.app.registry.plans import PLAN_REGISTRY
+from backend.app.core.logging_config import logger
 
 router = APIRouter(prefix="/eligibility", tags=["Eligibility Assessment & Underwriting"])
 
 class PlanSelectionPayload(BaseModel):
     selected_plan_id: str = Field(..., description="Target plan ID (e.g. HS-GOLD-001)")
     assessment_id: Optional[str] = Field(None, description="Optional assessment ID; defaults to current active assessment")
+
+class PlanConfirmationPayload(BaseModel):
+    plan_id: str = Field(..., description="Confirmed plan ID (e.g. HS-GOLD-001)")
 
 class AgentContactPayload(BaseModel):
     assessment_id: Optional[str] = Field(None, description="Reference assessment ID")
@@ -46,7 +50,28 @@ def assess_applicant_eligibility(
     """
     Evaluates applicant data against the authentic Gradient Boosting model pipeline.
     Validates features, calculates BMI, performs ML prediction, and persists assessment.
+    Server-side rule: Enforces that completed assessments cannot be re-run.
     """
+    # 1. Enforce server-side one-time assessment rule
+    existing_completed = sqlite_db.get_completed_assessment_for_user(current_user.user_id)
+    if existing_completed:
+        logger.info(f"User '{current_user.user_id}' already has completed assessment '{existing_completed['assessment_id']}'. Returning saved result.")
+        return {
+            "assessment_id": existing_completed["assessment_id"],
+            "outcome": existing_completed["outcome"],
+            "status": existing_completed["status"],
+            "probability_eligible": existing_completed.get("confidence_score") or 0.0,
+            "bmi": existing_completed.get("input_provenance", {}).get("bmi", 22.0),
+            "qualifying_plans": existing_completed.get("qualifying_plans", []),
+            "confidence_score": existing_completed.get("confidence_score") or 0.0,
+            "reason_codes": existing_completed.get("reason_codes", []),
+            "review_status": existing_completed.get("review_status", "NONE"),
+            "explanation": "Existing completed eligibility assessment retrieved. Re-evaluation is not permitted under account policy.",
+            "input_summary": existing_completed.get("input_provenance", {}),
+            "completed_at": existing_completed.get("completed_at") or existing_completed.get("created_at"),
+            "already_completed": True
+        }
+
     try:
         result = eligibility_model_service.evaluate(profile, user_role=current_user.role)
         
@@ -141,9 +166,18 @@ def select_plan_with_eligibility(
 ):
     """
     Records an active plan selection.
-    Enforces that the user has an active ELIGIBLE assessment covering the selected plan.
+    Enforces that the user has an active ELIGIBLE assessment covering the selected plan,
+    and enforces role-based plan authorization.
     """
-    assessment = sqlite_db.get_current_assessment_for_user(current_user.user_id)
+    # 1. Enforce role-based plan authorization
+    authorized_plans = AuthorizationService.get_authorized_plans(current_user.role)
+    if payload.selected_plan_id not in authorized_plans:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Plan '{payload.selected_plan_id}' is not authorized for role '{current_user.role}'."
+        )
+
+    assessment = sqlite_db.get_completed_assessment_for_user(current_user.user_id) or sqlite_db.get_current_assessment_for_user(current_user.user_id)
     if not assessment:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -187,6 +221,76 @@ def select_plan_with_eligibility(
         "plan_name": plan_name,
         "status": "ACTIVE",
         "assessment_id": assessment["assessment_id"]
+    }
+
+@router.post("/confirm-plan")
+def confirm_customer_plan(
+    payload: PlanConfirmationPayload,
+    current_user: UserIdentity = Depends(get_auth_user)
+):
+    """
+    Persists customer confirmation of their selected plan.
+    Strictly Customer role only.
+    Requires completed eligible assessment and active plan selection matching the plan_id.
+    Idempotent: Duplicate submissions return the persisted confirmation state.
+    """
+    if current_user.role != "customer":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Plan confirmation is exclusively reserved for customer accounts."
+        )
+
+    assessment = sqlite_db.get_completed_assessment_for_user(current_user.user_id) or sqlite_db.get_current_assessment_for_user(current_user.user_id)
+    if not assessment or assessment.get("outcome") != "ELIGIBLE":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="A completed eligible assessment is required prior to confirming a policy plan."
+        )
+
+    if payload.plan_id not in {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001"}:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Plan '{payload.plan_id}' is not a valid customer policy plan."
+        )
+
+    active_sel = sqlite_db.get_active_plan_selection_for_user(current_user.user_id)
+    if not active_sel or active_sel.get("selected_plan_id") != payload.plan_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No active plan selection matches this confirmation request. Please select your plan first."
+        )
+
+    confirmed_record = sqlite_db.confirm_customer_plan_selection(current_user.user_id, payload.plan_id)
+    if not confirmed_record:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to record plan confirmation in persistent store."
+        )
+
+    plan_info = PLAN_REGISTRY.get(payload.plan_id)
+    plan_name = plan_info.plan_name if plan_info else payload.plan_id
+
+    sqlite_db.record_audit_event(
+        action="customer_plan_confirmed",
+        actor_id=current_user.user_id,
+        actor_email=current_user.email,
+        actor_role=current_user.role,
+        target_resource=payload.plan_id,
+        outcome="SUCCESS",
+        details={
+            "selection_id": confirmed_record["selection_id"],
+            "plan_id": payload.plan_id,
+            "confirmed_at": confirmed_record["confirmed_at"]
+        }
+    )
+
+    return {
+        "status": "CONFIRMED",
+        "plan_id": payload.plan_id,
+        "plan_name": plan_name,
+        "selection_id": confirmed_record["selection_id"],
+        "confirmed_at": confirmed_record["confirmed_at"],
+        "message": f"You have selected the {plan_name} Plan. Agent will contact you soon for document verification."
     }
 
 @router.post("/agent-contact")

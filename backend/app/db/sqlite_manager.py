@@ -184,6 +184,7 @@ class SQLiteManager:
                     assessment_id TEXT NOT NULL,
                     selected_plan_id TEXT NOT NULL,
                     status TEXT NOT NULL DEFAULT 'ACTIVE',
+                    confirmed_at TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
@@ -222,6 +223,11 @@ class SQLiteManager:
                 CREATE INDEX IF NOT EXISTS idx_agent_req_user ON agent_contact_requests(user_id);
                 CREATE INDEX IF NOT EXISTS idx_agent_req_status ON agent_contact_requests(status);
             """)
+            # Non-destructive idempotent schema migration for existing databases
+            try:
+                conn.execute("ALTER TABLE plan_selections ADD COLUMN confirmed_at TEXT;")
+            except sqlite3.OperationalError:
+                pass
             conn.commit()
 
     def _seed_default_accounts(self) -> None:
@@ -262,7 +268,7 @@ class SQLiteManager:
                     """, (emp_id, now))
 
                 # 3. Default customer
-                cur.execute("SELECT user_id FROM users WHERE email = 'customer@insurance.com'")
+                cur.execute("SELECT user_id FROM users WHERE lower(email) = 'customer@insurance.com'")
                 if not cur.fetchone():
                     salt = bcrypt.gensalt()
                     cust_hash = bcrypt.hashpw(b"Customer@123", salt).decode("utf-8")
@@ -276,6 +282,54 @@ class SQLiteManager:
                         INSERT OR REPLACE INTO profiles (user_id, email, role, governance_status, last_login)
                         VALUES (?, 'customer@insurance.com', 'customer', 'active_customer', ?)
                     """, (cust_id, now))
+
+                # 4. Mandatory Local-Demo Account: Shivu (Customer)
+                cur.execute("SELECT user_id FROM users WHERE lower(email) = 'shivu@gmail.com'")
+                if not cur.fetchone():
+                    salt = bcrypt.gensalt()
+                    shivu_hash = bcrypt.hashpw(b"12345678", salt).decode("utf-8")
+                    shivu_id = "user_cust_shivu"
+                    now = datetime.now(timezone.utc).isoformat()
+                    cur.execute("""
+                        INSERT INTO users (user_id, email, password_hash, requested_role, effective_role, is_approved, full_name, created_at)
+                        VALUES (?, 'shivu@gmail.com', ?, 'customer', 'customer', 1, 'Shivu', ?)
+                    """, (shivu_id, shivu_hash, now))
+                    cur.execute("""
+                        INSERT OR REPLACE INTO profiles (user_id, email, role, governance_status, last_login)
+                        VALUES (?, 'shivu@gmail.com', 'customer', 'active', ?)
+                    """, (shivu_id, now))
+
+                # 5. Mandatory Local-Demo Account: Murali (Employee)
+                cur.execute("SELECT user_id FROM users WHERE lower(email) = 'murali@gmail.com'")
+                if not cur.fetchone():
+                    salt = bcrypt.gensalt()
+                    murali_hash = bcrypt.hashpw(b"12345678", salt).decode("utf-8")
+                    murali_id = "user_emp_murali"
+                    now = datetime.now(timezone.utc).isoformat()
+                    cur.execute("""
+                        INSERT INTO users (user_id, email, password_hash, requested_role, effective_role, is_approved, full_name, created_at)
+                        VALUES (?, 'murali@gmail.com', ?, 'employee', 'employee', 1, 'Murali', ?)
+                    """, (murali_id, murali_hash, now))
+                    cur.execute("""
+                        INSERT OR REPLACE INTO profiles (user_id, email, role, governance_status, last_login)
+                        VALUES (?, 'murali@gmail.com', 'employee', 'active', ?)
+                    """, (murali_id, now))
+
+                # 6. Mandatory Local-Demo Account: Administrator (Admin)
+                cur.execute("SELECT user_id FROM users WHERE lower(email) = 'admin@gmail.com'")
+                if not cur.fetchone():
+                    salt = bcrypt.gensalt()
+                    admin_demo_hash = bcrypt.hashpw(b"admin@123", salt).decode("utf-8")
+                    admin_demo_id = "user_admin_sys"
+                    now = datetime.now(timezone.utc).isoformat()
+                    cur.execute("""
+                        INSERT INTO users (user_id, email, password_hash, requested_role, effective_role, is_approved, full_name, created_at)
+                        VALUES (?, 'admin@gmail.com', ?, 'admin', 'admin', 1, 'Administrator', ?)
+                    """, (admin_demo_id, admin_demo_hash, now))
+                    cur.execute("""
+                        INSERT OR REPLACE INTO profiles (user_id, email, role, governance_status, last_login)
+                        VALUES (?, 'admin@gmail.com', 'admin', 'active', ?)
+                    """, (admin_demo_id, now))
 
                 # 4. Seed verified documents into document_records if table is empty
                 cur.execute("SELECT COUNT(*) as cnt FROM document_records")
@@ -327,6 +381,62 @@ class SQLiteManager:
                 conn.commit()
         except Exception as e:
             logger.error(f"Error seeding default accounts: {e}")
+
+    def provision_demo_accounts(self, force_reconcile: bool = False) -> dict[str, str]:
+        """
+        Explicit, safe local-demo credential provisioning operation for designated demo accounts:
+        - shivu@gmail.com (Customer, demo password: '12345678')
+        - murali@gmail.com (Employee, demo password: '12345678')
+        - admin@gmail.com (Admin, demo password: 'admin@123')
+
+        If force_reconcile is True, reconciles passwords and roles to demo specification.
+        If False, creates missing accounts without resetting existing passwords.
+        Strictly touches ONLY these 3 designated demo accounts.
+        Never prints or logs passwords or hashes.
+        """
+        demo_specs = [
+            {"email": "shivu@gmail.com", "name": "Shivu", "role": "customer", "pw": b"12345678", "user_id": "user_cust_shivu"},
+            {"email": "murali@gmail.com", "name": "Murali", "role": "employee", "pw": b"12345678", "user_id": "user_emp_murali"},
+            {"email": "admin@gmail.com", "name": "Administrator", "role": "admin", "pw": b"admin@123", "user_id": "user_admin_sys"},
+        ]
+        results = {}
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            now = datetime.now(timezone.utc).isoformat()
+            for spec in demo_specs:
+                norm_email = spec["email"].strip().lower()
+                cur.execute("SELECT user_id, password_hash FROM users WHERE lower(email) = ?", (norm_email,))
+                row = cur.fetchone()
+                if not row:
+                    salt = bcrypt.gensalt()
+                    pw_hash = bcrypt.hashpw(spec["pw"], salt).decode("utf-8")
+                    cur.execute("""
+                        INSERT INTO users (user_id, email, password_hash, requested_role, effective_role, is_approved, full_name, created_at)
+                        VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+                    """, (spec["user_id"], norm_email, pw_hash, spec["role"], spec["role"], spec["name"], now))
+                    cur.execute("""
+                        INSERT OR REPLACE INTO profiles (user_id, email, role, governance_status, last_login)
+                        VALUES (?, ?, ?, 'active', ?)
+                    """, (spec["user_id"], norm_email, spec["role"], now))
+                    results[norm_email] = "CREATED"
+                elif force_reconcile:
+                    salt = bcrypt.gensalt()
+                    pw_hash = bcrypt.hashpw(spec["pw"], salt).decode("utf-8")
+                    cur.execute("""
+                        UPDATE users
+                        SET password_hash = ?, effective_role = ?, requested_role = ?, is_approved = 1, full_name = ?
+                        WHERE lower(email) = ?
+                    """, (pw_hash, spec["role"], spec["role"], spec["name"], norm_email))
+                    cur.execute("""
+                        UPDATE profiles
+                        SET role = ?, governance_status = 'active'
+                        WHERE user_id = ?
+                    """, (spec["role"], row["user_id"]))
+                    results[norm_email] = "RECONCILED"
+                else:
+                    results[norm_email] = "EXISTS"
+            conn.commit()
+        return results
 
     # ==================== USER MANAGEMENT ====================
 
@@ -1130,7 +1240,7 @@ class SQLiteManager:
                 FROM users u
                 LEFT JOIN profiles p ON u.user_id = p.user_id
                 LEFT JOIN eligibility_assessments ea ON u.user_id = ea.user_id AND ea.is_current = 1
-                LEFT JOIN plan_selections ps ON u.user_id = ps.user_id AND ps.status = 'ACTIVE'
+                LEFT JOIN plan_selections ps ON u.user_id = ps.user_id AND ps.status IN ('ACTIVE', 'CONFIRMED')
                 {where_clause}
                 ORDER BY u.created_at DESC
                 LIMIT ? OFFSET ?
@@ -1185,6 +1295,13 @@ class SQLiteManager:
 
         with self._get_connection() as conn:
             cur = conn.cursor()
+            # Enforce server-side one-time completed assessment restriction
+            if status == "COMPLETED":
+                cur.execute("SELECT assessment_id FROM eligibility_assessments WHERE user_id = ? AND status = 'COMPLETED'", (user_id,))
+                existing = cur.fetchone()
+                if existing:
+                    return existing["assessment_id"]
+
             # 1. Fetch previous current assessment ID
             cur.execute("SELECT assessment_id FROM eligibility_assessments WHERE user_id = ? AND is_current = 1", (user_id,))
             prev_row = cur.fetchone()
@@ -1211,6 +1328,27 @@ class SQLiteManager:
             conn.commit()
             return assessment_id
 
+    def get_completed_assessment_for_user(self, user_id: str) -> Optional[dict]:
+        """
+        Returns the authoritative completed eligibility assessment for a user if one exists.
+        Ignores pending, failed, or incomplete assessments.
+        """
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT * FROM eligibility_assessments
+                WHERE user_id = ? AND status = 'COMPLETED'
+                ORDER BY created_at DESC LIMIT 1
+            """, (user_id,))
+            row = cur.fetchone()
+            if not row:
+                return None
+            data = dict(row)
+            data["qualifying_plans"] = json.loads(data.get("qualifying_plans_json") or "[]")
+            data["input_provenance"] = json.loads(data.get("input_provenance_json") or "{}")
+            data["reason_codes"] = json.loads(data.get("reason_codes_json") or "[]")
+            return data
+
     def get_current_assessment_for_user(self, user_id: str) -> Optional[dict]:
         """Returns the current valid assessment for the user with deserialized JSON fields."""
         with self._get_connection() as conn:
@@ -1232,13 +1370,13 @@ class SQLiteManager:
     def save_plan_selection(self, user_id: str, assessment_id: str, selected_plan_id: str) -> str:
         """
         Records a plan selection linked to a valid assessment.
-        Marks any prior active selection as SWITCHED.
+        Marks any prior active or confirmed selection as SWITCHED.
         """
         selection_id = f"psel_{uuid.uuid4().hex[:12]}"
         now = datetime.now(timezone.utc).isoformat()
         with self._get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("UPDATE plan_selections SET status = 'SWITCHED', updated_at = ? WHERE user_id = ? AND status = 'ACTIVE'", (now, user_id))
+            cur.execute("UPDATE plan_selections SET status = 'SWITCHED', updated_at = ? WHERE user_id = ? AND status IN ('ACTIVE', 'CONFIRMED')", (now, user_id))
             cur.execute("""
                 INSERT INTO plan_selections (
                     selection_id, user_id, assessment_id, selected_plan_id, status, created_at, updated_at
@@ -1248,16 +1386,47 @@ class SQLiteManager:
             return selection_id
 
     def get_active_plan_selection_for_user(self, user_id: str) -> Optional[dict]:
-        """Returns the active plan selection for a user."""
+        """Returns the active or confirmed plan selection for a user."""
         with self._get_connection() as conn:
             cur = conn.cursor()
             cur.execute("""
                 SELECT * FROM plan_selections
-                WHERE user_id = ? AND status = 'ACTIVE'
+                WHERE user_id = ? AND status IN ('ACTIVE', 'CONFIRMED')
                 ORDER BY created_at DESC LIMIT 1
             """, (user_id,))
             row = cur.fetchone()
             return dict(row) if row else None
+
+    def confirm_customer_plan_selection(self, user_id: str, plan_id: str) -> Optional[dict]:
+        """
+        Confirms customer plan selection, updating status to CONFIRMED and recording confirmed_at timestamp.
+        Idempotent: If already confirmed for this plan, returns the existing record without duplicate entries.
+        """
+        now = datetime.now(timezone.utc).isoformat()
+        with self._get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT * FROM plan_selections
+                WHERE user_id = ? AND selected_plan_id = ? AND status IN ('ACTIVE', 'CONFIRMED')
+                ORDER BY created_at DESC LIMIT 1
+            """, (user_id, plan_id))
+            row = cur.fetchone()
+            if not row:
+                return None
+            data = dict(row)
+            if data.get("status") == "CONFIRMED" and data.get("confirmed_at"):
+                return data
+
+            cur.execute("""
+                UPDATE plan_selections
+                SET status = 'CONFIRMED', confirmed_at = ?, updated_at = ?
+                WHERE selection_id = ?
+            """, (now, now, data["selection_id"]))
+            conn.commit()
+            data["status"] = "CONFIRMED"
+            data["confirmed_at"] = now
+            data["updated_at"] = now
+            return data
 
     def save_agent_contact_request(
         self,
@@ -1352,12 +1521,12 @@ class SQLiteManager:
                 SELECT COUNT(DISTINCT ea.user_id) as cnt
                 FROM eligibility_assessments ea
                 WHERE ea.is_current = 1 AND ea.outcome = 'ELIGIBLE'
-                  AND ea.user_id NOT IN (SELECT DISTINCT user_id FROM plan_selections WHERE status = 'ACTIVE')
+                  AND ea.user_id NOT IN (SELECT DISTINCT user_id FROM plan_selections WHERE status IN ('ACTIVE', 'CONFIRMED'))
             """)
             eligible_no_plan = cur.fetchone()["cnt"]
 
             # 9. Users Who Selected a Plan
-            cur.execute("SELECT COUNT(DISTINCT user_id) as cnt FROM plan_selections WHERE status = 'ACTIVE'")
+            cur.execute("SELECT COUNT(DISTINCT user_id) as cnt FROM plan_selections WHERE status IN ('ACTIVE', 'CONFIRMED')")
             plan_selected_users = cur.fetchone()["cnt"]
 
             # 10. Users Who Proceeded to Policy Chat
@@ -1365,7 +1534,7 @@ class SQLiteManager:
                 SELECT COUNT(DISTINCT c.user_id) as cnt
                 FROM conversations c
                 JOIN messages m ON c.conversation_id = m.conversation_id
-                WHERE c.user_id IN (SELECT DISTINCT user_id FROM plan_selections WHERE status = 'ACTIVE')
+                WHERE c.user_id IN (SELECT DISTINCT user_id FROM plan_selections WHERE status IN ('ACTIVE', 'CONFIRMED'))
             """)
             chat_active_users = cur.fetchone()["cnt"]
 

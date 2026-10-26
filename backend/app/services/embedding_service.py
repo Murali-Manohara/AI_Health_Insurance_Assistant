@@ -3,8 +3,12 @@ from typing import Optional
 from backend.app.core.config import settings
 from backend.app.core.logging_config import logger
 
+import threading
+
 class LocalEmbeddingService:
     """Generates 384-dimensional dense vectors using local BAAI/bge-small-en-v1.5."""
+    _cached_models: dict = {}
+    _cache_lock = threading.Lock()
 
     def __init__(self, model_name: Optional[str] = None):
         self.model_name = model_name or settings.EMBEDDING_MODEL_NAME
@@ -15,17 +19,23 @@ class LocalEmbeddingService:
         self._load_model()
 
     def _load_model(self):
-        try:
-            from sentence_transformers import SentenceTransformer
-            import torch
-            if torch.cuda.is_available():
-                self.device = "cuda"
-            logger.info(f"Loading local embedding model '{self.model_name}' on device '{self.device}'...")
-            self._model = SentenceTransformer(self.model_name, device=self.device)
-            logger.info(f"Successfully loaded embedding model '{self.model_name}'")
-        except Exception as e:
-            logger.error(f"Failed to load SentenceTransformer model {self.model_name}: {e}")
-            raise RuntimeError(f"Could not initialize local embedding model {self.model_name}: {e}")
+        with self._cache_lock:
+            if self.model_name in self._cached_models:
+                self._model, self.device = self._cached_models[self.model_name]
+                return
+
+            try:
+                from sentence_transformers import SentenceTransformer
+                import torch
+                if torch.cuda.is_available():
+                    self.device = "cuda"
+                logger.info(f"Loading local embedding model '{self.model_name}' on device '{self.device}'...")
+                self._model = SentenceTransformer(self.model_name, device=self.device)
+                self._cached_models[self.model_name] = (self._model, self.device)
+                logger.info(f"Successfully loaded embedding model '{self.model_name}'")
+            except Exception as e:
+                logger.error(f"Failed to load SentenceTransformer model {self.model_name}: {e}")
+                raise RuntimeError(f"Could not initialize local embedding model {self.model_name}: {e}")
 
     def generate_embeddings(self, texts: list[str]) -> list[list[float]]:
         """Generate normalized dense embeddings in batches."""

@@ -87,3 +87,24 @@ def list_plans(user: UserIdentity = Depends(get_auth_user)):
         total=len(response_items),
         user_role=user.role
     )
+
+@router.get("/{plan_id}/review-details")
+def get_plan_review_details(
+    plan_id: str,
+    user: UserIdentity = Depends(get_auth_user)
+):
+    """
+    Retrieve structured review details for a specific plan sourced directly from its TXT document.
+    Enforces RBAC: Customer can only view customer-authorized plans.
+    """
+    from backend.app.services.policy_review_service import policy_review_service
+    from fastapi import HTTPException, status
+
+    authorized_plans = AuthorizationService.get_authorized_plans(user.role)
+    if plan_id not in authorized_plans:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Plan '{plan_id}' is not authorized for your role '{user.role}'."
+        )
+
+    return policy_review_service.get_review_data_for_plan(plan_id)

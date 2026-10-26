@@ -121,9 +121,9 @@ Generated outputs:
 1. Open **`http://localhost:5173`** in your browser.
 2. Unauthenticated visitors are automatically directed to the **Sign In Screen**. Plan Selection, Chat, and Admin views are strictly guarded until authenticated.
 3. **Quick Demo Logins:**
-   - 👤 **Customer Demo:** `customer@insurance.com` / `Customer@123`
-   - 🛡️ **Corporate Employee Demo:** `employee@insurance.corp` / `Employee@123`
-   - ⚙️ **Enterprise Administrator Demo:** `admin@insurance.corp` / `Admin@123`
+   - 👤 **Customer Demo (Shivu):** `shivu@gmail.com` / `12345678`
+   - 🛡️ **Corporate Employee Demo (Murali):** `murali@gmail.com` / `12345678`
+   - ⚙️ **Enterprise Administrator Demo:** `admin@gmail.com` / `admin@123`
 4. Click **"Sign In"**.
 
 ### Demo Step 2: Screen A — Plan Selection Screen
@@ -191,9 +191,9 @@ The system is pre-seeded with three verified, role-isolated test accounts config
 
 | Role | Email | Password | Permissions & Access Scope |
 |---|---|---|---|
-| **Customer** | `customer@insurance.com` | `Customer@123` | • Can access and query customer policies: **Health Shield – Basic** (`HS-BASIC-001`), **Health Shield – Gold** (`HS-GOLD-001`), and **Health Shield – Premium** (`HS-PREMIUM-001`).<br/>• Strictly blocked from viewing or querying employee-only plans.<br/>• Access to personal conversation history and policy quick actions. |
-| **Corporate Employee** | `employee@insurance.corp` | `Employee@123` | • Can access all customer policies PLUS the exclusive **Executive Employee Insurance Plan** (`EMP-INS-001`).<br/>• Full multi-plan cross-comparison authorization.<br/>• View internal illustrative benefit schedules. |
-| **Enterprise Administrator** | `admin@insurance.corp` | `Admin@123` | • Full administrative access to the **Admin Governance Dashboard** (`/api/admin/dashboard`).<br/>• View real-time platform KPIs, consultation distribution graphs, and activity streams.<br/>• Filter system audit logs by status (**SUCCESS**, **FORBIDDEN / DENIED**, **ERROR**).<br/>• User & account administration (user status management, role audits).<br/>• Document ingestion management with plan scope assignment. |
+| **Customer (Shivu)** | `shivu@gmail.com` | `12345678` | • Can access and query customer policies: **Health Shield – Basic** (`HS-BASIC-001`), **Health Shield – Gold** (`HS-GOLD-001`), and **Health Shield – Premium** (`HS-PREMIUM-001`).<br/>• Strictly blocked from viewing or querying employee-only plans.<br/>• Access to personal conversation history, eligibility check, and plan confirmation. |
+| **Corporate Employee (Murali)** | `murali@gmail.com` | `12345678` | • Can access all customer policies PLUS the exclusive **Executive Employee Insurance Plan** (`EMP-INS-001`).<br/>• Full multi-plan cross-comparison authorization.<br/>• View internal illustrative benefit schedules. |
+| **Enterprise Administrator** | `admin@gmail.com` | `admin@123` | • Full administrative access to the **Admin Governance Dashboard** (`/api/admin/dashboard`).<br/>• View real-time platform KPIs, consultation distribution graphs, and activity streams.<br/>• Filter system audit logs by status (**SUCCESS**, **FORBIDDEN / DENIED**, **ERROR**).<br/>• User & account administration (user status management, role audits).<br/>• Document ingestion management with plan scope assignment. |
 
 > [!IMPORTANT]
-> The Administrator account (`admin@insurance.corp`) is strictly provisioned through the trusted database seed mechanism. Public signup with `role=admin` is rejected with HTTP 403 Forbidden to prevent privilege escalation.
+> The Administrator account (`admin@gmail.com`) is strictly provisioned through the trusted database seed mechanism. Public signup with `role=admin` is rejected with HTTP 403 Forbidden to prevent privilege escalation.

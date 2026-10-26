@@ -30,10 +30,21 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }) {
     }
   };
 
-  const handleFillDemo = (demoEmail, demoPw) => {
+  const handleFillDemo = async (demoEmail, demoPw) => {
     setEmail(demoEmail);
     setPassword(demoPw);
     setError(null);
+    setLoading(true);
+    try {
+      const data = await authApi.login(demoEmail, demoPw);
+      if (onLoginSuccess) {
+        onLoginSuccess(data.user, data.token);
+      }
+    } catch (err) {
+      setError(err.message || 'Authentication failed. Please verify credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -149,30 +160,33 @@ export function LoginScreen({ onLoginSuccess, onSwitchToSignup }) {
           </button>
         </form>
 
-        {/* Quick Access: single unified container with Customer, Employee, Admin */}
+        {/* Quick Access: Single unified container for Shivu (Customer), Murali (Employee), and Admin */}
         <div className="auth-demo-chips">
           <div className="auth-quick-access-container">
             <button
               type="button"
               className="quick-access-btn"
-              onClick={() => handleFillDemo('customer@insurance.com', 'Customer@123')}
-              title="Fill Customer Demo credentials"
+              onClick={() => handleFillDemo('shivu@gmail.com', '12345678')}
+              disabled={loading}
+              title="Sign in as Shivu (Customer) — shivu@gmail.com"
             >
-              Customer
+              Shivu (Customer)
             </button>
             <button
               type="button"
               className="quick-access-btn"
-              onClick={() => handleFillDemo('employee@insurance.corp', 'Employee@123')}
-              title="Fill Corporate Employee credentials"
+              onClick={() => handleFillDemo('murali@gmail.com', '12345678')}
+              disabled={loading}
+              title="Sign in as Murali (Employee) — murali@gmail.com"
             >
-              Employee
+              Murali (Employee)
             </button>
             <button
               type="button"
               className="quick-access-btn"
-              onClick={() => handleFillDemo('admin@insurance.corp', 'Admin@123')}
-              title="Fill Administrator credentials"
+              onClick={() => handleFillDemo('admin@gmail.com', 'admin@123')}
+              disabled={loading}
+              title="Sign in as Administrator — admin@gmail.com"
             >
               Admin
             </button>

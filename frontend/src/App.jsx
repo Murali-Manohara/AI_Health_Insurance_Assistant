@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { EligibilityScreen } from './components/EligibilityScreen';
 import { PlanSelectionScreen } from './components/PlanSelectionScreen';
 import { PlanChatScreen } from './components/PlanChatScreen';
+import { ConfirmReviewScreen } from './components/ConfirmReviewScreen';
 import { IngestionPage } from './pages/IngestionPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { LoginScreen } from './components/LoginScreen';
@@ -58,14 +59,71 @@ export function App() {
                 setUserAssessment(eligData.assessment);
                 const isEligible = eligData.assessment.outcome === 'ELIGIBLE';
                 if (isEligible) {
+                  const activeSel = eligData.active_plan_selection;
+                  const isConfirmed = Boolean(
+                    user.is_confirmed ||
+                    user.confirmation_status === 'CONFIRMED' ||
+                    activeSel?.status === 'CONFIRMED' ||
+                    activeSel?.confirmed_at
+                  );
+
+                  let planToSet = null;
                   if (savedPlan) {
                     try {
-                      const parsedPlan = JSON.parse(savedPlan);
-                      setSelectedPlan(parsedPlan);
-                      setActiveTab(savedTab || 'chat');
+                      planToSet = JSON.parse(savedPlan);
                     } catch {
-                      sessionStorage.removeItem('ins_app_selected_plan');
-                      setActiveTab('plans');
+                      planToSet = null;
+                    }
+                  }
+
+                  if (!planToSet && activeSel) {
+                    const pId = activeSel.selected_plan_id;
+                    planToSet = {
+                      plan_id: pId,
+                      plan_name: pId.includes('GOLD')
+                        ? 'Health Shield — Gold'
+                        : pId.includes('PREM')
+                        ? 'Health Shield — Premium'
+                        : pId.includes('EMP')
+                        ? 'Executive Employee Insurance Plan'
+                        : 'Health Shield — Basic',
+                      plan_category: pId.includes('GOLD')
+                        ? 'Gold'
+                        : pId.includes('PREM')
+                        ? 'Premium'
+                        : pId.includes('EMP')
+                        ? 'Employee Exclusive'
+                        : 'Basic',
+                      display_title: pId.includes('GOLD')
+                        ? 'Gold Plan'
+                        : pId.includes('PREM')
+                        ? 'Premium Plan'
+                        : pId.includes('EMP')
+                        ? 'Employee Plan'
+                        : 'Basic Plan',
+                      status: isConfirmed ? 'CONFIRMED' : (activeSel.status || 'ACTIVE'),
+                      is_confirmed: isConfirmed,
+                      confirmed_at: activeSel.confirmed_at || user.confirmed_at || null
+                    };
+                  }
+
+                  if (planToSet) {
+                    if (isConfirmed) {
+                      planToSet.is_confirmed = true;
+                      planToSet.status = 'CONFIRMED';
+                      if (activeSel?.confirmed_at) {
+                        planToSet.confirmed_at = activeSel.confirmed_at;
+                      } else if (user.confirmed_at) {
+                        planToSet.confirmed_at = user.confirmed_at;
+                      }
+                    }
+                    setSelectedPlan(planToSet);
+                    sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(planToSet));
+
+                    if (isConfirmed && user.role === 'customer') {
+                      setActiveTab(savedTab === 'chat' ? 'chat' : 'confirm');
+                    } else {
+                      setActiveTab(savedTab || 'chat');
                     }
                   } else {
                     setActiveTab(savedTab === 'eligibility' ? 'eligibility' : 'plans');
@@ -108,23 +166,77 @@ export function App() {
         const eligData = await eligibilityApi.getMyAssessment();
         if (eligData && eligData.has_assessment && eligData.assessment) {
           setUserAssessment(eligData.assessment);
-          if (eligData.assessment.outcome === 'ELIGIBLE') {
-            setActiveTab('plans');
-            sessionStorage.setItem('ins_app_active_tab', 'plans');
+          const isEligible = eligData.assessment.outcome === 'ELIGIBLE';
+          if (isEligible) {
+            const activeSel = eligData.active_plan_selection;
+            const isConfirmed = Boolean(
+              user.is_confirmed ||
+              user.confirmation_status === 'CONFIRMED' ||
+              activeSel?.status === 'CONFIRMED' ||
+              activeSel?.confirmed_at
+            );
+
+            if (activeSel) {
+              const pId = activeSel.selected_plan_id;
+              const restoredPlan = {
+                plan_id: pId,
+                plan_name: pId.includes('GOLD')
+                  ? 'Health Shield — Gold'
+                  : pId.includes('PREM')
+                  ? 'Health Shield — Premium'
+                  : pId.includes('EMP')
+                  ? 'Executive Employee Insurance Plan'
+                  : 'Health Shield — Basic',
+                plan_category: pId.includes('GOLD')
+                  ? 'Gold'
+                  : pId.includes('PREM')
+                  ? 'Premium'
+                  : pId.includes('EMP')
+                  ? 'Employee Exclusive'
+                  : 'Basic',
+                display_title: pId.includes('GOLD')
+                  ? 'Gold Plan'
+                  : pId.includes('PREM')
+                  ? 'Premium Plan'
+                  : pId.includes('EMP')
+                  ? 'Employee Plan'
+                  : 'Basic Plan',
+                status: isConfirmed ? 'CONFIRMED' : (activeSel.status || 'ACTIVE'),
+                is_confirmed: isConfirmed,
+                confirmed_at: activeSel.confirmed_at || user.confirmed_at || null
+              };
+              setSelectedPlan(restoredPlan);
+              sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(restoredPlan));
+
+              if (isConfirmed && user.role === 'customer') {
+                setActiveTab('confirm');
+                sessionStorage.setItem('ins_app_active_tab', 'confirm');
+              } else {
+                setActiveTab('chat');
+                sessionStorage.setItem('ins_app_active_tab', 'chat');
+              }
+            } else {
+              setSelectedPlan(null);
+              sessionStorage.removeItem('ins_app_selected_plan');
+              setActiveTab('plans');
+              sessionStorage.setItem('ins_app_active_tab', 'plans');
+            }
           } else {
+            setSelectedPlan(null);
+            sessionStorage.removeItem('ins_app_selected_plan');
             setActiveTab('eligibility');
             sessionStorage.setItem('ins_app_active_tab', 'eligibility');
           }
         } else {
           setUserAssessment(null);
+          setSelectedPlan(null);
+          sessionStorage.removeItem('ins_app_selected_plan');
           setActiveTab('eligibility');
           sessionStorage.setItem('ins_app_active_tab', 'eligibility');
         }
       } catch {
         setActiveTab('eligibility');
       }
-      setSelectedPlan(null);
-      sessionStorage.removeItem('ins_app_selected_plan');
     }
   };
 
@@ -248,6 +360,9 @@ export function App() {
               } else if (stage === 'chat' && selectedPlan) {
                 setActiveTab('chat');
                 sessionStorage.setItem('ins_app_active_tab', 'chat');
+              } else if (stage === 'confirm' && selectedPlan && userRole === 'customer') {
+                setActiveTab('confirm');
+                sessionStorage.setItem('ins_app_active_tab', 'confirm');
               }
             }}
             onBack={handleBackToPlans}
@@ -423,6 +538,43 @@ export function App() {
                     onMessageCountChange={setUserMessageCount}
                   />
                 )}
+
+                {activeTab === 'confirm' && selectedPlan && userRole === 'customer' && (
+                  <div className="scrollable-page-container">
+                    <ConfirmReviewScreen
+                      currentUser={currentUser}
+                      selectedPlan={selectedPlan}
+                      assessment={userAssessment}
+                      onConfirmationSuccess={(confData, proceedToChat = false) => {
+                        const confDate = confData.confirmedAt || new Date().toISOString();
+                        setCurrentUser((prev) => ({
+                          ...prev,
+                          is_confirmed: true,
+                          confirmed_at: confDate,
+                          confirmation_status: 'CONFIRMED'
+                        }));
+                        setSelectedPlan((prev) => {
+                          const updated = {
+                            ...(prev || {}),
+                            is_confirmed: true,
+                            status: 'CONFIRMED',
+                            confirmed_at: confDate
+                          };
+                          sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(updated));
+                          return updated;
+                        });
+                        if (proceedToChat) {
+                          setActiveTab('chat');
+                          sessionStorage.setItem('ins_app_active_tab', 'chat');
+                        } else {
+                          setActiveTab('confirm');
+                          sessionStorage.setItem('ins_app_active_tab', 'confirm');
+                        }
+                      }}
+                      onBackToPlans={handleBackToPlans}
+                    />
+                  </div>
+                )}
               </>
             )}
           </main>
@@ -435,6 +587,7 @@ export function App() {
         onClose={() => setIsProfileOpen(false)}
         currentUser={currentUser}
         selectedPlan={selectedPlan}
+        assessment={userAssessment}
         onLogout={handleLogout}
       />
     </div>

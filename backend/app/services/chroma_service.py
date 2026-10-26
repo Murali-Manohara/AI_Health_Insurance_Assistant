@@ -7,21 +7,38 @@ from backend.app.models.chunk import ValidatedChunk, ParentChunk
 from backend.app.core.config import settings
 from backend.app.core.logging_config import logger
 
+import threading
+
 class ChromaStorageService:
     """
     Manages ChromaDB storage (Chroma Cloud, Remote HTTP, or Local Persistent).
     Implements staged two-phase safe replacement and hash deduplication.
     """
+    _shared_client: Any = None
+    _shared_collections: dict = {}
+    _lock = threading.Lock()
 
     def __init__(self, persist_path: Optional[Path] = None):
         self.collection_name = settings.CHROMA_COLLECTION_NAME
-        self.client = self._initialize_client(persist_path)
-        
-        self.collection = self.client.get_or_create_collection(
-            name=self.collection_name,
-            metadata={"description": "AI Insurance Assistant Knowledge Base"}
-        )
-        logger.info(f"Initialized ChromaDB collection '{self.collection_name}'. Current count: {self.collection.count()}")
+        with self._lock:
+            if ChromaStorageService._shared_client is None or persist_path is not None:
+                client = self._initialize_client(persist_path)
+                if persist_path is None:
+                    ChromaStorageService._shared_client = client
+                self.client = client
+            else:
+                self.client = ChromaStorageService._shared_client
+
+            if self.collection_name in ChromaStorageService._shared_collections and persist_path is None:
+                self.collection = ChromaStorageService._shared_collections[self.collection_name]
+            else:
+                self.collection = self.client.get_or_create_collection(
+                    name=self.collection_name,
+                    metadata={"description": "AI Insurance Assistant Knowledge Base"}
+                )
+                if persist_path is None:
+                    ChromaStorageService._shared_collections[self.collection_name] = self.collection
+                logger.info(f"Initialized ChromaDB collection '{self.collection_name}'. Current count: {self.collection.count()}")
 
     def _initialize_client(self, persist_path: Optional[Path] = None):
         """

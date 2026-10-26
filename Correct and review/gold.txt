@@ -1,0 +1,87 @@
+┌──────────────────────────────────────────────────────────────────────────────────────────┐
+│  Choose Plan  >  Confirm & Review                                                       │
+│                                                                                          │
+│  CONFIRM & REVIEW SELECTED POLICY                                                        │
+│  Review your applicant details and selected coverage before proceeding.                   │
+├──────────────────────────────────────────┬───────────────────────────────────────────────┤
+│  01  CUSTOMER DETAILS                    │  02  SELECTED PLAN                            │
+│  ────────────────────────────────────   │  ──────────────────────────────────────────   │
+│  Full Name       [Dynamic]               │  Health Shield – Gold                         │
+│  Email           [Dynamic]               │  Plan ID       HS-GOLD-001                    │
+│  Role            [Dynamic]               │  Category      Gold                           │
+│  Eligibility     [Saved result]          │  Product       Fixed-Benefit Health Insurance│
+│  Assessment Date [Saved date]            │  Policy Term   Illustrative 1 year            │
+│                                          │  Annual Premium ₹11,800*                      │
+│                                          │  Payment       Annual | Taxes excluded*       │
+├──────────────────────────────────────────────────────────────────────────────────────────┤
+│  03  BENEFITS & COVERAGE LIMITS                                                           │
+│                                                                                          │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐ ┌─────────────────────┐ │
+│  │ ANNUAL COVER     │ │ HOSPITAL CASH    │ │ ICU BENEFIT      │ │ MAJOR SURGERY       │ │
+│  │                  │ │                  │ │                  │ │                     │ │
+│  │ Overall annual   │ │ ₹5,000 / day     │ │ ₹10,000 / day    │ │ Basis: ₹5,00,000    │ │
+│  │ coverage limit   │ │ Min stay >24 hrs │ │ Max 10 days      │ │ Category payouts:   │ │
+│  │ not specified    │ │ Max 20 days      │ │ Max ₹1,00,000    │ │ ₹5L / ₹3L / ₹2L /   │ │
+│  │ in source        │ │ Max ₹1,00,000    │ │                  │ │ ₹1L                 │ │
+│  │ document         │ │                  │ │ ICU and hospital │ │ Overall maximum:    │ │
+│  │                  │ │                  │ │ cash combination │ │ ₹25,00,000*         │ │
+│  │                  │ │                  │ │ subject to terms*│ │                     │ │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘ └─────────────────────┘ │
+├──────────────────────────────────────────┬───────────────────────────────────────────────┤
+│  04  OTHER BENEFITS                      │  05  WAITING PERIODS                          │
+│  ────────────────────────────────────   │  ──────────────────────────────────────────   │
+│  Day-care       ₹25,000/procedure        │  Initial illness       30 days*               │
+│                 Max 2 claims/year        │  Specified diseases    24 months*             │
+│                 Max ₹50,000/year         │  Pre-existing disease  36 months*             │
+│                                          │  PED lookback          Previous 48 months*     │
+│  Other surgery  ₹10,000/day              │  Accident cover        From policy start*     │
+│                 Max 10 days/year         │  Health check-up       30 days*               │
+│                 Max ₹1,00,000/year       │  Critical illness rider 90 days*              │
+│                                          │  Premium waiver rider  90 days*               │
+│  Medical care   ₹15,000/claim            │                                          │
+│                 Max 2 claims/year        │                                          │
+│                 Max ₹30,000/year         │                                          │
+│                                          │                                          │
+│  Extended stay  ₹50,000                  │                                          │
+│                 Hospitalization >30 days │                                          │
+│                 Max 1 claim/year         │                                          │
+│                                          │                                          │
+│  Health check   Up to ₹3,000/year        │                                          │
+│                 Once per policy year     │                                          │
+│                                          │                                          │
+│  Ambulance      ₹500/trip                │                                          │
+│                 Max 2 trips/year         │                                          │
+│                                          │                                          │
+│  Restored cover Up to ₹5,00,000*         │                                          │
+│                 Once per policy year     │                                          │
+│                                          │                                          │
+│  Quick cash     Up to 25% of eligible    │                                          │
+│                 surgery benefit; capped  │                                          │
+│                 at ₹50,000*              │                                          │
+├──────────────────────────────────────────┴───────────────────────────────────────────────┤
+│  06  EXCLUSIONS & CLAIM REQUIREMENTS                                                      │
+│                                                                                          │
+│  Exclusions                              Claim requirements                              │
+│  • Cosmetic treatment                    • Emergency notification: within 24 hours       │
+│  • Non-medical expenses                   • Complete documents: within 30 days of        │
+│  • Self-inflicted injury                    discharge*                                  │
+│  • Substance misuse-related events       • Treatment in India; overseas treatment        │
+│  • Unproven treatment                       excluded*                                   │
+│  • Material misrepresentation             • Registered eligible hospitals; conditions   │
+│  • Claims during waiting periods             apply*                                    │
+│                                          • Annual/half-yearly premium grace: 30 days*    │
+│                                          • Monthly premium grace: 15 days*               │
+│                                          • Revival request: within 90 days, subject     │
+│                                            to conditions*                              │
+├──────────────────────────────────────────────────────────────────────────────────────────┤
+│  07  POLICY DISCLOSURE                                                                    │
+│  DEMONSTRATION DATA — NOT AN OFFICIAL VERIFIED INSURANCE PRODUCT                          │
+│  Benefits, premiums, waiting periods, and exclusions are illustrative and require        │
+│  verification against approved policy wording. Confirmation records enrollment intent    │
+│  only; it does not issue a policy, activate coverage, or grant final underwriting         │
+│  approval.                                                                                │
+│                                                                                          │
+│  [ Back to Plan Selection ]                              [ ✓ Confirm Plan ]              │
+└──────────────────────────────────────────────────────────────────────────────────────────┘
+
+*Illustrative values and conditions; verify against approved policy wording.

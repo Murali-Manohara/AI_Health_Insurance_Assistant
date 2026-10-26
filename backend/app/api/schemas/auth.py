@@ -67,3 +67,14 @@ class UserProfileResponse(BaseModel):
     governance_status: Optional[str] = "active"
     last_login: Optional[str] = None
     created_at: Optional[str] = None
+    account_status: Optional[str] = "ACTIVE"
+    eligibility_status: Optional[str] = "NOT_STARTED"
+    eligibility_outcome: Optional[str] = None
+    assessment_completed_at: Optional[str] = None
+    selected_plan_id: Optional[str] = None
+    selected_plan_name: Optional[str] = None
+    plan_selection_status: Optional[str] = None
+    is_confirmed: Optional[bool] = False
+    confirmation_status: Optional[str] = None
+    confirmed_at: Optional[str] = None
+    authorized_plans: Optional[list[str]] = None

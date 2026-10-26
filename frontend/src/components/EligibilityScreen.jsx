@@ -3,12 +3,12 @@ import { eligibilityApi } from '../services/eligibilityApi';
 
 export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
   // Model Features: age, height_cm, weight_kg, smoker, alcoholic, pre_existing_condition
-  const [age, setAge] = useState(30);
-  const [heightCm, setHeightCm] = useState(172);
-  const [weightKg, setWeightKg] = useState(68);
-  const [smoker, setSmoker] = useState('No'); // 'No' | 'Yes'
-  const [alcoholic, setAlcoholic] = useState('No'); // 'No' | 'Yes'
-  const [condition, setCondition] = useState('None');
+  const [age, setAge] = useState('');
+  const [heightCm, setHeightCm] = useState('');
+  const [weightKg, setWeightKg] = useState('');
+  const [smoker, setSmoker] = useState(''); // '' | 'No' | 'Yes'
+  const [alcoholic, setAlcoholic] = useState(''); // '' | 'No' | 'Yes'
+  const [condition, setCondition] = useState('');
   const [isConditionDropdownOpen, setIsConditionDropdownOpen] = useState(false);
   const [dropUp, setDropUp] = useState(true);
   const conditionDropdownRef = useRef(null);
@@ -52,7 +52,7 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
   const bmiData = useMemo(() => {
     const h = parseFloat(heightCm);
     const w = parseFloat(weightKg);
-    if (!h || !w || h <= 0) return { bmi: 0, category: 'N/A', color: '#64748b' };
+    if (!h || !w || h <= 0) return { bmi: '—', category: 'Pending Entry', color: '#64748b' };
     const calculated = (w / ((h / 100) ** 2)).toFixed(1);
     const val = parseFloat(calculated);
 
@@ -79,6 +79,13 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
         const data = await eligibilityApi.getMyAssessment();
         if (mounted && data.has_assessment && data.assessment) {
           setAssessmentResult(data.assessment);
+          const prov = data.assessment.input_provenance || data.assessment.input_summary || {};
+          if (prov.age !== undefined && prov.age !== '') setAge(prov.age);
+          if (prov.height_cm !== undefined && prov.height_cm !== '') setHeightCm(prov.height_cm);
+          if (prov.weight_kg !== undefined && prov.weight_kg !== '') setWeightKg(prov.weight_kg);
+          if (prov.smoker) setSmoker(prov.smoker);
+          if (prov.alcoholic) setAlcoholic(prov.alcoholic);
+          if (prov.pre_existing_condition) setCondition(prov.pre_existing_condition);
         }
       } catch {
         // Allow fresh submission
@@ -124,6 +131,9 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
   };
 
   const selectedConditionObj = useMemo(() => {
+    if (!condition) {
+      return { id: '', label: 'Select Pre-existing Condition', desc: 'Choose a condition category from the list' };
+    }
     return allowedConditions.find((c) => c.id === condition) || allowedConditions[0];
   }, [condition, allowedConditions]);
 
@@ -137,18 +147,33 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
     const heightNum = parseFloat(heightCm);
     const weightNum = parseFloat(weightKg);
 
-    if (isNaN(ageNum) || ageNum < 18 || ageNum > 100) {
-      setError('Age must be between 18 and 100.');
+    if (age === '' || isNaN(ageNum) || ageNum < 18 || ageNum > 100) {
+      setError('Please enter a valid age between 18 and 100.');
       setLoading(false);
       return;
     }
-    if (isNaN(heightNum) || heightNum < 100 || heightNum > 250) {
-      setError('Height must be between 100 cm and 250 cm.');
+    if (heightCm === '' || isNaN(heightNum) || heightNum < 100 || heightNum > 250) {
+      setError('Please enter a valid height between 100 cm and 250 cm.');
       setLoading(false);
       return;
     }
-    if (isNaN(weightNum) || weightNum < 20 || weightNum > 300) {
-      setError('Weight must be between 20 kg and 300 kg.');
+    if (weightKg === '' || isNaN(weightNum) || weightNum < 20 || weightNum > 300) {
+      setError('Please enter a valid weight between 20 kg and 300 kg.');
+      setLoading(false);
+      return;
+    }
+    if (!smoker) {
+      setError('Please select your tobacco/smoking status.');
+      setLoading(false);
+      return;
+    }
+    if (!alcoholic) {
+      setError('Please select your alcohol consumption status.');
+      setLoading(false);
+      return;
+    }
+    if (!condition) {
+      setError('Please select a pre-existing condition category.');
       setLoading(false);
       return;
     }
@@ -266,41 +291,55 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
                 : 'Specialized Review Recommended'}
             </h3>
 
-            {/* Clear, Effective 1-line Subtitle */}
-            <p
-              style={{
-                fontSize: '15px',
-                color: '#475569',
-                margin: '0 auto 20px',
-                maxWidth: '480px',
-                lineHeight: 1.55
-              }}
-            >
-              {assessmentResult.outcome === 'ELIGIBLE' ? (
-                <>
-                  Your health profile qualifies for direct enrollment with a{' '}
-                  <strong style={{ color: '#059669' }}>
-                    {assessmentResult.probability_eligible !== undefined
-                      ? `${Math.round(assessmentResult.probability_eligible * 100)}% AI Match`
-                      : 'High AI Confidence'}
-                  </strong>
-                  .
-                </>
-              ) : (
-                'Based on underwriting standards, direct online enrollment is paused. Our licensed agents specialize in alternative coverage options for your profile.'
-              )}
-            </p>
+            {(assessmentResult.completed_at || assessmentResult.created_at) && (
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '14.5px',
+                  color: '#1D1D1F',
+                  marginBottom: '14px',
+                  fontWeight: 600
+                }}
+              >
+                <span style={{ color: '#1D1D1F', fontWeight: 600 }}>Assessment Date:</span>
+                <strong style={{ color: '#1D1D1F', fontWeight: 700 }}>
+                  {new Date(assessmentResult.completed_at || assessmentResult.created_at).toLocaleString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </strong>
+              </div>
+            )}
+
+            {assessmentResult.outcome !== 'ELIGIBLE' && (
+              <p
+                style={{
+                  fontSize: '15px',
+                  color: '#475569',
+                  margin: '0 auto 20px',
+                  maxWidth: '480px',
+                  lineHeight: 1.55
+                }}
+              >
+                Based on underwriting standards, direct online enrollment is paused. Our licensed agents specialize in alternative coverage options for your profile.
+              </p>
+            )}
 
             {/* If Eligible: Clean, Beautiful Plan Tier Badges */}
             {assessmentResult.outcome === 'ELIGIBLE' && assessmentResult.qualifying_plans?.length > 0 && (
               <div style={{ marginBottom: '22px' }}>
                 <div
                   style={{
-                    fontSize: '12px',
-                    fontWeight: 700,
+                    fontSize: '14px',
+                    fontWeight: 800,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: '#64748b',
+                    color: '#1D1D1F',
                     marginBottom: '10px'
                   }}
                 >
@@ -347,32 +386,100 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
               </div>
             )}
 
-            {/* Quick Profile Snapshot Strip (Minimalist & Clean) */}
+            {/* Verified Underwriting Criteria Grid (Read-Only) */}
             <div
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '12px',
-                padding: '8px 18px',
-                background: 'rgba(255, 255, 255, 0.75)',
-                border: '1.2px solid rgba(226, 232, 240, 0.9)',
-                borderRadius: '9999px',
-                fontSize: '13px',
-                color: '#475569',
-                fontWeight: 600,
-                marginBottom: '24px',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+                background: 'linear-gradient(175deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.88) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1.2px solid rgba(226, 232, 240, 0.95)',
+                borderRadius: '16px',
+                padding: '16px',
+                marginBottom: '22px',
+                textAlign: 'left',
+                boxShadow: '0 4px 16px -2px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.9)'
               }}
             >
-              <span>BMI: <strong style={{ color: '#0f172a' }}>{assessmentResult.bmi || bmiData.bmi}</strong></span>
-              <span style={{ color: '#cbd5e1' }}>•</span>
-              <span>Smoker: <strong style={{ color: '#0f172a' }}>{smoker}</strong></span>
-              <span style={{ color: '#cbd5e1' }}>•</span>
-              <span>Alcohol: <strong style={{ color: '#0f172a' }}>{alcoholic}</strong></span>
-              <span style={{ color: '#cbd5e1' }}>•</span>
-              <span>Condition: <strong style={{ color: '#0f172a' }}>{selectedConditionObj.label.split('/')[0].trim()}</strong></span>
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  color: '#1D1D1F',
+                  marginBottom: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <span style={{ color: '#1D1D1F', fontWeight: 800 }}>Verified Underwriting Criteria</span>
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    color: '#059669',
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    padding: '1.5px 7px',
+                    borderRadius: '9999px',
+                    textTransform: 'none',
+                    letterSpacing: 'normal'
+                  }}
+                >
+                  🔒 Locked &amp; Non-Editable
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+                  gap: '10px'
+                }}
+              >
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Applicant Age</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {(assessmentResult.input_provenance?.age || assessmentResult.input_summary?.age || age) ? `${assessmentResult.input_provenance?.age || assessmentResult.input_summary?.age || age} yrs` : '—'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Height &amp; Weight</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {(assessmentResult.input_provenance?.height_cm || assessmentResult.input_summary?.height_cm || heightCm)} cm / {(assessmentResult.input_provenance?.weight_kg || assessmentResult.input_summary?.weight_kg || weightKg)} kg
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Calculated BMI</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {assessmentResult.bmi || assessmentResult.input_provenance?.bmi || bmiData.bmi || '—'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Tobacco / Smoker</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {assessmentResult.input_provenance?.smoker || assessmentResult.input_summary?.smoker || smoker || 'No'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Alcohol Usage</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {assessmentResult.input_provenance?.alcoholic || assessmentResult.input_summary?.alcoholic || alcoholic || 'No'}
+                  </div>
+                </div>
+
+                <div style={{ background: '#ffffff', borderRadius: '10px', padding: '10px 12px', border: '1px solid rgba(226, 232, 240, 0.8)' }}>
+                  <div style={{ fontSize: '12px', color: '#1D1D1F', fontWeight: 700, marginBottom: '2px' }}>Pre-existing Condition</div>
+                  <div style={{ fontSize: '14.5px', color: '#1D1D1F', fontWeight: 800 }}>
+                    {assessmentResult.input_provenance?.pre_existing_condition || assessmentResult.input_summary?.pre_existing_condition || condition || 'None'}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Primary Action Button */}
@@ -414,26 +521,25 @@ export function EligibilityScreen({ user, onAssessmentComplete, onCancel }) {
               </button>
             )}
 
-            {/* Secondary Re-evaluate Link */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setAssessmentResult(null)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#64748b',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  padding: '6px 12px',
-                  transition: 'color 0.15s ease'
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#007aff'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; }}
-              >
-                Modify Profile / Re-evaluate
-              </button>
+            {/* Permanent One-Time Assessment Policy Notice */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                borderRadius: '10px',
+                background: 'rgba(16, 185, 129, 0.08)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
+                color: '#065f46',
+                fontSize: '12.5px',
+                fontWeight: 600
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>Assessment Completed & Persisted • One-time evaluation policy</span>
             </div>
           </div>
         ) : (

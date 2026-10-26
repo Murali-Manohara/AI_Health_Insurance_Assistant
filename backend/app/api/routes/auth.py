@@ -11,8 +11,10 @@ from backend.app.services.auth_service import (
     authenticate_user,
     logout_session,
     UserIdentity,
-    get_current_user
+    get_current_user,
+    AuthorizationService
 )
+from backend.app.registry.plans import PLAN_REGISTRY
 from backend.app.db.sqlite_manager import sqlite_db
 from backend.app.core.logging_config import logger
 
@@ -90,26 +92,64 @@ def logout(request: Request):
 @router.get("/me", response_model=UserProfileResponse)
 def get_me(user: UserIdentity = Depends(get_current_user)):
     """
-    Retrieves profile and permissions for the currently authenticated session.
+    Retrieves profile and permissions for the currently authenticated session,
+    including persisted eligibility status, active plan selection, and confirmation state.
     """
     db_user = sqlite_db.get_user_by_id(user.user_id)
-    if not db_user:
-        # Fallback for dev / test identities
-        return UserProfileResponse(
-            user_id=user.user_id,
-            email=user.email or f"{user.user_id}@test.local",
-            role=user.role,
-            full_name=user.full_name,
-            is_approved=True,
-            governance_status="active"
-        )
+    email = db_user["email"] if db_user else (user.email or f"{user.user_id}@test.local")
+    role = db_user["effective_role"] if db_user else user.role
+    full_name = db_user["full_name"] if db_user and db_user.get("full_name") else user.full_name
+    is_approved = bool(db_user["is_approved"]) if db_user else True
+    created_at = db_user["created_at"] if db_user else None
+    governance_status = "active" if is_approved else "pending_verification"
+    account_status = "ACTIVE" if is_approved else "PENDING_VERIFICATION"
+
+    # Query persistent eligibility assessment
+    asmt = sqlite_db.get_completed_assessment_for_user(user.user_id) or sqlite_db.get_current_assessment_for_user(user.user_id)
+    eligibility_status = "NOT_STARTED"
+    eligibility_outcome = None
+    assessment_completed_at = None
+    if asmt:
+        eligibility_status = asmt.get("status", "NOT_STARTED")
+        eligibility_outcome = asmt.get("outcome")
+        assessment_completed_at = asmt.get("completed_at") or asmt.get("created_at")
+
+    # Query persistent plan selection & confirmation
+    active_sel = sqlite_db.get_active_plan_selection_for_user(user.user_id)
+    selected_plan_id = None
+    selected_plan_name = None
+    plan_selection_status = None
+    is_confirmed = False
+    confirmation_status = None
+    confirmed_at = None
+    if active_sel:
+        selected_plan_id = active_sel.get("selected_plan_id")
+        plan_obj = PLAN_REGISTRY.get(selected_plan_id)
+        selected_plan_name = plan_obj.plan_name if plan_obj else selected_plan_id
+        plan_selection_status = active_sel.get("status")
+        is_confirmed = (active_sel.get("status") == "CONFIRMED") or bool(active_sel.get("confirmed_at"))
+        confirmation_status = "CONFIRMED" if is_confirmed else "PENDING_CONFIRMATION"
+        confirmed_at = active_sel.get("confirmed_at")
+
+    authorized_plans = sorted(list(AuthorizationService.get_authorized_plans(role)))
 
     return UserProfileResponse(
-        user_id=db_user["user_id"],
-        email=db_user["email"],
-        role=db_user["effective_role"],
-        full_name=db_user["full_name"] or "User",
-        is_approved=bool(db_user["is_approved"]),
-        governance_status="active" if db_user["is_approved"] else "pending_verification",
-        created_at=db_user["created_at"]
+        user_id=user.user_id,
+        email=email,
+        role=role,
+        full_name=full_name,
+        is_approved=is_approved,
+        governance_status=governance_status,
+        created_at=created_at,
+        account_status=account_status,
+        eligibility_status=eligibility_status,
+        eligibility_outcome=eligibility_outcome,
+        assessment_completed_at=assessment_completed_at,
+        selected_plan_id=selected_plan_id,
+        selected_plan_name=selected_plan_name,
+        plan_selection_status=plan_selection_status,
+        is_confirmed=is_confirmed,
+        confirmation_status=confirmation_status,
+        confirmed_at=confirmed_at,
+        authorized_plans=authorized_plans
     )

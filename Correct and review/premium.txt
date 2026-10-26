@@ -1,0 +1,60 @@
+┌──────────────────────────────────────────────────────────────────────────────────────────┐
+│  Choose Plan  >  Confirm & Review                                                       │
+│                                                                                          │
+│  CONFIRM & REVIEW SELECTED POLICY                                                        │
+│  Review your applicant details and selected coverage before proceeding.                   │
+├──────────────────────────────────────────┬───────────────────────────────────────────────┤
+│  01  CUSTOMER DETAILS                    │  02  SELECTED PLAN                            │
+│  ────────────────────────────────────   │  ──────────────────────────────────────────   │
+│  Full Name       [Dynamic]               │  Health Shield – Premium                      │
+│  Email           [Dynamic]               │  Plan ID       HS-PREMIUM-001                 │
+│  Role             [Dynamic]               │  Category      Premium                       │
+│  Eligibility      [Saved result]          │  Product       Fixed-Benefit Health Insurance│
+│  Assessment Date  [Saved date]            │  Policy Term   Illustrative 1 year            │
+│                                          │  Annual Premium ₹22,500*                      │
+│                                          │  Payment        Annual | Taxes excluded*      │
+├──────────────────────────────────────────────────────────────────────────────────────────┤
+│  03  BENEFITS & COVERAGE LIMITS                                                           │
+│                                                                                          │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐ ┌─────────────────────┐ │
+│  │ ANNUAL COVER     │ │ HOSPITAL CASH    │ │ ICU BENEFIT      │ │ MAJOR SURGERY       │ │
+│  │                  │ │                  │ │                  │ │                     │ │
+│  │ Not specified    │ │ ₹10,000 / day    │ │ ₹20,000 / day    │ │ Basis: ₹10,00,000   │ │
+│  │ in source        │ │ Max 30 days      │ │ Max 15 days      │ │ Category payouts:   │ │
+│  │ document         │ │ Max ₹3,00,000    │ │ Max ₹3,00,000    │ │ ₹10L / ₹6L / ₹4L /  │ │
+│  │                  │ │                  │ │ ICU replaces     │ │ ₹2L                 │ │
+│  │                  │ │                  │ │ hospital cash    │ │                     │ │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘ └─────────────────────┘ │
+├──────────────────────────────────────────┬───────────────────────────────────────────────┤
+│  04  OTHER BENEFITS                      │  05  WAITING PERIODS                          │
+│  ────────────────────────────────────   │  ──────────────────────────────────────────   │
+│  Day-care       ₹50,000/procedure        │  Initial illness       30 days*               │
+│                 Max 3 claims/year        │  Specified ailments    24 months*             │
+│  Other surgery  ₹25,000/day              │  Pre-existing disease  36 months*             │
+│                 Max 15 days/year         │  PED lookback          Previous 48 months*     │
+│  Medical care   ₹25,000/claim            │  Accident cover        From policy start*     │
+│                 Max 3 claims/year        │  Rider illness         30 days*               │
+│  Extended stay  ₹1,00,000                │                                               │
+│  Health check   Up to ₹5,000/year        │                                               │
+│  Ambulance      ₹1,000/claim             │                                               │
+├──────────────────────────────────────────┴───────────────────────────────────────────────┤
+│  06  EXCLUSIONS & CLAIM REQUIREMENTS                                                      │
+│                                                                                          │
+│  Exclusions                              Claim requirements                              │
+│  • Non-medical expenses                  • Emergency notification: within 24 hours*      │
+│  • Cosmetic treatment                    • Planned admission: within 48 hours*           │
+│  • Self-inflicted injury, where excluded • Documents: within 30 days of discharge*      │
+│  • Unproven treatment                    • Eligible registered hospitals, subject to     │
+│  • Applicable waiting-period claims        the stated hospital requirements              │
+│  • Other documented exclusions          • Treatment in India, subject to exceptions*    │
+├──────────────────────────────────────────────────────────────────────────────────────────┤
+│  07  POLICY DISCLOSURE                                                                    │
+│  DEMONSTRATION DATA — NOT AN OFFICIAL VERIFIED INSURANCE PRODUCT                          │
+│  Benefits, premiums, waiting periods, and exclusions require verification against an      │
+│  approved policy document. Confirmation records enrollment intent only; it does not      │
+│  issue a policy, activate coverage, or grant final underwriting approval.                │
+│                                                                                          │
+│  [ Back to Plan Selection ]                              [ ✓ Confirm Plan ]              │
+└──────────────────────────────────────────────────────────────────────────────────────────┘
+
+*Illustrative values and conditions; verify against approved policy wording.

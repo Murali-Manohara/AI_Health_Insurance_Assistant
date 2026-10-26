@@ -6,6 +6,8 @@ import React from 'react';
  * - Professional vector SVG icons
  * - Active dot indicators & status pills
  * - Scope authorization footer
+ * - Persistent green completion indicator for Stage 1 Eligibility
+ * - Customer-only Stage 4 "Confirm & Review"
  */
 export function ProcessSidebar({
   activeStage,
@@ -17,37 +19,49 @@ export function ProcessSidebar({
   currentUser
 }) {
   const isEmployee = userRole === 'employee';
+  const isEligibilityCompleted = Boolean(
+    assessment && (assessment.status === 'COMPLETED' || assessment.outcome)
+  );
+  const isPlanCompleted = Boolean(selectedPlan);
+  const isConfirmed = Boolean(
+    currentUser?.is_confirmed ||
+    selectedPlan?.is_confirmed ||
+    selectedPlan?.status === 'CONFIRMED' ||
+    selectedPlan?.confirmed_at
+  );
 
   const stages = [
     {
       id: 'eligibility',
       number: '1',
-      title: 'Eligibility Assessment',
-      desc: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'Qualified (Underwriting Passed)' : assessment.outcome.replace('_', ' ')) : 'Risk evaluation',
-      badge: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'Qualified' : 'Assessed') : null,
-      badgeClass: assessment ? (assessment.outcome === 'ELIGIBLE' ? 'gold' : 'basic') : null,
+      title: 'Eligibility Criteria',
+      desc: isEligibilityCompleted
+        ? (isConfirmed ? 'Verified & Completed' : 'Completed')
+        : 'Risk evaluation',
+      badge: isEligibilityCompleted ? 'Completed' : null,
+      badgeClass: isEligibilityCompleted ? 'gold' : null,
       icon: (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           <path d="M9 12l2 2 4-4" />
         </svg>
       ),
-      disabled: false
+      disabled: false // Always accessible to view assessment parameters
     },
     {
       id: 'plans',
       number: '2',
-      title: 'Choose Plan',
-      desc: selectedPlan ? selectedPlan.plan_name : 'Select active policy portfolio',
+      title: isEmployee ? 'Employee Plan' : 'Choose Plan',
+      desc: selectedPlan ? selectedPlan.plan_name : (isEmployee ? 'Select employee group plan' : 'Select active policy portfolio'),
       badge: selectedPlan ? (selectedPlan.display_title || selectedPlan.plan_category) : null,
-      badgeClass: selectedPlan ? selectedPlan.plan_category.toLowerCase() : null,
+      badgeClass: selectedPlan ? selectedPlan.plan_category?.toLowerCase() : null,
       icon: (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
           <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
         </svg>
       ),
-      disabled: !assessment && !isEmployee
+      disabled: !isEligibilityCompleted
     },
     {
       id: 'chat',
@@ -65,6 +79,32 @@ export function ProcessSidebar({
       disabled: !selectedPlan
     }
   ];
+
+  // Customer-only Stage 4: Confirm & Review
+  if (!isEmployee) {
+    stages.push({
+      id: 'confirm',
+      number: '4',
+      title: 'Confirm & Review',
+      desc: isConfirmed
+        ? 'Confirmed Policy Summary'
+        : selectedPlan
+        ? 'Review & finalize selection'
+        : 'Select a plan first',
+      badge: isConfirmed ? 'Confirmed' : null,
+      badgeClass: isConfirmed ? 'gold' : null,
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+      ),
+      disabled: Boolean(!selectedPlan) // Accessible whenever plan is selected, before and after confirmation
+    });
+  }
 
   return (
     <aside className="process-sidebar" aria-label="Process Navigation">
@@ -97,9 +137,14 @@ export function ProcessSidebar({
       <nav className="process-nav-list" role="navigation">
         {stages.map((stage) => {
           const isActive = activeStage === stage.id;
-          const isCompleted =
-            (stage.id === 'eligibility' && assessment && activeStage !== 'eligibility') ||
-            (stage.id === 'plans' && selectedPlan && activeStage === 'chat');
+          let isCompleted = false;
+          if (stage.id === 'eligibility') {
+            isCompleted = isEligibilityCompleted;
+          } else if (stage.id === 'plans') {
+            isCompleted = isPlanCompleted && (activeStage === 'chat' || activeStage === 'confirm');
+          } else if (stage.id === 'confirm') {
+            isCompleted = isConfirmed;
+          }
 
           return (
             <button
@@ -108,7 +153,15 @@ export function ProcessSidebar({
               className={`process-nav-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''} ${stage.disabled ? 'disabled' : ''}`}
               onClick={() => !stage.disabled && onNavigate(stage.id)}
               disabled={stage.disabled}
-              title={stage.disabled ? 'Select a plan first to unlock Policy Chat' : stage.title}
+              title={
+                stage.disabled
+                  ? isConfirmed && (stage.id === 'eligibility' || stage.id === 'confirm')
+                    ? 'Locked: Only one insurance policy can be taken from the company.'
+                    : stage.id === 'confirm'
+                    ? 'Select a plan first to unlock Confirm & Review'
+                    : 'Complete previous stage first'
+                  : stage.title
+              }
               aria-current={isActive ? 'step' : undefined}
             >
               <div className="process-nav-icon-col">
@@ -123,11 +176,57 @@ export function ProcessSidebar({
                 </div>
               </div>
 
-              <div className="process-nav-info">
-                <div className="process-nav-title-row">
-                  <span className="process-nav-title">{stage.title}</span>
-                  {isActive && <span className="admin-active-dot" aria-hidden="true">•</span>}
+              <div className="process-nav-info" style={{ display: 'flex', flexDirection: 'column', minWidth: 0, gap: '2px' }}>
+                <div className="process-nav-title-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px', minWidth: 0 }}>
+                  <span className="process-nav-title" style={{ fontSize: '13px', fontWeight: 700, color: 'inherit' }}>
+                    {stage.title}
+                  </span>
+                  {isActive && !isCompleted && !isConfirmed && (
+                    <span className="admin-active-dot" aria-hidden="true" style={{ marginLeft: 'auto', flexShrink: 0 }}>•</span>
+                  )}
                 </div>
+
+                {stage.id === 'eligibility' && isCompleted ? (
+                  <div style={{ display: 'flex', alignItems: 'center', marginTop: '2px' }}>
+                    <span
+                      style={{
+                        fontSize: '10.5px',
+                        fontWeight: 700,
+                        color: '#059669',
+                        background: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        padding: '1px 8px',
+                        borderRadius: '9999px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      ✓ Completed
+                    </span>
+                  </div>
+                ) : stage.id === 'confirm' && isConfirmed ? (
+                  <div style={{ display: 'flex', alignItems: 'center', marginTop: '2px' }}>
+                    <span
+                      style={{
+                        fontSize: '10.5px',
+                        fontWeight: 700,
+                        color: '#059669',
+                        background: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        padding: '1px 8px',
+                        borderRadius: '9999px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      ✓ Confirmed
+                    </span>
+                  </div>
+                ) : null}
               </div>
             </button>
           );

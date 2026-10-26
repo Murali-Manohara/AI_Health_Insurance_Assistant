@@ -4,17 +4,28 @@ const USER_KEY = 'insurance_auth_user';
 // Fallback to direct backend URL if proxy fails or in standalone mode
 const API_URL = '/api';
 
-async function safeFetch(endpoint, options = {}) {
-  try {
-    const res = await fetch(`${API_URL}${endpoint}`, options);
-    return res;
-  } catch (err) {
-    // If relative fetch fails (e.g. proxy issue), try direct backend port
+async function safeFetch(endpoint, options = {}, retries = 2) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const directUrl = `http://127.0.0.1:8000/api${endpoint}`;
-      return await fetch(directUrl, options);
-    } catch {
-      throw err;
+      const res = await fetch(`${API_URL}${endpoint}`, options);
+      // If Vite proxy returns 502/503/504 because backend is still starting up, retry shortly
+      if ((res.status === 502 || res.status === 503 || res.status === 504) && attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
+        continue;
+      }
+      // If relative fetch fails (e.g. proxy issue), try direct backend port
+      try {
+        const directUrl = `http://127.0.0.1:8000/api${endpoint}`;
+        return await fetch(directUrl, options);
+      } catch {
+        throw new Error('Backend server is currently initializing or unreachable. Please verify backend is running on port 8000.');
+      }
     }
   }
 }
@@ -34,7 +45,12 @@ async function parseResponse(res) {
 
 function extractErrorMessage(data, fallbackMsg) {
   if (!data) return fallbackMsg;
-  if (typeof data.detail === 'string') return data.detail;
+  if (typeof data.detail === 'string') {
+    if (data.detail.includes('502') || data.detail.includes('Bad Gateway') || data.detail.includes('connect ECONNREFUSED')) {
+      return 'Backend server is initializing. Please wait a moment and try again.';
+    }
+    return data.detail;
+  }
   if (Array.isArray(data.detail)) {
     return data.detail.map((e) => e.msg || e.message || JSON.stringify(e)).join(' ');
   }

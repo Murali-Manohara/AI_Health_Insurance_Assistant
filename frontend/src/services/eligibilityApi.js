@@ -72,6 +72,16 @@ export const eligibilityApi = {
     return handleResponse(res);
   },
 
+  async confirmPlan(selectedPlanId) {
+    const res = await safeFetch('/confirm-plan', {
+      method: 'POST',
+      body: JSON.stringify({
+        plan_id: selectedPlanId,
+      }),
+    });
+    return handleResponse(res);
+  },
+
   async contactAgent(contactData) {
     const res = await safeFetch('/agent-contact', {
       method: 'POST',
@@ -85,5 +95,20 @@ export const eligibilityApi = {
       method: 'GET',
     });
     return handleResponse(res);
+  },
+
+  async getPlanReviewDetails(planId) {
+    const token = authApi.getToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    try {
+      const res = await fetch(`/api/plans/${planId}/review-details`, { method: 'GET', headers });
+      return handleResponse(res);
+    } catch {
+      const directUrl = `http://127.0.0.1:8000/api/plans/${planId}/review-details`;
+      const res = await fetch(directUrl, { method: 'GET', headers });
+      return handleResponse(res);
+    }
   },
 };
