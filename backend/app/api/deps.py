@@ -4,7 +4,7 @@ from fastapi import Depends, Request
 from backend.app.services.ingestion_orchestrator import IngestionOrchestrator
 from backend.app.services.rag_orchestrator import RAGOrchestrator
 from backend.app.services.retrieval_service import HybridRetrievalService
-from backend.app.services.auth_service import UserIdentity, get_current_user, require_admin_user
+from backend.app.services.auth_service import UserIdentity, get_current_user, require_admin_user, require_employee_user
 
 # Thread-safe lazy singletons (avoid blocking FastAPI server startup)
 _ingestion_lock = threading.Lock()
@@ -36,6 +36,9 @@ def get_auth_user(request: Request) -> UserIdentity:
 
 def get_admin_user(request: Request) -> UserIdentity:
     return require_admin_user(request)
+
+def get_employee_user(request: Request) -> UserIdentity:
+    return require_employee_user(request)
 
 # Module-level __getattr__ for backward compatibility
 def __getattr__(name: str):

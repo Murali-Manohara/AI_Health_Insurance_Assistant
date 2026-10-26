@@ -276,11 +276,12 @@ def test_customer_confirmation_workflow():
     wrong_plan_conf = client.post("/api/eligibility/confirm-plan", json={"plan_id": "HS-BASIC-001"}, headers=headers_cust)
     assert wrong_plan_conf.status_code == 400
 
-    # 5. Employee cannot call customer confirmation endpoint: MUST BE 403 FORBIDDEN
+    # 5. Employee confirms their active selected plan:
     login_emp = client.post("/api/auth/login", json={"email": "murali@gmail.com", "password": "12345678"}).json()
     headers_emp = {"Authorization": f"Bearer {login_emp['token']}"}
-    emp_conf = client.post("/api/eligibility/confirm-plan", json={"plan_id": "HS-GOLD-001"}, headers=headers_emp)
-    assert emp_conf.status_code == 403
+    emp_conf = client.post("/api/eligibility/confirm-plan", json={"plan_id": "EMP-INS-001"}, headers=headers_emp)
+    assert emp_conf.status_code == 200
+    assert emp_conf.json()["status"] == "CONFIRMED"
 
     # 6. Admin cannot call customer confirmation endpoint: MUST BE 403 FORBIDDEN
     login_admin = client.post("/api/auth/login", json={"email": "admin@gmail.com", "password": "admin@123"}).json()

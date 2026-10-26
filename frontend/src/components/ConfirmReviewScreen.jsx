@@ -246,6 +246,93 @@ const FALLBACK_PLAN_REVIEW_DATA = {
       'Eligible registered hospitals, subject to the stated hospital requirements',
       'Treatment in India, subject to exceptions*'
     ]
+  },
+  'EMP-INS-001': {
+    plan_details: {
+      plan_name: 'Executive Employee Insurance Plan',
+      plan_id: 'EMP-INS-001',
+      category: 'Employee Exclusive',
+      product_type: 'Fixed-Benefit Health Insurance',
+      policy_term: '1 Year',
+      annual_premium: '₹5,000',
+      employer_pays: '₹2,000',
+      employee_pays: '₹3,000',
+      payment_frequency: 'Annual (default)',
+      taxes: 'Not defined',
+      official_plan_number: 'Not assigned in the document',
+      uin: 'Not specified'
+    },
+    benefits_coverage_limits: {
+      annual_coverage: {
+        title: 'ANNUAL COVERAGE',
+        overall_limit: 'Not defined',
+        major_surgery_basis: '₹10,00,000',
+        major_surgery_max: '₹1,00,00,000* (10× benefit basis)',
+        status: 'not_specified'
+      },
+      hospital_cash: {
+        title: 'HOSPITAL CASH',
+        daily_benefit: '₹10,000 / day',
+        min_stay: 'More than 24 hours',
+        max_days: 'First Year: Max 30 days | Later: Max 90 days/yr',
+        max_amount: 'Overall Maximum: 900 days*'
+      },
+      icu_benefit: {
+        title: 'ICU BENEFIT',
+        daily_benefit: '₹20,000 / day',
+        max_days: 'Maximum ICU days not specified in document',
+        max_amount: 'Overall ICU limit: Not defined',
+        relationship: 'Hospital cash combo: Subject to policy terms'
+      },
+      surgery_benefit: {
+        title: 'MAJOR SURGERY BENEFIT',
+        basis: 'Benefit Basis: ₹10,00,000',
+        category_payouts: [
+          'Cat. 1 (100%): ₹10,00,000',
+          'Cat. 2 (60%): ₹6,00,000',
+          'Cat. 3 (40%): ₹4,00,000',
+          'Cat. 4 (20%): ₹2,00,000'
+        ],
+        overall_max: '₹1,00,00,000* (Up to 10× benefit basis)'
+      }
+    },
+    other_benefits: [
+      { name: 'Day-Care Procedure', amount: '₹50,000/procedure', frequency: 'Max 3 procedures/year', annual_limit: 'Overall: 30 procedures*', status: 'included' },
+      { name: 'Other Surgery', amount: '₹25,000/day', frequency: 'Min stay >24 hrs • Yr 1: Max 15 days | Later: Max 45 days/yr', annual_limit: 'Overall Maximum: 450 days*', status: 'included' },
+      { name: 'Medical Management', amount: '₹25,000/eligible claim', frequency: 'Max 2 claims/year', annual_limit: 'Overall Claims: 20*', status: 'included' },
+      { name: 'Extended Hospital Stay', amount: '₹1,00,000 lump sum', frequency: 'Qualifying Stay >30 continuous days', annual_limit: 'Max 1 claim/year; 10 overall*', status: 'included' },
+      { name: 'Health Check-Up', amount: '₹5,000 reimbursement', frequency: 'Available after 3 years of cover*', annual_limit: 'Subsequent: 3 years after previous check-up', status: 'included' },
+      { name: 'Restored Cover', amount: 'Not confirmed for employee plan (Reference: Up to ₹10,00,000*)', frequency: 'N/A', annual_limit: 'N/A', status: 'not_included' },
+      { name: 'Ambulance', amount: '₹1,000 illustrative (availability and claim limit not confirmed)', frequency: 'Illustrative', annual_limit: 'Not confirmed', status: 'not_included' },
+      { name: 'Quick Cash', amount: 'Not confirmed (reference describes 50% advance for eligible surgery)', frequency: 'N/A', annual_limit: 'N/A', status: 'not_included' },
+      { name: 'Claim-Free Increase', amount: 'Not confirmed (no increase calculation permitted without approved rules)', frequency: 'N/A', annual_limit: 'N/A', status: 'not_included' },
+      { name: 'Premium Waiver & Auto Health Cover', amount: 'Availability and conditions not defined', frequency: 'N/A', annual_limit: 'N/A', status: 'not_included' }
+    ],
+    waiting_periods: [
+      { condition: 'Initial illness wait', duration: 'Not specified in employee document' },
+      { condition: 'Accident coverage', duration: 'Not specified in employee document' },
+      { condition: 'Specified diseases', duration: 'Not specified in employee document' },
+      { condition: 'Pre-existing diseases (PED)', duration: 'Not specified in employee document' },
+      { condition: 'Geographic limits', duration: 'Not specified in employee document' },
+      { condition: 'Hospital eligibility', duration: 'Not specified in employee document' },
+      { condition: 'Grace period & Revival', duration: 'Not specified in employee document' },
+      { condition: 'Claim deadline', duration: 'Not specified in employee document' },
+      { condition: 'Employment continuity & leave', duration: 'Not defined in employee document' },
+      { condition: 'Dependent coverage', duration: 'Not defined in employee document' }
+    ],
+    exclusions: [
+      'Exclusions not specified in the employee-plan document',
+      'Medical disclosures requirements not specified',
+      'Employee eligibility and minimum service requirements not specified',
+      'Dependent eligibility and coverage not defined',
+      'Employment change rules (resignation, retirement, termination) not defined'
+    ],
+    claim_requirements: [
+      'Claim process must be confirmed from approved employee policy',
+      'Required documents not specified in the employee-plan document',
+      'HR corporate verification of active employment status',
+      'Hospital registration requirements to be confirmed from employer policy'
+    ]
   }
 };
 
@@ -655,7 +742,7 @@ export function ConfirmReviewScreen({
               01
             </span>
             <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#1D1D1F', margin: 0, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-              CUSTOMER DETAILS
+              CUSTOMER / EMPLOYEE DETAILS
             </h3>
           </div>
 
@@ -751,7 +838,14 @@ export function ConfirmReviewScreen({
             </div>
             <div>
               <span style={{ color: '#1D1D1F', display: 'block', fontSize: '12.5px', fontWeight: 600, marginBottom: '2px' }}>Annual Premium</span>
-              <span style={{ fontWeight: 800, color: '#1D1D1F', fontSize: '15.5px' }}>{pDetails.annual_premium}</span>
+              <span style={{ fontWeight: 800, color: '#1D1D1F', fontSize: '15.5px' }}>
+                {pDetails.annual_premium}
+                {pDetails.employer_pays && (
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569', marginLeft: '6px', display: 'block' }}>
+                    (Employer: {pDetails.employer_pays} | Employee: {pDetails.employee_pays})
+                  </span>
+                )}
+              </span>
             </div>
             <div>
               <span style={{ color: '#1D1D1F', display: 'block', fontSize: '12.5px', fontWeight: 600, marginBottom: '2px' }}>Payment / Taxes</span>

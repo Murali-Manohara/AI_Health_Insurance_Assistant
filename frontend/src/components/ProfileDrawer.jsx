@@ -206,8 +206,8 @@ export function ProfileDrawer({
             </div>
           )}
 
-          {/* Section: Customer-Specific Plan & Confirmation */}
-          {userRole === "customer" && (
+          {/* Section: Plan & Confirmation (Customer and Employee) */}
+          {userRole !== "admin" && (
             <div className="profile-section">
               <h4 className="profile-section-heading">Policy Selection & Confirmation</h4>
               <div className="profile-detail-row">

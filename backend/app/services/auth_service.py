@@ -304,3 +304,83 @@ def require_admin_user(request: Request) -> UserIdentity:
         full_name=session.get("full_name") or "Administrator",
         email=session.get("email")
     )
+
+def require_employee_user(request: Request) -> UserIdentity:
+    """
+    Enforces server-side employee-only authorization.
+    Rejects unauthenticated requests with HTTP 401.
+    Rejects authenticated non-employees (customers, admins) with HTTP 403 Forbidden.
+    """
+    auth_header = request.headers.get("Authorization", "").strip()
+    token = None
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:].strip()
+    elif "X-Session-Token" in request.headers:
+        token = request.headers["X-Session-Token"].strip()
+
+    if not token:
+        if "X-User-Role" in request.headers:
+            client_role = request.headers["X-User-Role"].lower().strip()
+            sqlite_db.record_audit_event(
+                action="claim_predictor_forbidden",
+                actor_id=request.headers.get("X-User-Id", "unknown"),
+                actor_role=client_role,
+                target_resource=str(request.url.path),
+                outcome="FORBIDDEN",
+                details={"reason": f"Role '{client_role}' lacks employee privileges"}
+            )
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Forbidden: Employee role authorization required to access the Claim Predictor."
+            )
+
+        sqlite_db.record_audit_event(
+            action="claim_predictor_unauthorized",
+            actor_id="anonymous",
+            actor_role="none",
+            target_resource=str(request.url.path),
+            outcome="UNAUTHORIZED",
+            details={"reason": "Missing authentication session token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required. Please log in with an authorized employee account."
+        )
+
+    session = sqlite_db.get_session(token)
+    if not session:
+        sqlite_db.record_audit_event(
+            action="claim_predictor_unauthorized",
+            actor_id="invalid_session",
+            actor_role="none",
+            target_resource=str(request.url.path),
+            outcome="UNAUTHORIZED",
+            details={"reason": "Expired or invalid session token"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired session. Please log in again."
+        )
+
+    effective_role = session.get("effective_role", "").lower().strip()
+    if effective_role != "employee":
+        sqlite_db.record_audit_event(
+            action="claim_predictor_forbidden",
+            actor_id=session.get("user_id"),
+            actor_email=session.get("email"),
+            actor_role=effective_role,
+            target_resource=str(request.url.path),
+            outcome="FORBIDDEN",
+            details={"reason": f"Authenticated user has role '{effective_role}', not 'employee'"}
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Forbidden: Employee role authorization required to access the Claim Predictor."
+        )
+
+    return UserIdentity(
+        user_id=session["user_id"],
+        role="employee",
+        full_name=session.get("full_name") or "Employee User",
+        email=session.get("email")
+    )

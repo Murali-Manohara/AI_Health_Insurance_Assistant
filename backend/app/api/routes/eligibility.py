@@ -229,15 +229,15 @@ def confirm_customer_plan(
     current_user: UserIdentity = Depends(get_auth_user)
 ):
     """
-    Persists customer confirmation of their selected plan.
-    Strictly Customer role only.
+    Persists user confirmation of their selected plan.
+    Available for Customer and Employee roles.
     Requires completed eligible assessment and active plan selection matching the plan_id.
     Idempotent: Duplicate submissions return the persisted confirmation state.
     """
-    if current_user.role != "customer":
+    if current_user.role not in {"customer", "employee"}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Plan confirmation is exclusively reserved for customer accounts."
+            detail="Plan confirmation is exclusively reserved for customer and employee accounts."
         )
 
     assessment = sqlite_db.get_completed_assessment_for_user(current_user.user_id) or sqlite_db.get_current_assessment_for_user(current_user.user_id)
@@ -247,10 +247,11 @@ def confirm_customer_plan(
             detail="A completed eligible assessment is required prior to confirming a policy plan."
         )
 
-    if payload.plan_id not in {"HS-BASIC-001", "HS-GOLD-001", "HS-PREMIUM-001"}:
+    authorized_plans = AuthorizationService.get_authorized_plans(current_user.role)
+    if payload.plan_id not in authorized_plans:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Plan '{payload.plan_id}' is not a valid customer policy plan."
+            detail=f"Plan '{payload.plan_id}' is not an authorized policy plan for role '{current_user.role}'."
         )
 
     active_sel = sqlite_db.get_active_plan_selection_for_user(current_user.user_id)

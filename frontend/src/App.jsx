@@ -32,6 +32,7 @@ export function App() {
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const [newChatTrigger, setNewChatTrigger] = useState(0);
   const [userMessageCount, setUserMessageCount] = useState(0);
+  const [isClaimPredictorOpen, setIsClaimPredictorOpen] = useState(false);
 
   // Restore authenticated session and active navigation stage on page refresh
   useEffect(() => {
@@ -120,7 +121,7 @@ export function App() {
                     setSelectedPlan(planToSet);
                     sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(planToSet));
 
-                    if (isConfirmed && user.role === 'customer') {
+                    if (isConfirmed && user.role !== 'admin') {
                       setActiveTab(savedTab === 'chat' ? 'chat' : 'confirm');
                     } else {
                       setActiveTab(savedTab || 'chat');
@@ -208,7 +209,7 @@ export function App() {
               setSelectedPlan(restoredPlan);
               sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(restoredPlan));
 
-              if (isConfirmed && user.role === 'customer') {
+              if (isConfirmed && user.role !== 'admin') {
                 setActiveTab('confirm');
                 sessionStorage.setItem('ins_app_active_tab', 'confirm');
               } else {
@@ -258,6 +259,7 @@ export function App() {
     setAdminTab('dashboard');
     setAuthScreen('login');
     setIsProfileOpen(false);
+    setIsClaimPredictorOpen(false);
     sessionStorage.removeItem('ins_app_selected_plan');
     sessionStorage.removeItem('ins_app_active_tab');
     sessionStorage.removeItem('ins_app_admin_tab');
@@ -360,7 +362,7 @@ export function App() {
               } else if (stage === 'chat' && selectedPlan) {
                 setActiveTab('chat');
                 sessionStorage.setItem('ins_app_active_tab', 'chat');
-              } else if (stage === 'confirm' && selectedPlan && userRole === 'customer') {
+              } else if (stage === 'confirm' && selectedPlan && userRole !== 'admin') {
                 setActiveTab('confirm');
                 sessionStorage.setItem('ins_app_active_tab', 'confirm');
               }
@@ -386,6 +388,27 @@ export function App() {
           <div className="header-right-actions">
             {!isAdmin && activeTab === 'chat' && (
               <>
+                {userRole === 'employee' && (
+                  <button
+                    type="button"
+                    className={`chat-hdr-btn claim-predictor-btn ${isClaimPredictorOpen ? 'active' : ''}`}
+                    onClick={() => {
+                      setIsClaimPredictorOpen((prev) => {
+                        const next = !prev;
+                        if (next) setIsChatMenuOpen(false);
+                        return next;
+                      });
+                    }}
+                    title={isClaimPredictorOpen ? "Close Claim Predictor sidebar" : "Open Insurance Claim Predictor"}
+                    aria-label="Claim Predictor"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    <span>Claim Predictor</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   className="chat-hdr-btn chat-new-chat-btn"
@@ -402,7 +425,13 @@ export function App() {
                 <button
                   type="button"
                   className={`chat-hdr-btn chat-menu-toggle-btn ${isChatMenuOpen ? 'active' : ''}`}
-                  onClick={() => setIsChatMenuOpen((prev) => !prev)}
+                  onClick={() => {
+                    setIsChatMenuOpen((prev) => {
+                      const next = !prev;
+                      if (next) setIsClaimPredictorOpen(false);
+                      return next;
+                    });
+                  }}
                   title={isChatMenuOpen ? "Close side menu" : "Open side menu (History & Quick Actions)"}
                   aria-label="Toggle chat side menu"
                 >
@@ -534,12 +563,14 @@ export function App() {
                     onUnauthorized={handleLogout}
                     isActionsSidebarOpen={isChatMenuOpen}
                     onCloseActionsSidebar={() => setIsChatMenuOpen(false)}
+                    isClaimPredictorOpen={isClaimPredictorOpen}
+                    onCloseClaimPredictor={() => setIsClaimPredictorOpen(false)}
                     newChatTrigger={newChatTrigger}
                     onMessageCountChange={setUserMessageCount}
                   />
                 )}
 
-                {activeTab === 'confirm' && selectedPlan && userRole === 'customer' && (
+                {activeTab === 'confirm' && selectedPlan && userRole !== 'admin' && (
                   <div className="scrollable-page-container">
                     <ConfirmReviewScreen
                       currentUser={currentUser}

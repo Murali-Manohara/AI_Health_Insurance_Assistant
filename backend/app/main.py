@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.core.logging_config import logger
-from backend.app.api.routes import plans, upload, ingestion, conversations, retrieval, auth, admin_dashboard, eligibility
+from backend.app.api.routes import plans, upload, ingestion, conversations, retrieval, auth, admin_dashboard, eligibility, claim_predictor
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -49,6 +49,7 @@ app.include_router(upload.router, prefix=settings.API_PREFIX)
 app.include_router(ingestion.router, prefix=settings.API_PREFIX)
 app.include_router(conversations.router, prefix=settings.API_PREFIX)
 app.include_router(retrieval.router, prefix=settings.API_PREFIX)
+app.include_router(claim_predictor.router, prefix=settings.API_PREFIX)
 
 @app.get("/api/health", tags=["Health"])
 def health_check():

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MarkdownContent from './MarkdownContent';
 import { ChatActionsSidebar } from './ChatActionsSidebar';
+import { ClaimPredictorDrawer } from './ClaimPredictorDrawer';
 
 export function PlanChatScreen({
   selectedPlan,
@@ -11,6 +12,8 @@ export function PlanChatScreen({
   onUnauthorized,
   isActionsSidebarOpen: propIsActionsSidebarOpen,
   onCloseActionsSidebar,
+  isClaimPredictorOpen = false,
+  onCloseClaimPredictor,
   newChatTrigger,
   onMessageCountChange
 }) {
@@ -18,6 +21,7 @@ export function PlanChatScreen({
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingStatusText, setLoadingStatusText] = useState('Retrieving authorized policy evidence & generating grounded answer...');
   const [error, setError] = useState(null);
   const [expandedSources, setExpandedSources] = useState({});
   const [localIsActionsSidebarOpen, setLocalIsActionsSidebarOpen] = useState(false);
@@ -519,6 +523,7 @@ export function PlanChatScreen({
 
     setMessages((prev) => [...prev, userMessage]);
     setInputText('');
+    setLoadingStatusText('Retrieving authorized policy evidence & generating grounded answer...');
     setLoading(true);
     setError(null);
 
@@ -662,7 +667,7 @@ export function PlanChatScreen({
 
 
   return (
-    <div className={`chat-workspace-shell ${isActionsSidebarOpen ? 'actions-open' : ''}`}>
+    <div className={`chat-workspace-shell ${(isActionsSidebarOpen || isClaimPredictorOpen) ? 'actions-open' : ''}`}>
       {/* Primary Chat Column */}
       <div className="chat-main-column">
 
@@ -922,7 +927,7 @@ export function PlanChatScreen({
                     <span></span><span></span><span></span>
                   </div>
                   <span style={{ fontStyle: 'italic', color: 'var(--text-muted)', fontSize: '12.5px' }}>
-                    Retrieving authorized policy evidence & generating grounded answer...
+                    {loadingStatusText}
                   </span>
                 </div>
               </div>
@@ -1009,7 +1014,7 @@ export function PlanChatScreen({
 
       {/* Right Sidebar: Dedicated for Quick Actions & History Table */}
       <ChatActionsSidebar
-        isOpen={isActionsSidebarOpen}
+        isOpen={isActionsSidebarOpen && !isClaimPredictorOpen}
         activeTab={actionsSidebarTab}
         onSelectTab={(tab) => setActionsSidebarTab(tab)}
         onClose={() => {
@@ -1028,6 +1033,43 @@ export function PlanChatScreen({
         onStartNewChat={startNewConversation}
         onSelectHistory={(query) => setInputText(query)}
       />
+
+      {/* Employee-Only Predictive Claim Estimator Drawer */}
+      {userRole === 'employee' && (
+        <ClaimPredictorDrawer
+          isOpen={Boolean(isClaimPredictorOpen)}
+          onClose={onCloseClaimPredictor}
+          authToken={authToken}
+          currentConversationId={conversationId}
+          selectedPlan={selectedPlan}
+          onPredictionStart={() => {
+            setLoadingStatusText('Estimating claim payout & evaluating parameters...');
+            setLoading(true);
+            setError(null);
+            setTimeout(() => {
+              messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 60);
+          }}
+          onPredictionSuccess={(newAssistantMsg) => {
+            setLoading(false);
+            if (newAssistantMsg) {
+              setMessages((prev) => {
+                if (!prev.some((m) => m.message_id === newAssistantMsg.message_id)) {
+                  return [...prev, newAssistantMsg];
+                }
+                return prev;
+              });
+              setHistoryRefreshTrigger((prev) => prev + 1);
+              setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }, 60);
+            }
+          }}
+          onPredictionError={() => {
+            setLoading(false);
+          }}
+        />
+      )}
 
     </div>
   );

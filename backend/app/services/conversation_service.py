@@ -260,13 +260,14 @@ class ConversationManager:
 
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
-        # User turn
-        u_msg = ChatMessage(
-            role="user",
-            content=user_query,
-            timestamp=now
-        )
-        session.messages.append(u_msg)
+        # User turn (only append if user_query is provided)
+        if user_query:
+            u_msg = ChatMessage(
+                role="user",
+                content=user_query,
+                timestamp=now
+            )
+            session.messages.append(u_msg)
 
         # Assistant turn
         a_msg = ChatMessage(

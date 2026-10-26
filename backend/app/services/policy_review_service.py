@@ -9,7 +9,8 @@ from backend.app.core.logging_config import logger
 PLAN_DOCUMENT_MAPPING: Dict[str, str] = {
     "HS-BASIC-001": "basic.txt",
     "HS-GOLD-001": "gold.txt",
-    "HS-PREMIUM-001": "premium.txt"
+    "HS-PREMIUM-001": "premium.txt",
+    "EMP-INS-001": "employee executive.txt"
 }
 
 # Canonical normalized structured representation extracted directly and strictly from the 3 TXT files
@@ -445,6 +446,106 @@ CANONICAL_PLAN_REVIEW_DATA: Dict[str, Dict[str, Any]] = {
             "source_document": "premium.txt",
             "directory": "Correct and review",
             "canonical_plan_id": "HS-PREMIUM-001"
+        }
+    },
+    "EMP-INS-001": {
+        "plan_details": {
+            "plan_name": "Executive Employee Insurance Plan",
+            "plan_id": "EMP-INS-001",
+            "category": "Employee Exclusive",
+            "product_type": "Fixed-Benefit Health Insurance",
+            "policy_term": "1 Year",
+            "annual_premium": "₹5,000",
+            "employer_pays": "₹2,000",
+            "employee_pays": "₹3,000",
+            "payment_frequency": "Annual (default)",
+            "taxes": "Not defined",
+            "official_plan_number": "Not assigned in the document",
+            "uin": "Not specified"
+        },
+        "benefits_coverage_limits": {
+            "annual_coverage": {
+                "title": "ANNUAL COVERAGE",
+                "overall_limit": "Not defined",
+                "major_surgery_basis": "₹10,00,000",
+                "major_surgery_max": "₹1,00,00,000* (10× benefit basis)",
+                "status": "not_specified"
+            },
+            "hospital_cash": {
+                "title": "HOSPITAL CASH",
+                "daily_benefit": "₹10,000",
+                "min_stay": "More than 24 hours",
+                "max_days": "First Year: Max 30 days | Later Years: Max 90 days/year",
+                "max_amount": "Overall Maximum: 900 days*",
+                "status": "included"
+            },
+            "icu_benefit": {
+                "title": "ICU BENEFIT",
+                "daily_benefit": "₹20,000",
+                "max_days": "Maximum ICU days not specified in document",
+                "max_amount": "Overall ICU limit: Not defined",
+                "relationship": "Hospital Cash Combo: Subject to policy terms",
+                "status": "included"
+            },
+            "surgery_benefit": {
+                "title": "MAJOR SURGERY BENEFIT",
+                "basis": "Benefit Basis: ₹10,00,000",
+                "category_payouts": [
+                    "Cat. 1 (100%): ₹10,00,000",
+                    "Cat. 2 (60%): ₹6,00,000",
+                    "Cat. 3 (40%): ₹4,00,000",
+                    "Cat. 4 (20%): ₹2,00,000"
+                ],
+                "overall_max": "₹1,00,00,000* (Up to 10× benefit basis)",
+                "status": "included"
+            }
+        },
+        "other_benefits": [
+            { "name": "Day-Care Procedure", "amount": "₹50,000/procedure", "frequency": "Max 3 procedures/year", "annual_limit": "Overall: 30 procedures*", "status": "included" },
+            { "name": "Other Surgery", "amount": "₹25,000/day", "frequency": "Min stay >24 hrs • First Year: Max 15 days | Later: Max 45 days/year", "annual_limit": "Overall Maximum: 450 days*", "status": "included" },
+            { "name": "Medical Management", "amount": "₹25,000/eligible claim", "frequency": "Max 2 claims/year", "annual_limit": "Overall Claims: 20*", "status": "included" },
+            { "name": "Extended Hospital Stay", "amount": "₹1,00,000 lump sum", "frequency": "Qualifying Stay >30 continuous days", "annual_limit": "Max 1 claim/year; 10 overall*", "status": "included" },
+            { "name": "Health Check-Up", "amount": "₹5,000 reimbursement", "frequency": "Available after 3 years of cover*", "annual_limit": "Subsequent: 3 years after previous check-up", "status": "included" },
+            { "name": "Restored Cover", "amount": "Not confirmed for employee plan (Reference: Up to ₹10,00,000*)", "frequency": "N/A", "annual_limit": "N/A", "status": "not_included" },
+            { "name": "Ambulance", "amount": "₹1,000 illustrative (availability and claim limit not confirmed)", "frequency": "Illustrative", "annual_limit": "Not confirmed", "status": "not_included" },
+            { "name": "Quick Cash", "amount": "Not confirmed (reference describes 50% advance for eligible surgery)", "frequency": "N/A", "annual_limit": "N/A", "status": "not_included" },
+            { "name": "Claim-Free Increase", "amount": "Not confirmed (no increase calculation permitted without approved rules)", "frequency": "N/A", "annual_limit": "N/A", "status": "not_included" },
+            { "name": "Premium Waiver & Auto Health Cover", "amount": "Availability and conditions not defined", "frequency": "N/A", "annual_limit": "N/A", "status": "not_included" }
+        ],
+        "waiting_periods": [
+            { "condition": "Initial illness wait", "duration": "Not specified in employee document" },
+            { "condition": "Accident coverage", "duration": "Not specified in employee document" },
+            { "condition": "Specified diseases", "duration": "Not specified in employee document" },
+            { "condition": "Pre-existing diseases (PED)", "duration": "Not specified in employee document" },
+            { "condition": "Geographic limits", "duration": "Not specified in employee document" },
+            { "condition": "Hospital eligibility", "duration": "Not specified in employee document" },
+            { "condition": "Grace period & Revival", "duration": "Not specified in employee document" },
+            { "condition": "Claim deadline", "duration": "Not specified in employee document" },
+            { "condition": "Employment continuity & leave", "duration": "Not defined in employee document" },
+            { "condition": "Dependent coverage", "duration": "Not defined in employee document" }
+        ],
+        "exclusions": [
+            "Exclusions not specified in the employee-plan document",
+            "Medical disclosures requirements not specified",
+            "Employee eligibility and minimum service requirements not specified",
+            "Dependent eligibility and coverage not defined",
+            "Employment change rules (resignation, retirement, termination) not defined"
+        ],
+        "claim_requirements": [
+            "Claim process must be confirmed from approved employee policy",
+            "Required documents not specified in the employee-plan document",
+            "HR corporate verification of active employment status",
+            "Hospital registration requirements to be confirmed from employer policy"
+        ],
+        "policy_disclosure": {
+            "title": "POLICY DISCLOSURE — ILLUSTRATIVE DEMONSTRATION VALUES",
+            "body": "This plan contains illustrative demonstration values, not verified or approved employee insurance terms. Several benefits are based on reference material and are not confirmed for this employee plan. “Not specified” or “Not confirmed” must not be interpreted as included or excluded coverage. Confirmation records enrollment intent only; it does not activate coverage, issue a policy, or guarantee final underwriting approval. Approved policy documents and employer rules must be verified.",
+            "footnote": "* denotes values stated in the reference illustration, not independently verified employee-plan entitlements."
+        },
+        "provenance": {
+            "source_document": "employee executive.txt",
+            "directory": "Correct and review",
+            "canonical_plan_id": "EMP-INS-001"
         }
     }
 }

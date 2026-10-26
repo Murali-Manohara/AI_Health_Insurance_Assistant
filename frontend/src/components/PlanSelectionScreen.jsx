@@ -215,10 +215,11 @@ export function PlanSelectionScreen({ userRole, authToken, onSelectPlan, onUnaut
 
       {!loading && !error && (
         <div
+          className={plans.length === 4 ? "plans-grid-2x2" : "plans-grid-auto"}
           style={{
             display: 'grid',
             gridTemplateColumns: plans.length === 4
-              ? 'repeat(auto-fit, minmax(260px, 1fr))'
+              ? 'repeat(2, minmax(0, 1fr))'
               : 'repeat(auto-fit, minmax(310px, 1fr))',
             gap: '28px',
             alignItems: 'stretch'
