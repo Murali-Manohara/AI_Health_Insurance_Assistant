@@ -532,7 +532,8 @@ sequenceDiagram
 ## L. Security and Privacy Findings
 
 ### 1. Authentication and Authorization
-- **JWT**: HMAC-SHA256 tokens signed with secret key. Tokens expire after 24 hours.
+- **JWT**: HMAC-SHA256 tokens signed with secret key. Tokens expire after 24
+ hours.
 - **RBAC**: Three distinct user roles (`customer`, `employee`, `admin`). Endpoints use FastAPI dependency injection (`require_role`) to restrict administrative and employee features.
 - **Scope Isolation**: Plan data is strictly partitioned. A user enrolled in `HS-BASIC-001` cannot retrieve documents from `HS-PREMIUM-001`.
 

@@ -351,7 +351,7 @@ function OverviewSection({ data, rangeLabel, onRefresh }) {
     },
     {
       label: 'Assessed for Eligibility',
-      value: kpis.total_assessed_users ?? 0,
+      value: kpis.total_assessed_users ?? kpis.total_users_assessed ?? 0,
       sub: `${kpis.underwriting_eligibility_rate_pct ?? kpis.funnel_rates?.eligibility_rate_pct ?? 0}% Pass Rate`,
       color: '#0284c7',
       iconBg: 'rgba(2, 132, 199, 0.1)',
@@ -805,7 +805,12 @@ function UsersSection({
               </tr>
             ) : (
               users.map((u) => {
-                const eligOutcome = u.latest_eligibility_outcome;
+                const eligOutcome = u.eligibility_outcome || u.latest_eligibility_outcome;
+                const planId = u.active_plan_id || u.selected_plan_id;
+                const score = (u.eligibility_score !== null && u.eligibility_score !== undefined)
+                  ? Math.round(u.eligibility_score <= 1.0 ? u.eligibility_score * 100 : u.eligibility_score)
+                  : (u.latest_risk_score !== null && u.latest_risk_score !== undefined ? u.latest_risk_score : null);
+
                 return (
                   <tr key={u.user_id}>
                     <td>
@@ -826,8 +831,8 @@ function UsersSection({
                       {eligOutcome ? (
                         <span className={`admin-elig-badge ${eligOutcome.toLowerCase()}`}>
                           {eligOutcome.replace('_', ' ')}
-                          {u.latest_risk_score !== null && u.latest_risk_score !== undefined && (
-                            <span style={{ opacity: 0.85, fontSize: '10.5px' }}> ({u.latest_risk_score}/100)</span>
+                          {score !== null && (
+                            <span style={{ opacity: 0.85, fontSize: '10.5px' }}> ({score}%)</span>
                           )}
                         </span>
                       ) : (
@@ -835,8 +840,8 @@ function UsersSection({
                       )}
                     </td>
                     <td>
-                      {u.selected_plan_id ? (
-                        <span className="admin-mini-plan-tag">{u.selected_plan_id}</span>
+                      {planId ? (
+                        <span className="admin-mini-plan-tag">{planId}</span>
                       ) : (
                         <span style={{ color: '#94a3b8', fontSize: '12px' }}>None</span>
                       )}

@@ -13,7 +13,14 @@ const formatHighlight = (text) => {
     .replace(/â€”/g, '—');
 };
 
-export function PlanSelectionScreen({ userRole, authToken, onSelectPlan, onUnauthorized }) {
+export function PlanSelectionScreen({
+  userRole,
+  authToken,
+  onSelectPlan,
+  onUnauthorized,
+  isConfirmed = false,
+  confirmedPlanId = null
+}) {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -168,7 +175,9 @@ export function PlanSelectionScreen({ userRole, authToken, onSelectPlan, onUnaut
           Choose Your Insurance Plan
         </h1>
         <p style={{ fontSize: '15.5px', color: '#64748b', margin: 0 }}>
-          Select a policy tier to start chatting with your personalized AI assistant.
+          {isConfirmed
+            ? 'You have confirmed your policy. You can visit and chat with any plan to explore coverage details.'
+            : 'Select a policy tier to start chatting with your personalized AI assistant.'}
         </p>
       </div>
 
@@ -258,8 +267,37 @@ export function PlanSelectionScreen({ userRole, authToken, onSelectPlan, onUnaut
                   transform: isHovered ? 'translateY(-6px)' : 'translateY(0)'
                 }}
               >
+                {/* Confirmed Policy Badge */}
+                {isConfirmed && p.plan_id === confirmedPlanId && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-13px',
+                      right: '24px',
+                      background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                      color: '#ffffff',
+                      padding: '4px 14px',
+                      borderRadius: '9999px',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      letterSpacing: '0.04em',
+                      textTransform: 'uppercase',
+                      boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)',
+                      zIndex: 3,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px'
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span>Confirmed Policy</span>
+                  </div>
+                )}
+
                 {/* Most Popular Floating Badge for Gold */}
-                {theme.isPopular && (
+                {theme.isPopular && (!isConfirmed || p.plan_id !== confirmedPlanId) && (
                   <div
                     style={{
                       position: 'absolute',
@@ -437,7 +475,13 @@ export function PlanSelectionScreen({ userRole, authToken, onSelectPlan, onUnaut
                     <span>Opening Assistant...</span>
                   ) : (
                     <>
-                      <span>Select {p.display_title || 'Plan'}</span>
+                      <span>
+                        {isConfirmed
+                          ? (p.plan_id === confirmedPlanId
+                            ? 'Chat with Confirmed Plan'
+                            : `Chat with ${p.display_title || 'Plan'}`)
+                          : `Select ${p.display_title || 'Plan'}`}
+                      </span>
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12" />
                         <polyline points="12 5 19 12 12 19" />

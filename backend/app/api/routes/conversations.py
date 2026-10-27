@@ -81,23 +81,25 @@ def create_conversation(
                     detail="Your eligibility assessment has expired. Please re-evaluate your eligibility before starting a conversation."
                 )
 
-        # 2. User must have an active plan selection matching the requested plan
+        # 2. User must have an active or confirmed plan selection
         active_selection = sqlite_db.get_active_plan_selection_for_user(user.user_id)
         if not active_selection:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="No active plan selection found. Please select an eligible plan before initiating policy consultation."
             )
-        if active_selection.get("selected_plan_id") != req.selected_plan_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Requested plan '{req.selected_plan_id}' does not match your active selected plan '{active_selection.get('selected_plan_id')}'."
-            )
-        if active_selection.get("assessment_id") != assessment.get("assessment_id"):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Active plan selection is not associated with your current eligibility assessment."
-            )
+        is_user_confirmed = active_selection.get("status") == "CONFIRMED"
+        if not is_user_confirmed:
+            if active_selection.get("selected_plan_id") != req.selected_plan_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail=f"Requested plan '{req.selected_plan_id}' does not match your active selected plan '{active_selection.get('selected_plan_id')}'."
+                )
+            if active_selection.get("assessment_id") != assessment.get("assessment_id"):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Active plan selection is not associated with your current eligibility assessment."
+                )
 
         # 3. Requested plan must be in the assessment's qualifying plans
         qualifying_plans = assessment.get("qualifying_plans", [])

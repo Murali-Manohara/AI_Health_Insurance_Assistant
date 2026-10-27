@@ -25,6 +25,8 @@ export function ProcessSidebar({
   const isPlanCompleted = Boolean(selectedPlan);
   const isConfirmed = Boolean(
     currentUser?.is_confirmed ||
+    currentUser?.confirmation_status === 'CONFIRMED' ||
+    currentUser?.confirmed_plan_id ||
     selectedPlan?.is_confirmed ||
     selectedPlan?.status === 'CONFIRMED' ||
     selectedPlan?.confirmed_at
@@ -52,7 +54,9 @@ export function ProcessSidebar({
       id: 'plans',
       number: '2',
       title: 'Choose Plan',
-      desc: selectedPlan ? selectedPlan.plan_name : (isEmployee ? 'Select employee group plan' : 'Select active policy portfolio'),
+      desc: isConfirmed
+        ? (selectedPlan ? `Chat Scope: ${selectedPlan.display_title || selectedPlan.plan_name}` : 'Visit any plan for chatbot')
+        : (selectedPlan ? selectedPlan.plan_name : (isEmployee ? 'Select employee group plan' : 'Select active policy portfolio')),
       badge: selectedPlan ? (selectedPlan.display_title || selectedPlan.plan_category) : null,
       badgeClass: selectedPlan ? selectedPlan.plan_category?.toLowerCase() : null,
       icon: (
@@ -80,7 +84,7 @@ export function ProcessSidebar({
     }
   ];
 
-  // Stage 4: Confirm & Review (Enabled for Customer & Employee)
+  // Stage 4: Confirm & Review (Always visible & available in reading mode)
   stages.push({
     id: 'confirm',
     number: '4',
@@ -101,7 +105,7 @@ export function ProcessSidebar({
         <polyline points="10 9 9 9 8 9" />
       </svg>
     ),
-    disabled: Boolean(!selectedPlan) // Accessible whenever plan is selected, before and after confirmation
+    disabled: Boolean(!selectedPlan && !currentUser?.is_confirmed)
   });
 
   return (

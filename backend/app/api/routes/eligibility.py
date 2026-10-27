@@ -197,6 +197,21 @@ def select_plan_with_eligibility(
             detail=f"Plan '{payload.selected_plan_id}' is not in your qualified plans: {qualifying_plans}"
         )
 
+    active_selection = sqlite_db.get_active_plan_selection_for_user(current_user.user_id)
+    if active_selection and active_selection.get("status") == "CONFIRMED":
+        # User has already confirmed a plan. Selecting another plan is strictly for chatbot response.
+        plan_info = PLAN_REGISTRY.get(payload.selected_plan_id)
+        plan_name = plan_info.plan_name if plan_info else payload.selected_plan_id
+        return {
+            "selection_id": active_selection["selection_id"],
+            "selected_plan_id": payload.selected_plan_id,
+            "confirmed_plan_id": active_selection.get("selected_plan_id"),
+            "plan_name": plan_name,
+            "status": "CONFIRMED",
+            "assessment_id": active_selection.get("assessment_id"),
+            "mode": "CHATBOT_EXPLORATION"
+        }
+
     selection_id = sqlite_db.save_plan_selection(
         user_id=current_user.user_id,
         assessment_id=assessment["assessment_id"],

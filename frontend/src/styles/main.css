@@ -6305,6 +6305,7 @@ html, body, #root {
   border-radius: 16px;
   border: 1.5px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-stat-card .stat-label {
@@ -6313,64 +6314,78 @@ html, body, #root {
   color: #000000;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-stat-card .stat-value {
   font-size: 20px;
   font-weight: 800;
   color: #000000;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-stat-card .stat-sub {
   font-size: 11.5px;
   font-weight: 600;
   color: #475569;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-bars-container {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding: 20px 22px;
-  background: rgba(255, 255, 255, 0.95);
+  padding: 22px 24px;
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 18px;
-  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.05);
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-bar-row {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 4px 0;
+  gap: 16px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
+}
+
+.admin-plan-bar-row:hover {
+  background: rgba(241, 245, 249, 0.65);
 }
 
 .admin-plan-bar-left {
-  width: 250px;
+  width: 330px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-bar-badge {
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'BJCree', 'PT Serif', serif !important;
+  letter-spacing: 0.02em;
+  padding: 3.5px 10px;
   border-radius: 9999px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .admin-plan-bar-title {
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 700;
-  color: #000000;
+  color: #1e293b;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
 }
 
 .admin-plan-bar-track-wrap {
@@ -6379,12 +6394,13 @@ html, body, #root {
 }
 
 .admin-plan-bar-track {
-  height: 14px;
-  background: rgba(0, 0, 0, 0.04);
+  height: 16px;
+  background: rgba(241, 245, 249, 0.95);
   border-radius: 9999px;
   overflow: hidden;
-  padding: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 2.5px;
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .admin-plan-bar-fill {
@@ -6394,41 +6410,46 @@ html, body, #root {
 }
 
 .admin-plan-bar-right {
-  width: 120px;
+  width: 130px;
   flex-shrink: 0;
   text-align: right;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-bar-count {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 800;
-  color: #000000;
+  color: #0f172a;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-bar-pct {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: #000000;
+  color: #334155;
   background: rgba(0, 0, 0, 0.05);
-  padding: 2px 7px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 2.5px 8px;
   border-radius: 9999px;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-ticks-scale {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-top: 4px;
-  padding-top: 10px;
+  gap: 16px;
+  margin-top: 6px;
+  padding: 10px 10px 0;
   border-top: 1px solid rgba(241, 245, 249, 0.95);
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
 }
 
 .admin-plan-ticks-spacer {
-  width: 250px;
+  width: 330px;
   flex-shrink: 0;
 }
 
@@ -6436,7 +6457,7 @@ html, body, #root {
   flex: 1;
   min-width: 140px;
   position: relative;
-  height: 18px;
+  height: 20px;
 }
 
 .admin-plan-tick-item {
@@ -6449,19 +6470,20 @@ html, body, #root {
 
 .admin-plan-tick-line {
   width: 1px;
-  height: 4px;
-  background: #cbd5e1;
+  height: 5px;
+  background: #94a3b8;
 }
 
 .admin-plan-tick-label {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   color: #64748b;
+  font-family: 'BJCree', 'PT Serif', Georgia, serif !important;
   margin-top: 2px;
 }
 
 .admin-plan-ticks-right-spacer {
-  width: 120px;
+  width: 130px;
   flex-shrink: 0;
 }
 

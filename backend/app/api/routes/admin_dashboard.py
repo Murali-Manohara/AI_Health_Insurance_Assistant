@@ -127,6 +127,14 @@ def get_admin_users(
     for u in users:
         u_role = u.get("role") or "customer"
         u["authorized_plans"] = list(ROLE_PLAN_PERMISSIONS.get(u_role, []))
+        # Guarantee both naming schemes so frontend table and details modal always have data
+        u["latest_eligibility_outcome"] = u.get("eligibility_outcome")
+        u["selected_plan_id"] = u.get("active_plan_id")
+        raw_score = u.get("eligibility_score")
+        if raw_score is not None:
+            u["latest_risk_score"] = int(round(raw_score * 100)) if raw_score <= 1.0 else int(round(raw_score))
+        else:
+            u["latest_risk_score"] = None
 
     return {
         "users": users,

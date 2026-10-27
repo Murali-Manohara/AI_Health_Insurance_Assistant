@@ -18,8 +18,16 @@ export function PlanChatScreen({
   newChatTrigger,
   onMessageCountChange
 }) {
+  const createWelcomeMessage = (plan) => ({
+    message_id: 'welcome-' + (plan?.plan_id || 'initial'),
+    role: 'assistant',
+    content: `You are consulting **${plan?.plan_name || 'Selected Policy'}** (\`${plan?.plan_id || 'ACTIVE'}\`). Ask questions regarding benefit payouts, waiting periods, ICU limits, surgery categories, or ask to compare with other customer plans.`,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    citations: []
+  });
+
   const [conversationId, setConversationId] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => (selectedPlan ? [createWelcomeMessage(selectedPlan)] : []));
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMode, setLoadingMode] = useState('rag');
@@ -320,17 +328,20 @@ export function PlanChatScreen({
   useEffect(() => {
     // Session preservation across page refresh:
     // Check if an active session was already loaded for this plan and role
+    if (!selectedPlan?.plan_id) return;
     const sessionKey = `active_conv_${userRole}_${selectedPlan?.plan_id}`;
     const savedConvId = sessionStorage.getItem(sessionKey);
     if (savedConvId) {
       handleLoadConversation(savedConvId, selectedPlan?.plan_id, true);
     } else {
+      setMessages([createWelcomeMessage(selectedPlan)]);
       startNewConversation();
     }
   }, [selectedPlan?.plan_id, userRole, authToken]);
 
   useEffect(() => {
     if (newChatTrigger && newChatTrigger > 0) {
+      setMessages([createWelcomeMessage(selectedPlan)]);
       startNewConversation();
     }
   }, [newChatTrigger]);
@@ -346,9 +357,7 @@ export function PlanChatScreen({
 
   const startNewConversation = async () => {
     if (!selectedPlan) return;
-    setLoading(true);
     setError(null);
-    setMessages([]);
     setExpandedSources({});
     if (onCloseActionsSidebar) onCloseActionsSidebar();
     setLocalIsActionsSidebarOpen(false);
@@ -410,26 +419,15 @@ export function PlanChatScreen({
       sessionStorage.setItem(sessionKey, data.conversation_id);
       setHistoryRefreshTrigger((prev) => prev + 1);
 
-
-      const welcomeMessage = {
-        message_id: 'welcome-' + Date.now(),
-        role: 'assistant',
-        content: `You are consulting **${selectedPlan.plan_name}** (\`${selectedPlan.plan_id}\`). Ask questions regarding benefit payouts, waiting periods, ICU limits, surgery categories, or ask to compare with other customer plans.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        citations: []
-      };
-      setMessages([welcomeMessage]);
+      setMessages([createWelcomeMessage(selectedPlan)]);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleLoadConversation = async (targetConvId, targetPlanId, isAutoResume = false) => {
     if (!targetConvId) return;
 
-    setLoading(true);
     setError(null);
     try {
       const headers = {
@@ -481,14 +479,7 @@ export function PlanChatScreen({
       if (data.messages && data.messages.length > 0) {
         setMessages(data.messages);
       } else {
-        const welcomeMessage = {
-          message_id: 'welcome-' + Date.now(),
-          role: 'assistant',
-          content: `You are consulting **${selectedPlan.plan_name}** (\`${selectedPlan.plan_id}\`). This chat session has been resumed.`,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          citations: []
-        };
-        setMessages([welcomeMessage]);
+        setMessages([createWelcomeMessage(selectedPlan)]);
       }
 
       if (targetPlanId && targetPlanId !== selectedPlan.plan_id && onSwitchPlan) {
@@ -505,8 +496,6 @@ export function PlanChatScreen({
       } else {
         setError(`Failed to resume conversation: ${err.message}`);
       }
-    } finally {
-      setLoading(false);
     }
   };
 

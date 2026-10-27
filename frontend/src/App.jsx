@@ -23,6 +23,8 @@ export function App() {
   // Customer navigation state: Stage 1 'eligibility' -> Stage 2 'plans' -> Stage 3 'chat'
   const [activeTab, setActiveTab] = useState('eligibility');
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [confirmedPlanId, setConfirmedPlanId] = useState(null);
+  const [confirmedPlan, setConfirmedPlan] = useState(null);
   const [userAssessment, setUserAssessment] = useState(null);
 
   // Administrator navigation state: strictly two items ('dashboard' | 'ingestion')
@@ -64,9 +66,64 @@ export function App() {
                   const isConfirmed = Boolean(
                     user.is_confirmed ||
                     user.confirmation_status === 'CONFIRMED' ||
+                    user.confirmed_plan_id ||
                     activeSel?.status === 'CONFIRMED' ||
                     activeSel?.confirmed_at
                   );
+
+                  const confPId = activeSel?.status === 'CONFIRMED'
+                    ? activeSel.selected_plan_id
+                    : (user.confirmed_plan_id || (user.is_confirmed ? activeSel?.selected_plan_id : null));
+
+                  if (isConfirmed && confPId) {
+                    setConfirmedPlanId(confPId);
+                    user.is_confirmed = true;
+                    user.confirmed_plan_id = confPId;
+                    user.confirmation_status = 'CONFIRMED';
+
+                    let confirmedPlanObj = null;
+                    const savedConfPlan = sessionStorage.getItem('ins_app_confirmed_plan');
+                    if (savedConfPlan) {
+                      try {
+                        confirmedPlanObj = JSON.parse(savedConfPlan);
+                      } catch {
+                        confirmedPlanObj = null;
+                      }
+                    }
+                    if (!confirmedPlanObj && confPId) {
+                      confirmedPlanObj = {
+                        plan_id: confPId,
+                        plan_name: confPId.includes('GOLD')
+                          ? 'Health Shield — Gold'
+                          : confPId.includes('PREM')
+                          ? 'Health Shield — Premium'
+                          : confPId.includes('EMP')
+                          ? 'Executive Employee Insurance Plan'
+                          : 'Health Shield — Basic',
+                        plan_category: confPId.includes('GOLD')
+                          ? 'Gold'
+                          : confPId.includes('PREM')
+                          ? 'Premium'
+                          : confPId.includes('EMP')
+                          ? 'Employee Exclusive'
+                          : 'Basic',
+                        display_title: confPId.includes('GOLD')
+                          ? 'Gold Plan'
+                          : confPId.includes('PREM')
+                          ? 'Premium Plan'
+                          : confPId.includes('EMP')
+                          ? 'Employee Plan'
+                          : 'Basic Plan',
+                        status: 'CONFIRMED',
+                        is_confirmed: true,
+                        confirmed_at: activeSel?.confirmed_at || user.confirmed_at || null
+                      };
+                    }
+                    if (confirmedPlanObj) {
+                      setConfirmedPlan(confirmedPlanObj);
+                      sessionStorage.setItem('ins_app_confirmed_plan', JSON.stringify(confirmedPlanObj));
+                    }
+                  }
 
                   let planToSet = null;
                   if (savedPlan) {
@@ -110,19 +167,27 @@ export function App() {
 
                   if (planToSet) {
                     if (isConfirmed) {
-                      planToSet.is_confirmed = true;
-                      planToSet.status = 'CONFIRMED';
-                      if (activeSel?.confirmed_at) {
-                        planToSet.confirmed_at = activeSel.confirmed_at;
-                      } else if (user.confirmed_at) {
-                        planToSet.confirmed_at = user.confirmed_at;
+                      const isThisConfirmed = planToSet.plan_id === confPId;
+                      planToSet.is_confirmed = isThisConfirmed;
+                      planToSet.status = isThisConfirmed ? 'CONFIRMED' : 'EXPLORING';
+                      if (isThisConfirmed) {
+                        planToSet.confirmed_at = activeSel?.confirmed_at || user.confirmed_at || null;
                       }
                     }
                     setSelectedPlan(planToSet);
                     sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(planToSet));
 
                     if (isConfirmed && user.role !== 'admin') {
-                      setActiveTab(savedTab === 'chat' ? 'chat' : 'confirm');
+                      if (savedTab === 'confirm') {
+                        setActiveTab('confirm');
+                      } else if (savedTab === 'plans') {
+                        setActiveTab('plans');
+                      } else if (savedTab === 'eligibility') {
+                        setActiveTab('eligibility');
+                      } else {
+                        setActiveTab('chat');
+                        sessionStorage.setItem('ins_app_active_tab', 'chat');
+                      }
                     } else {
                       setActiveTab(savedTab || 'chat');
                     }
@@ -173,12 +238,54 @@ export function App() {
             const isConfirmed = Boolean(
               user.is_confirmed ||
               user.confirmation_status === 'CONFIRMED' ||
+              user.confirmed_plan_id ||
               activeSel?.status === 'CONFIRMED' ||
               activeSel?.confirmed_at
             );
 
+            const confPId = activeSel?.status === 'CONFIRMED'
+              ? activeSel.selected_plan_id
+              : (user.confirmed_plan_id || (user.is_confirmed ? activeSel?.selected_plan_id : null));
+
+            if (isConfirmed && confPId) {
+              setConfirmedPlanId(confPId);
+              user.is_confirmed = true;
+              user.confirmed_plan_id = confPId;
+              user.confirmation_status = 'CONFIRMED';
+              const confirmedPlanObj = {
+                plan_id: confPId,
+                plan_name: confPId.includes('GOLD')
+                  ? 'Health Shield — Gold'
+                  : confPId.includes('PREM')
+                  ? 'Health Shield — Premium'
+                  : confPId.includes('EMP')
+                  ? 'Executive Employee Insurance Plan'
+                  : 'Health Shield — Basic',
+                plan_category: confPId.includes('GOLD')
+                  ? 'Gold'
+                  : confPId.includes('PREM')
+                  ? 'Premium'
+                  : confPId.includes('EMP')
+                  ? 'Employee Exclusive'
+                  : 'Basic',
+                display_title: confPId.includes('GOLD')
+                  ? 'Gold Plan'
+                  : confPId.includes('PREM')
+                  ? 'Premium Plan'
+                  : confPId.includes('EMP')
+                  ? 'Employee Plan'
+                  : 'Basic Plan',
+                status: 'CONFIRMED',
+                is_confirmed: true,
+                confirmed_at: activeSel?.confirmed_at || user.confirmed_at || null
+              };
+              setConfirmedPlan(confirmedPlanObj);
+              sessionStorage.setItem('ins_app_confirmed_plan', JSON.stringify(confirmedPlanObj));
+            }
+
             if (activeSel) {
               const pId = activeSel.selected_plan_id;
+              const isThisConfirmed = isConfirmed && (pId === confPId);
               const restoredPlan = {
                 plan_id: pId,
                 plan_name: pId.includes('GOLD')
@@ -202,20 +309,15 @@ export function App() {
                   : pId.includes('EMP')
                   ? 'Employee Plan'
                   : 'Basic Plan',
-                status: isConfirmed ? 'CONFIRMED' : (activeSel.status || 'ACTIVE'),
-                is_confirmed: isConfirmed,
+                status: isThisConfirmed ? 'CONFIRMED' : (activeSel.status || 'ACTIVE'),
+                is_confirmed: isThisConfirmed,
                 confirmed_at: activeSel.confirmed_at || user.confirmed_at || null
               };
               setSelectedPlan(restoredPlan);
               sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(restoredPlan));
 
-              if (isConfirmed && user.role !== 'admin') {
-                setActiveTab('confirm');
-                sessionStorage.setItem('ins_app_active_tab', 'confirm');
-              } else {
-                setActiveTab('chat');
-                sessionStorage.setItem('ins_app_active_tab', 'chat');
-              }
+              setActiveTab('chat');
+              sessionStorage.setItem('ins_app_active_tab', 'chat');
             } else {
               setSelectedPlan(null);
               sessionStorage.removeItem('ins_app_selected_plan');
@@ -260,6 +362,7 @@ export function App() {
     setAuthScreen('login');
     setIsProfileOpen(false);
     setIsClaimPredictorOpen(false);
+    setConfirmedPlanId(null);
     sessionStorage.removeItem('ins_app_selected_plan');
     sessionStorage.removeItem('ins_app_active_tab');
     sessionStorage.removeItem('ins_app_admin_tab');
@@ -271,6 +374,31 @@ export function App() {
   };
 
   const handleSelectPlan = async (plan) => {
+    const isUserConfirmed = Boolean(
+      currentUser?.is_confirmed ||
+      currentUser?.confirmation_status === 'CONFIRMED' ||
+      currentUser?.confirmed_plan_id ||
+      confirmedPlanId
+    );
+
+    if (isUserConfirmed) {
+      // User has already confirmed a policy.
+      // Selecting another plan is strictly for chatbot response and exploration.
+      // Do NOT call eligibilityApi.selectPlan() to preserve the confirmed policy in the database.
+      const activeConfId = confirmedPlanId || currentUser?.confirmed_plan_id;
+      const isConfirmedPolicy = plan.plan_id === activeConfId;
+      const chatPlan = {
+        ...plan,
+        is_confirmed: isConfirmedPolicy,
+        status: isConfirmedPolicy ? 'CONFIRMED' : 'EXPLORING'
+      };
+      setSelectedPlan(chatPlan);
+      setActiveTab('chat');
+      sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(chatPlan));
+      sessionStorage.setItem('ins_app_active_tab', 'chat');
+      return;
+    }
+
     await eligibilityApi.selectPlan(plan.plan_id);
     setSelectedPlan(plan);
     setActiveTab('chat');
@@ -362,7 +490,7 @@ export function App() {
               } else if (stage === 'chat' && selectedPlan) {
                 setActiveTab('chat');
                 sessionStorage.setItem('ins_app_active_tab', 'chat');
-              } else if (stage === 'confirm' && selectedPlan && userRole !== 'admin') {
+              } else if (stage === 'confirm' && (selectedPlan || confirmedPlan) && userRole !== 'admin') {
                 setActiveTab('confirm');
                 sessionStorage.setItem('ins_app_active_tab', 'confirm');
               }
@@ -370,6 +498,7 @@ export function App() {
             onBack={handleBackToPlans}
             userRole={userRole}
             currentUser={currentUser}
+            confirmedPlanId={confirmedPlanId || currentUser?.confirmed_plan_id}
           />
         )}
       </aside>
@@ -517,6 +646,8 @@ export function App() {
                       authToken={authToken}
                       onSelectPlan={handleSelectPlan}
                       onUnauthorized={handleLogout}
+                      isConfirmed={Boolean(currentUser?.is_confirmed || currentUser?.confirmation_status === 'CONFIRMED' || currentUser?.confirmed_plan_id || confirmedPlanId)}
+                      confirmedPlanId={confirmedPlanId || currentUser?.confirmed_plan_id}
                     />
                   </div>
                 )}
@@ -530,6 +661,8 @@ export function App() {
                     onSwitchPlan={(planOrId) => {
                       if (typeof planOrId === 'string') {
                         const idUpper = planOrId.toUpperCase();
+                        const activeConfId = confirmedPlanId || currentUser?.confirmed_plan_id;
+                        const isThisConfirmed = planOrId === activeConfId;
                         const updatedPlan = {
                           plan_id: planOrId,
                           plan_name: idUpper.includes('GOLD')
@@ -552,7 +685,9 @@ export function App() {
                             ? 'Platinum Plan'
                             : idUpper.includes('EMP')
                             ? 'Employee Staff Plan'
-                            : 'Basic Plan'
+                            : 'Basic Plan',
+                          is_confirmed: isThisConfirmed,
+                          status: isThisConfirmed ? 'CONFIRMED' : 'EXPLORING'
                         };
                         setSelectedPlan(updatedPlan);
                         sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(updatedPlan));
@@ -570,36 +705,45 @@ export function App() {
                   />
                 )}
 
-                {activeTab === 'confirm' && selectedPlan && userRole !== 'admin' && (
+                {activeTab === 'confirm' && (selectedPlan || confirmedPlan) && userRole !== 'admin' && (
                   <div className="scrollable-page-container">
                     <ConfirmReviewScreen
                       currentUser={currentUser}
-                      selectedPlan={selectedPlan}
+                      selectedPlan={
+                        (confirmedPlanId && selectedPlan?.plan_id !== confirmedPlanId && confirmedPlan)
+                          ? confirmedPlan
+                          : (confirmedPlan || selectedPlan)
+                      }
                       assessment={userAssessment}
                       onConfirmationSuccess={(confData, proceedToChat = false) => {
                         const confDate = confData.confirmedAt || new Date().toISOString();
+                        const pId = confData.selectionId || selectedPlan?.plan_id;
+                        setConfirmedPlanId(pId);
                         setCurrentUser((prev) => ({
                           ...prev,
                           is_confirmed: true,
                           confirmed_at: confDate,
+                          confirmed_plan_id: pId,
                           confirmation_status: 'CONFIRMED'
                         }));
-                        setSelectedPlan((prev) => {
-                          const updated = {
-                            ...(prev || {}),
-                            is_confirmed: true,
-                            status: 'CONFIRMED',
-                            confirmed_at: confDate
-                          };
-                          sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(updated));
-                          return updated;
-                        });
+                        const basePlan = (confirmedPlanId && selectedPlan?.plan_id !== confirmedPlanId && confirmedPlan)
+                          ? confirmedPlan
+                          : (confirmedPlan || selectedPlan);
+                        const updated = {
+                          ...(basePlan || {}),
+                          is_confirmed: true,
+                          status: 'CONFIRMED',
+                          confirmed_at: confDate
+                        };
+                        setSelectedPlan(updated);
+                        setConfirmedPlan(updated);
+                        sessionStorage.setItem('ins_app_selected_plan', JSON.stringify(updated));
+                        sessionStorage.setItem('ins_app_confirmed_plan', JSON.stringify(updated));
+
+                        // Only transition to chat if the user explicitly clicked "Continue to Policy Chat"
                         if (proceedToChat) {
                           setActiveTab('chat');
                           sessionStorage.setItem('ins_app_active_tab', 'chat');
-                        } else {
-                          setActiveTab('confirm');
-                          sessionStorage.setItem('ins_app_active_tab', 'confirm');
                         }
                       }}
                       onBackToPlans={handleBackToPlans}

@@ -989,6 +989,9 @@ class SQLiteManager:
             cur.execute("SELECT COUNT(*) as cnt FROM users WHERE effective_role = 'customer'")
             total_customers = cur.fetchone()["cnt"]
 
+            cur.execute("SELECT COUNT(*) as cnt FROM users WHERE effective_role = 'employee'")
+            total_employees = cur.fetchone()["cnt"]
+
             # New users in range
             user_time_clause = ""
             user_params = []
@@ -1088,6 +1091,7 @@ class SQLiteManager:
                 "active_users": active_users,
                 "new_user_registrations": new_users,
                 "total_customers": total_customers,
+                "total_employees": total_employees,
                 "total_documents": total_docs,
                 "indexed_documents": indexed_docs,
                 "failed_ingestion_jobs": failed_jobs,
@@ -1384,13 +1388,13 @@ class SQLiteManager:
     def save_plan_selection(self, user_id: str, assessment_id: str, selected_plan_id: str) -> str:
         """
         Records a plan selection linked to a valid assessment.
-        Marks any prior active or confirmed selection as SWITCHED.
+        Marks any prior active selection as SWITCHED (preserves CONFIRMED selections).
         """
         selection_id = f"psel_{uuid.uuid4().hex[:12]}"
         now = datetime.now(timezone.utc).isoformat()
         with self._get_connection() as conn:
             cur = conn.cursor()
-            cur.execute("UPDATE plan_selections SET status = 'SWITCHED', updated_at = ? WHERE user_id = ? AND status IN ('ACTIVE', 'CONFIRMED')", (now, user_id))
+            cur.execute("UPDATE plan_selections SET status = 'SWITCHED', updated_at = ? WHERE user_id = ? AND status = 'ACTIVE'", (now, user_id))
             cur.execute("""
                 INSERT INTO plan_selections (
                     selection_id, user_id, assessment_id, selected_plan_id, status, created_at, updated_at
@@ -1400,13 +1404,13 @@ class SQLiteManager:
             return selection_id
 
     def get_active_plan_selection_for_user(self, user_id: str) -> Optional[dict]:
-        """Returns the active or confirmed plan selection for a user."""
+        """Returns the active or confirmed plan selection for a user, prioritizing confirmed plans."""
         with self._get_connection() as conn:
             cur = conn.cursor()
             cur.execute("""
                 SELECT * FROM plan_selections
                 WHERE user_id = ? AND status IN ('ACTIVE', 'CONFIRMED')
-                ORDER BY created_at DESC LIMIT 1
+                ORDER BY CASE WHEN status = 'CONFIRMED' THEN 1 ELSE 2 END, created_at DESC LIMIT 1
             """, (user_id,))
             row = cur.fetchone()
             return dict(row) if row else None
@@ -1565,6 +1569,7 @@ class SQLiteManager:
             return {
                 "total_registered_users": total_registered,
                 "total_users_assessed": total_assessed_users,
+                "total_assessed_users": total_assessed_users,
                 "eligible_users": eligible_users,
                 "ineligible_users": ineligible_users,
                 "pending_review_users": pending_review_users,
