@@ -29,16 +29,38 @@ class HybridRetrievalService:
         self.chroma_service = chroma_service or ChromaStorageService()
         self.embedding_service = embedding_service or LocalEmbeddingService()
         self.bm25_service = bm25_service or BM25SearchService(self.chroma_service)
+        self._parent_store_mtime: float = 0.0
         self.parent_store_data: dict[str, dict] = self._load_parent_store()
 
     def _load_parent_store(self) -> dict[str, dict]:
         if settings.PARENT_STORE_PATH.exists():
             try:
+                st = settings.PARENT_STORE_PATH.stat()
+                self._parent_store_mtime = st.st_mtime
                 with open(settings.PARENT_STORE_PATH, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    logger.info(f"Loaded {len(data)} parent records into in-memory cache.")
+                    return data
             except Exception as e:
                 logger.error(f"Failed to load parent store from {settings.PARENT_STORE_PATH}: {e}")
         return {}
+
+    def get_parent_store(self) -> dict[str, dict]:
+        """Returns in-memory cached parent store, auto-refreshing if file on disk was modified."""
+        if settings.PARENT_STORE_PATH.exists():
+            try:
+                current_mtime = settings.PARENT_STORE_PATH.stat().st_mtime
+                if current_mtime > self._parent_store_mtime or not self.parent_store_data:
+                    self.parent_store_data = self._load_parent_store()
+            except Exception:
+                pass
+        return self.parent_store_data
+
+    def refresh_indexes(self) -> None:
+        """Explicitly reloads parent store and rebuilds the BM25 lexical index (e.g. post-ingestion)."""
+        logger.info("Refreshing HybridRetrievalService parent store and BM25 index...")
+        self.parent_store_data = self._load_parent_store()
+        self.bm25_service.build_index()
 
     def retrieve(
         self,
@@ -122,7 +144,7 @@ class HybridRetrievalService:
         try:
             results = self.chroma_service.collection.query(
                 query_embeddings=[query_vector],
-                n_results=min(top_k, self.chroma_service.collection.count() or 1),
+                n_results=top_k,
                 where=where_filter,
                 include=["documents", "metadatas", "distances"]
             )
@@ -168,6 +190,7 @@ class HybridRetrievalService:
                 "metadata": item["metadata"],
                 "plan_id": item["plan_id"],
                 "dense_rank": item["dense_rank"],
+                "dense_distance": item.get("dense_distance"),
                 "bm25_rank": None,
                 "rrf_score": 1.0 / (rrf_k + item["dense_rank"])
             }
@@ -184,6 +207,7 @@ class HybridRetrievalService:
                     "metadata": item["metadata"],
                     "plan_id": item["plan_id"],
                     "dense_rank": None,
+                    "dense_distance": None,
                     "bm25_rank": item["bm25_rank"],
                     "rrf_score": 1.0 / (rrf_k + item["bm25_rank"])
                 }
@@ -198,10 +222,14 @@ class HybridRetrievalService:
             )
         )
 
-        # Deduplicate identical chunk content (e.g. cross-section table duplications)
+        # Deduplicate identical chunk content and filter poor semantic matches
         deduped: list[dict] = []
         seen_texts = set()
         for cand in sorted_candidates:
+            # Semantic noise filter: If candidate has no lexical BM25 match and high cosine distance (> 0.68), it is irrelevant noise
+            if cand.get("bm25_rank") is None and cand.get("dense_distance") is not None and cand["dense_distance"] > 0.68:
+                continue
+
             clean_body = " ".join(cand.get("content", "").split())
             if clean_body in seen_texts:
                 continue
@@ -220,6 +248,7 @@ class HybridRetrievalService:
         parents_map = {}
         contains_unverified = False
         authorized_set = set(authorized_scope)
+        parent_store = self.get_parent_store()
 
         for c in chunks:
             meta = c.get("metadata", {})
@@ -230,8 +259,8 @@ class HybridRetrievalService:
             if not parent_id or parent_id in parents_map:
                 continue
 
-            if parent_id in self.parent_store_data:
-                p_record = self.parent_store_data[parent_id]
+            if parent_id in parent_store:
+                p_record = parent_store[parent_id]
                 # Enforce that parent plan matches authorized scope
                 if p_record.get("plan_id") in authorized_set:
                     parents_map[parent_id] = p_record

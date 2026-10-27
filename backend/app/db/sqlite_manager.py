@@ -42,11 +42,11 @@ class SQLiteManager:
         conn = sqlite3.connect(str(self.db_path), timeout=15.0)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON;")
-        conn.execute("PRAGMA journal_mode = WAL;")
         return conn
 
     def _init_tables(self) -> None:
         with self._get_connection() as conn:
+            conn.execute("PRAGMA journal_mode = WAL;")
             conn.executescript("""
                 CREATE TABLE IF NOT EXISTS users (
                     user_id TEXT PRIMARY KEY,

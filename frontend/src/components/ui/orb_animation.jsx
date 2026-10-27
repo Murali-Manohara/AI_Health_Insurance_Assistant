@@ -56,19 +56,17 @@ class SafeThinkingOrbBoundary extends Component {
 }
 
 /**
- * LiquidThinkingOrb — 12-second containerless thinking indicator (3 seconds per step).
+ * LiquidThinkingOrb — 6-second containerless thinking indicator (2 seconds per step).
  * Uses theme blue (#007AFF) composing orb with bold black status text.
  * Modes:
  *   - "rag":
- *       0s - 3s: "Understanding your query"
- *       3s - 6s: "Searching for relevant documents"
- *       6s - 9s: "Checking the evidence"
- *       9s - 12s: "Generating the answer"
+ *       0s - 2s: "Understanding your query"
+ *       2s - 4s: "Searching for relevant documents"
+ *       4s - 6s: "Generating the answer"
  *   - "claim":
- *       0s - 3s: "Understanding your inputs"
- *       3s - 6s: "Preparing the prediction"
- *       6s - 9s: "Calculating the claim estimate"
- *       9s - 12s: "Preparing your results"
+ *       0s - 2s: "Understanding your inputs"
+ *       2s - 4s: "Preparing the prediction"
+ *       4s - 6s: "Calculating the claim estimate"
  */
 export function LiquidThinkingOrb({ size = 51, color = "#007AFF", theme = "auto", mode = "rag" }) {
   const [phaseIndex, setPhaseIndex] = useState(0);
@@ -81,28 +79,24 @@ export function LiquidThinkingOrb({ size = 51, color = "#007AFF", theme = "auto"
 
   useEffect(() => {
     setPhaseIndex(0);
-    const t1 = setTimeout(() => setPhaseIndex(1), 3000);
-    const t2 = setTimeout(() => setPhaseIndex(2), 6000);
-    const t3 = setTimeout(() => setPhaseIndex(3), 9000);
+    const t1 = setTimeout(() => setPhaseIndex(1), 2000);
+    const t2 = setTimeout(() => setPhaseIndex(2), 4000);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
-      clearTimeout(t3);
     };
   }, [mode]);
 
   const ragPhases = [
     { text: "Understanding your query" },
     { text: "Searching for relevant documents" },
-    { text: "Checking the evidence" },
     { text: "Generating the answer" }
   ];
 
   const claimPhases = [
     { text: "Understanding your inputs" },
     { text: "Preparing the prediction" },
-    { text: "Calculating the claim estimate" },
-    { text: "Preparing your results" }
+    { text: "Calculating the claim estimate" }
   ];
 
   const phases = mode === "claim" ? claimPhases : ragPhases;

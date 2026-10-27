@@ -13,17 +13,25 @@ DANGEROUS_UNICODE_CHARS = {
     '\x00'                                              # Null byte
 }
 
-# Compiled regex patterns for direct prompt injection detection
+# Compiled regex patterns for direct prompt injection and instruction override detection
 PROMPT_INJECTION_PATTERNS = [
     re.compile(r"ignore\s+(all\s+)?(previous|prior|above)\s+(instructions|directives|prompts|rules)", re.IGNORECASE),
     re.compile(r"disregard\s+(the\s+)?(system|developer|all)\s+(prompt|instructions|rules)", re.IGNORECASE),
     re.compile(r"(override|bypass|disable)\s+(all\s+)?(safety|guardrails|security|restrictions|filters)", re.IGNORECASE),
     re.compile(r"you\s+are\s+now\s+(in\s+)?(developer\s+mode|dan|unrestricted|jailbreak)", re.IGNORECASE),
-    re.compile(r"(reveal|print|disclose|dump|output)\s+(your\s+|the\s+)?(system\s+prompt|developer\s+instructions|secret|api\s*key)", re.IGNORECASE),
-    re.compile(r"what\s+is\s+your\s+(original\s+|exact\s+)?system\s+prompt", re.IGNORECASE),
-    re.compile(r"repeat\s+(everything|the\s+text)\s+(above|before|starting\s+with)", re.IGNORECASE),
+    re.compile(r"ignore\s+(all\s+)?(rules|instructions|directives|prompts)\s+(and|to)\s+(reveal|show|print|tell|bypass)", re.IGNORECASE),
     re.compile(r"(roleplay|act)\s+as\s+(an?\s+)?unrestricted\s+ai", re.IGNORECASE),
     re.compile(r"<\s*/?\s*(system|instruction|developer|admin)\s*>", re.IGNORECASE),
+]
+
+# Patterns requesting to disclose hidden system prompts, developer instructions, or credentials
+SYSTEM_DISCLOSURE_PATTERNS = [
+    re.compile(r"what\s+(is|are)\s+(the|your|its|all)\s+.*system\s+(prompt|instruction|directive|rule)s?", re.IGNORECASE),
+    re.compile(r"(reveal|print|disclose|dump|output|show|tell|share|display|give)\s+(?:me\s+)?(?:your\s+|the\s+|all\s+)?(?:system\s+|developer\s+|internal\s+|hidden\s+)?(?:prompts?|instructions?|rules?|directives?|secrets?|api\s*keys?|backend\s+config)", re.IGNORECASE),
+    re.compile(r"what\s+(is|are)\s+(the|your|its)\s+(hidden|internal|developer)\s+(instruction|prompt|directive)s?", re.IGNORECASE),
+    re.compile(r"repeat\s+(everything|the\s+text|all\s+system\s+prompts?)\s*(above|before|starting\s+with|verbatim)?", re.IGNORECASE),
+    re.compile(r"what\s+instructions\s+were\s+you\s+given", re.IGNORECASE),
+    re.compile(r"what\s+is\s+your\s+prompt\b", re.IGNORECASE),
 ]
 
 # Sensitive patterns that must never appear in generated responses (Secrets, Keys, Credentials)
@@ -63,7 +71,7 @@ class InputGuardrail:
         1. Checks non-emptiness.
         2. Enforces maximum character budget.
         3. Sanitizes dangerous Unicode.
-        4. Detects direct prompt injection.
+        4. Detects direct prompt injection or disclosure requests.
         Returns: (sanitized_query, is_injection_flagged, refusal_reason)
         """
         limit = max_length or settings.MAX_QUERY_CHARS
@@ -82,7 +90,7 @@ class InputGuardrail:
 
         sanitized = InputGuardrail.sanitize_text(query)
 
-        # Prompt Injection screening
+        # 1. Prompt Injection & Override screening
         for pattern in PROMPT_INJECTION_PATTERNS:
             if pattern.search(sanitized):
                 logger.warning(f"Prompt injection pattern detected: '{pattern.pattern}' in query excerpt: '{sanitized[:80]}...'")
@@ -91,6 +99,17 @@ class InputGuardrail:
                         sanitized,
                         True,
                         "I cannot process this request because it contains instructions attempting to override system directives, security boundaries, or internal configuration."
+                    )
+
+        # 2. System Prompt & Instruction Disclosure screening
+        for pattern in SYSTEM_DISCLOSURE_PATTERNS:
+            if pattern.search(sanitized):
+                logger.warning(f"System disclosure pattern detected: '{pattern.pattern}' in query excerpt: '{sanitized[:80]}...'")
+                if block_on_injection:
+                    return (
+                        sanitized,
+                        True,
+                        "I cannot disclose internal system instructions, configuration directives, or private prompts. I am an AI Health Insurance Assistant designed to help you understand health insurance policy benefits, claims, waiting periods, and eligibility."
                     )
 
         return (sanitized, False, None)
@@ -130,6 +149,8 @@ class OutputGuardrail:
         for c in citations:
             plan_id = getattr(c, "plan_id", None) or (c.get("plan_id") if isinstance(c, dict) else None)
             source_id = getattr(c, "source_id", None) or (c.get("source_id") if isinstance(c, dict) else None)
+            chunk_id = getattr(c, "chunk_id", None) or (c.get("chunk_id") if isinstance(c, dict) else None)
+            ref_id = source_id or chunk_id
 
             # Check plan authorization
             if plan_id and plan_id not in authorized_plans:
@@ -137,8 +158,8 @@ class OutputGuardrail:
                 continue
 
             # Check that citation actually matches retrieved evidence
-            if source_id and retrieved_chunk_ids and source_id not in retrieved_chunk_ids:
-                logger.warning(f"OutputGuardrail stripped fabricated citation ID '{source_id}' not in retrieved chunks.")
+            if ref_id and retrieved_chunk_ids and ref_id not in retrieved_chunk_ids:
+                logger.warning(f"OutputGuardrail stripped fabricated citation ID '{ref_id}' not in retrieved chunks.")
                 continue
 
             valid_citations.append(c)

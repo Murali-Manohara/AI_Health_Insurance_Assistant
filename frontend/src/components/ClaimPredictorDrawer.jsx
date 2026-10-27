@@ -311,9 +311,9 @@ export function ClaimPredictorDrawer({
       const res = await apiFn.call(claimPredictorApi, payload, authToken);
       setLastResult(res);
 
-      // Enforce proper 12 seconds of animation duration (4 steps, 3s per step)
+      // Enforce proper 6 seconds of animation duration (3 steps, 2s per step)
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 12000 - elapsed);
+      const remainingDelay = Math.max(0, 6000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }
@@ -331,7 +331,7 @@ export function ClaimPredictorDrawer({
       }
     } catch (err) {
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 12000 - elapsed);
+      const remainingDelay = Math.max(0, 6000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }

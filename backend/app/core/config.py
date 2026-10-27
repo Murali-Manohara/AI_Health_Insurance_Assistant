@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "gemini"
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-flash-lite-latest"
-    GEMINI_FALLBACK_MODEL: str = "gemini-flash-latest"
+    GEMINI_FALLBACK_MODEL: str = "gemini-3.5-flash-lite"
 
     # Upload limits & security
     MAX_UPLOAD_SIZE_BYTES: int = 25 * 1024 * 1024  # 25 MB

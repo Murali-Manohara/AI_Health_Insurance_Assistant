@@ -570,9 +570,9 @@ export function PlanChatScreen({
         throw new Error(data.detail || `Server error (HTTP ${res.status})`);
       }
 
-      // Enforce the full 12 seconds of thinking animation (4 steps, 3s per step)
+      // Enforce the full 6 seconds of thinking animation (3 steps, 2s per step)
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 12000 - elapsed);
+      const remainingDelay = Math.max(0, 6000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }
@@ -581,7 +581,7 @@ export function PlanChatScreen({
       setHistoryRefreshTrigger((prev) => prev + 1);
     } catch (err) {
       const elapsed = Date.now() - startTime;
-      const remainingDelay = Math.max(0, 12000 - elapsed);
+      const remainingDelay = Math.max(0, 6000 - elapsed);
       if (remainingDelay > 0) {
         await new Promise((resolve) => setTimeout(resolve, remainingDelay));
       }

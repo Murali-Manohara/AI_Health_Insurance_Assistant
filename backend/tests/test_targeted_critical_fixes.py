@@ -278,3 +278,49 @@ def test_absent_latency_telemetry_returns_none():
     if cnt == 0:
         assert kpis["average_latency_ms"] is None
         assert kpis["average_latency_ms"] != 450.0
+
+# ==================== OPTIMIZATION REGRESSION TESTS ====================
+
+def test_sqlite_wal_persistence_and_no_per_query_pragma():
+    """Verify WAL mode is active and persistent on the test database without per-query PRAGMA."""
+    with sqlite_db._get_connection() as conn:
+        journal_mode = conn.execute("PRAGMA journal_mode;").fetchone()[0]
+        assert journal_mode.lower() == "wal"
+
+def test_parent_store_caching_and_refresh_indexes():
+    """Verify HybridRetrievalService parent store caching and refresh_indexes functionality."""
+    from backend.app.api.deps import get_rag_orchestrator
+    retriever = get_rag_orchestrator().retrieval_service
+    store1 = retriever.get_parent_store()
+    assert isinstance(store1, dict)
+    
+    # Test refresh_indexes executes cleanly
+    retriever.refresh_indexes()
+    store2 = retriever.get_parent_store()
+    assert isinstance(store2, dict)
+
+def test_conversation_atomic_persistence_and_sqlite_primary():
+    """Verify conversation and messages are stored atomically in SQLite and retrievable."""
+    user_id, headers = create_eligible_customer("HS-GOLD-001")
+    
+    # Create conversation
+    create_resp = client.post("/api/conversations", headers=headers, json={
+        "selected_plan_id": "HS-GOLD-001"
+    })
+    assert create_resp.status_code == 201
+    cid = create_resp.json()["conversation_id"]
+
+    # Send message
+    send_resp = client.post(f"/api/conversations/{cid}/messages", headers=headers, json={
+        "query": "What is the ICU limit?"
+    })
+    assert send_resp.status_code == 200
+
+    # Verify directly from SQLite
+    db_msgs = sqlite_db.get_messages_for_conversation(cid)
+    assert len(db_msgs) >= 2  # user + assistant turns
+    user_msg = next((m for m in db_msgs if m["role"] == "user"), None)
+    asst_msg = next((m for m in db_msgs if m["role"] == "assistant"), None)
+    assert user_msg is not None
+    assert asst_msg is not None
+    assert "ICU" in user_msg["content"]

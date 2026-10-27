@@ -53,18 +53,27 @@ class ConversationManager:
             except Exception as e:
                 logger.error(f"Error reading conversation store: {e}")
 
-    def _persist_store(self) -> None:
+    def _persist_store_sync(self) -> None:
         try:
             # Only persist sessions that have at least one message (no empty chats)
             active_data = {
                 cid: s.model_dump()
-                for cid, s in self.sessions.items()
+                for cid, s in list(self.sessions.items())
                 if len(s.messages) > 0
             }
-            with open(CONVERSATIONS_STORE_PATH, "w", encoding="utf-8") as f:
+            tmp_path = CONVERSATIONS_STORE_PATH.with_suffix(".tmp")
+            with open(tmp_path, "w", encoding="utf-8") as f:
                 json.dump(active_data, f, indent=2)
+            tmp_path.replace(CONVERSATIONS_STORE_PATH)
         except Exception as e:
             logger.error(f"Failed to persist conversation store: {e}")
+
+    def _persist_store(self, async_write: bool = True) -> None:
+        if async_write:
+            import threading
+            threading.Thread(target=self._persist_store_sync, daemon=True).start()
+        else:
+            self._persist_store_sync()
 
     def clear_all_conversations(self) -> None:
         """Wipes all active in-memory sessions, persistent JSON cache, and SQLite records."""
@@ -288,8 +297,6 @@ class ConversationManager:
         if len(session.messages) > 20:
             session.messages = session.messages[-20:]
 
-        self._persist_store()
-
         try:
             # Ensure conversation row is created in SQLite if not yet saved
             if not sqlite_db.get_conversation(conversation_id):
@@ -330,5 +337,6 @@ class ConversationManager:
         except Exception as e:
             logger.error(f"Failed to persist chat messages to SQLite: {e}")
 
+        self._persist_store(async_write=True)
         return a_msg
 

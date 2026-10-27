@@ -2,6 +2,7 @@ import time
 import os
 import re
 from typing import Optional
+import httpx
 from pydantic import BaseModel, Field
 from backend.app.core.prompt import RAG_SYSTEM_PROMPT, format_rag_prompt
 from backend.app.registry.plans import get_plan_by_id
@@ -53,7 +54,17 @@ class AnswerGenerationService:
         else:
             self.provider = "grounded_synthesizer"
 
+        self._http_client: Optional[httpx.Client] = None
         logger.info(f"Initialized AnswerGenerationService with provider: '{self.provider}' (Gemini model: {self.gemini_model})")
+
+    def _get_http_client(self) -> httpx.Client:
+        """Returns a reusable, pooled httpx.Client with fast timeout to avoid freezing during network glitches."""
+        if self._http_client is None or self._http_client.is_closed:
+            self._http_client = httpx.Client(
+                timeout=10.0,
+                limits=httpx.Limits(max_keepalive_connections=10, max_connections=20)
+            )
+        return self._http_client
 
     def generate_answer(
         self,
@@ -82,31 +93,13 @@ class AnswerGenerationService:
 
         chunks = retrieval_result.get("chunks", [])
         if not chunks:
-            # Check if Gemini is enabled to handle general knowledge / educational / technical questions dynamically
-            if self.provider == "gemini" and self.gemini_key:
-                empty_retrieval = {
-                    "chunks": [],
-                    "formatted_context": "No relevant policy documents were retrieved for this query.",
-                    "contains_unverified": False
-                }
-                answer_text, success = self._call_gemini(
-                    query, role, selected_plan_id, empty_retrieval, is_comparison, conversation_history
-                )
-                if success:
-                    if denied_notice:
-                        answer_text = f"> **Access Restriction Notice:** {denied_notice}\n\n" + answer_text
-                    return GroundedAnswerResult(
-                        answer_text=answer_text,
-                        citations=[],
-                        denied_notice=denied_notice,
-                        provider_used="gemini"
-                    )
-
-            fallback_msg = (
-                f"{denied_notice}\n\n" if denied_notice else ""
-            ) + "The available policy documents do not provide enough information to answer reliably."
+            p_info = get_plan_by_id(selected_plan_id)
+            plan_name = p_info.plan_name if p_info else selected_plan_id
+            abstention_msg = (
+                f"> **Access Restriction Notice:** {denied_notice}\n\n" if denied_notice else ""
+            ) + f"The available policy documents for **{plan_name}** do not specify coverage terms, limits, or waiting periods for this condition or query. Please consult your official policy schedule or authorized insurance representative."
             return GroundedAnswerResult(
-                answer_text=fallback_msg,
+                answer_text=abstention_msg,
                 citations=[],
                 denied_notice=denied_notice,
                 provider_used=self.provider
@@ -131,6 +124,10 @@ class AnswerGenerationService:
             actual_provider = "grounded_synthesizer"
 
         answer_text = self._consolidate_inline_citations(answer_text)
+
+        # Ensure no citations returned on explicit policy abstention
+        if "do not specify coverage terms" in answer_text.lower() or "not specified in the available documents" in answer_text.lower():
+            verified_citations = []
 
         if denied_notice:
             answer_text = f"> **Access Restriction Notice:** {denied_notice}\n\n" + answer_text
@@ -308,36 +305,96 @@ class AnswerGenerationService:
 
         # 2. Single-plan query response
         plan_chunks = chunks_by_plan.get(selected_plan_id, chunks)
-        lead_chunk = plan_chunks[0]
-        meta = lead_chunk.get("metadata", {})
+
+        # Check topic presence: If query specifically asks for a term (waiting periods, diseases, benefits)
+        # and none of the chunks mention it, abstain cleanly instead of dumping irrelevant sections
+        q_clean = query.lower()
+        topic_keywords = [
+            "waiting period", "ambulance", "surgery", "surgical", "cataract", "pre-existing",
+            "maternity", "dental", "ayush", "domiciliary", "organ donor", "icu", "hospital cash",
+            "critical illness", "cancer", "diabetes", "hypertension", "dialysis", "hernia"
+        ]
+        queried_topics = [kw for kw in topic_keywords if kw in q_clean]
+        if queried_topics:
+            all_chunk_text = " ".join([c.get("content", "").lower() for c in plan_chunks])
+            if not any(kw in all_chunk_text for kw in queried_topics):
+                p_info = get_plan_by_id(selected_plan_id)
+                p_name = p_info.plan_name if p_info else selected_plan_id
+                return f"The available policy documents for **{p_name}** do not specify coverage terms, limits, or waiting periods for {', '.join(queried_topics)}. Please consult an authorized insurance representative or review the official policy schedule for unlisted terms."
+
+        # Score and rank chunks by query word overlap
+        query_words = set(re.findall(r"\b[a-zA-Z0-9]{3,}\b", q_clean)) - {
+            "the", "and", "for", "are", "per", "that", "this", "what", "with", "from", "have", "been", "under", "than", "more", "less", "year", "policy", "plan"
+        }
+
+        def score_chunk(c):
+            text = c.get("content", "").lower()
+            return sum(1 for w in query_words if w in text)
+
+        ranked_chunks = sorted(plan_chunks, key=score_chunk, reverse=True)
+        best_chunk = ranked_chunks[0] if ranked_chunks else None
+
+        p_info = get_plan_by_id(selected_plan_id)
+        plan_name = p_info.plan_name if p_info else selected_plan_id
+
+        if not best_chunk or (query_words and score_chunk(best_chunk) == 0):
+            return f"I am unable to answer this question because the available policy documents for **{plan_name}** do not specify this information. Please consult an authorized insurance representative or your policy schedule."
+
+        meta = best_chunk.get("metadata", {})
         sec_num = meta.get("section_number", "")
         sec_title = meta.get("section_title", "")
         p_start = meta.get("source_page_start", 1)
         p_end = meta.get("source_page_end", 1)
-        plan_name = meta.get("plan_name", selected_name)
         citation_str = f"[{plan_name}, Section {sec_num}: {sec_title}, p. {p_start}-{p_end}]"
+        chunk_text = best_chunk.get("content", "")
 
-        answer_parts = [
-            f"Policy terms for **{plan_name}** ({citation_str}):\n"
-        ]
+        # Detect Yes/No / Confirmation intent
+        is_confirmation = bool(
+            re.search(r"^(?:is|does|can|are|was|am\s+i|is\s+this|is\s+it|do\s+we|will)\b", q_clean) or
+            re.search(r"\b(am\s+i\s+right|is\s+this\s+correct|correct\?|right\?)\b", q_clean)
+        )
 
-        # Extract structured content from top chunks
-        for idx, c in enumerate(plan_chunks[:3]):
-            c_meta = c.get("metadata", {})
-            c_text = c.get("content", "").strip()
-            c_sec = c_meta.get("section_number", "")
-            c_title = c_meta.get("section_title", "")
-            c_pages = f"p. {c_meta.get('source_page_start')}-{c_meta.get('source_page_end')}"
-            ref = f"[{plan_name}, Section {c_sec}, {c_pages}]"
+        has_less_than = bool(re.search(r"\b(less\s+than|below|under|fewer\s+than)\s+(\d+[\d,]*)\b", q_clean))
+        has_more_than = bool(re.search(r"\b(more\s+than|greater\s+than|above|exceeding)\s+(\d+[\d,]*)\b", q_clean))
 
-            paragraphs = [p.strip() for p in c_text.split("\n\n") if p.strip()]
-            for p in paragraphs:
-                if "|" in p and "---" in p:  # Preserves markdown tables
-                    answer_parts.append(f"\n{p}\n{ref}\n")
-                elif len(p) > 20:
-                    answer_parts.append(f"- {p} {ref}")
+        # Check threshold / comparison questions (e.g. "less than 1000", "more than 2000")
+        if is_confirmation and (has_less_than or has_more_than):
+            lines = [l.strip().lstrip("-* ") for l in chunk_text.split("\n") if l.strip() and not l.strip().upper().startswith("SECTION ") and len(l.strip()) > 5]
+            matching_lines = [l for l in lines if any(w in l.lower() for w in query_words)]
+            line_detail = matching_lines[0] if matching_lines else (lines[0] if lines else "")
+            if has_less_than:
+                return f"**No.** Under **{plan_name}**, the benefit is capped up to the documented limit ({line_detail}), not strictly less than that amount.\n\n{citation_str}"
+            elif has_more_than:
+                return f"Under **{plan_name}**, the documented limit is: {line_detail}.\n\n{citation_str}"
 
-        return "\n".join(answer_parts)
+        # General confirmation query: Yes or No
+        if is_confirmation:
+            lines = [l.strip().lstrip("-* ") for l in chunk_text.split("\n") if l.strip() and not l.strip().upper().startswith("SECTION ") and len(l.strip()) > 5]
+            matching_lines = [l for l in lines if any(w in l.lower() for w in query_words)]
+            lead_statement = matching_lines[0] if matching_lines else (lines[0] if lines else "")
+            if any(neg in lead_statement.lower() for neg in ["excluded", "not covered", "no benefit", "shall not be liable"]):
+                return f"**No.** Under **{plan_name}**, {lead_statement}.\n\n{citation_str}"
+            else:
+                return f"**Yes.** Under **{plan_name}**, {lead_statement}.\n\n{citation_str}"
+
+        # General factual query: Return strictly the 1-2 most relevant matching sentences or table rows
+        matching_snippets = []
+        for line in chunk_text.split("\n"):
+            line_str = line.strip()
+            if not line_str:
+                continue
+            if "|" in line_str and "---" in line_str:
+                matching_snippets.append(line_str)
+            elif any(w in line_str.lower() for w in query_words) and len(line_str) > 15:
+                matching_snippets.append(f"- {line_str.lstrip('-* ')}")
+                if len(matching_snippets) >= 2:
+                    break
+
+        if not matching_snippets:
+            first_sentence = chunk_text.split(".")[0].strip()
+            matching_snippets.append(f"- {first_sentence}.")
+
+        return "\n".join(matching_snippets) + f"\n\n{citation_str}"
 
     def _call_gemini(
         self,
@@ -384,26 +441,26 @@ class AnswerGenerationService:
         if self.gemini_fallback_model and self.gemini_fallback_model != self.gemini_model:
             models_to_try.append(self.gemini_fallback_model)
 
+        client = self._get_http_client()
         for model_name in models_to_try:
             try:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
-                with httpx.Client(timeout=30.0) as client:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_key}"
+                resp = client.post(url, headers=headers, json=payload)
+                if resp.status_code in (429, 500, 502, 503):
+                    logger.warning(f"Gemini API ({model_name}) returned HTTP {resp.status_code}. Retrying in 0.5s...")
+                    time.sleep(0.5)
                     resp = client.post(url, headers=headers, json=payload)
-                    if resp.status_code == 429:
-                        logger.warning(f"Gemini API rate limit (429) on {model_name}. Waiting 3s and retrying...")
-                        time.sleep(3.0)
-                        resp = client.post(url, headers=headers, json=payload)
 
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        candidates = data.get("candidates", [])
-                        if candidates:
-                            parts = candidates[0].get("content", {}).get("parts", [])
-                            if parts and "text" in parts[0]:
-                                logger.info(f"Successfully generated answer with Gemini model '{model_name}'.")
-                                return parts[0]["text"].strip(), True
-                    else:
-                        logger.warning(f"Gemini API ({model_name}) returned HTTP {resp.status_code}: {resp.text[:200]}")
+                if resp.status_code == 200:
+                    data = resp.json()
+                    candidates = data.get("candidates", [])
+                    if candidates:
+                        parts = candidates[0].get("content", {}).get("parts", [])
+                        if parts and "text" in parts[0]:
+                            logger.info(f"Successfully generated answer with Gemini model '{model_name}'.")
+                            return parts[0]["text"].strip(), True
+                else:
+                    logger.warning(f"Gemini API ({model_name}) returned HTTP {resp.status_code}: {resp.text[:200]}")
             except Exception as e:
                 logger.warning(f"Gemini API ({model_name}) call failed: {e}")
 
@@ -491,18 +548,18 @@ class AnswerGenerationService:
             if self.gemini_fallback_model and self.gemini_fallback_model != self.gemini_model:
                 models_to_try.append(self.gemini_fallback_model)
 
+            client = self._get_http_client()
             for model_name in models_to_try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_key}"
                 try:
-                    resp = httpx.post(
+                    resp = client.post(
                         url,
                         headers={"Content-Type": "application/json"},
                         json={
                             "system_instruction": {"parts": [{"text": RAG_SYSTEM_PROMPT}]},
                             "contents": [{"role": "user", "parts": [{"text": claim_prompt}]}],
                             "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1024}
-                        },
-                        timeout=30.0
+                        }
                     )
                     if resp.status_code == 200:
                         data = resp.json()

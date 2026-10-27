@@ -86,6 +86,44 @@ class RAGOrchestrator:
             conversation_history=[m.model_dump() for m in session.messages]
         )
 
+        # 1.1 Handle Disclosure requests directly without retrieval
+        if scope_result.is_disclosure_request:
+            assistant_msg = self.conversation_manager.add_turn(
+                conversation_id=conversation_id,
+                user_id=user.user_id,
+                user_query=query,
+                assistant_answer=scope_result.refusal_message or "I cannot disclose internal system instructions, configuration directives, or private prompts. I am an AI Health Insurance Assistant designed to help you understand health insurance policy benefits, claims, waiting periods, and eligibility.",
+                citations=[],
+                effective_scope=scope_result.effective_scope,
+                is_comparison=False,
+                is_clarification=False,
+                contains_unverified=False
+            )
+            return {
+                "message": assistant_msg.model_dump(),
+                "scope_resolution": scope_result.model_dump(),
+                "retrieval_diagnostics": {"disclosure_blocked": True}
+            }
+
+        # 1.2 Handle Pure Out-of-Scope queries directly without retrieval
+        if scope_result.is_out_of_scope:
+            assistant_msg = self.conversation_manager.add_turn(
+                conversation_id=conversation_id,
+                user_id=user.user_id,
+                user_query=query,
+                assistant_answer=scope_result.refusal_message or "I'm a health insurance assistant and can help with policy benefits, eligibility, claims, and related insurance questions. I can't answer this question because it is outside my scope.",
+                citations=[],
+                effective_scope=scope_result.effective_scope,
+                is_comparison=False,
+                is_clarification=False,
+                contains_unverified=False
+            )
+            return {
+                "message": assistant_msg.model_dump(),
+                "scope_resolution": scope_result.model_dump(),
+                "retrieval_diagnostics": {"out_of_scope": True}
+            }
+
         # 1.5 Handle Greeting queries directly without unnecessary retrieval or disclaimers
         if scope_result.is_greeting:
             assistant_msg = self.conversation_manager.add_turn(
@@ -126,7 +164,7 @@ class RAGOrchestrator:
 
         # 3. Execute Hybrid Retrieval with contextualized resolved query
         t_start = time.time()
-        search_query = scope_result.resolved_query or query
+        search_query = scope_result.mixed_insurance_query or scope_result.resolved_query or query
         t_ret_start = time.time()
         retrieval_res = self.retrieval_service.retrieve(
             query=search_query,
@@ -139,10 +177,12 @@ class RAGOrchestrator:
         # 4. Generate Grounded Answer with Citations using sanitized query
         history_list = [m.model_dump() for m in session.messages]
         t_gen_start = time.time()
+        generation_query = scope_result.mixed_insurance_query or sanitized_query
+        target_plan_id = scope_result.effective_scope[0] if (scope_result.effective_scope and len(scope_result.effective_scope) == 1) else session.selected_plan_id
         answer_res = self.generation_service.generate_answer(
-            query=sanitized_query,
+            query=generation_query,
             role=user.role,
-            selected_plan_id=session.selected_plan_id,
+            selected_plan_id=target_plan_id,
             retrieval_result=retrieval_res,
             is_comparison=scope_result.is_comparison,
             denied_plans=scope_result.denied_plans,
@@ -150,6 +190,15 @@ class RAGOrchestrator:
         )
         t_generation_ms = (time.time() - t_gen_start) * 1000.0
         t_total_ms = (time.time() - t_start) * 1000.0
+
+        final_answer_text = answer_res.answer_text
+        if scope_result.is_mixed and scope_result.mixed_unrelated_topic:
+            oos_topic = scope_result.mixed_unrelated_topic
+            final_answer_text = (
+                f"I'm a health insurance assistant and can help with policy benefits, eligibility, claims, and related insurance questions. "
+                f"I can't answer questions about {oos_topic} because they are outside my scope.\n\n"
+                f"Regarding your insurance question:\n{final_answer_text}"
+            )
 
         # Output Guardrail: Validate and prune any fabricated or unauthorized plan citations
         authorized_plans = ROLE_PLAN_PERMISSIONS.get(user.role, set())
@@ -168,7 +217,7 @@ class RAGOrchestrator:
             conversation_id=conversation_id,
             user_id=user.user_id,
             user_query=sanitized_query,
-            assistant_answer=answer_res.answer_text,
+            assistant_answer=final_answer_text,
             citations=filtered_citations,
             effective_scope=scope_result.effective_scope,
             is_comparison=scope_result.is_comparison,

@@ -355,6 +355,17 @@ class IngestionOrchestrator:
         except Exception as e:
             logger.warning(f"Failed to record ingestion run to SQLite: {e}")
 
+        # Trigger index refresh on RAG retrieval service so newly ingested chunks are immediately searchable via BM25 and parent store
+        if job.status == "SUCCESS":
+            try:
+                from backend.app.api.deps import get_rag_orchestrator
+                rag_orch = get_rag_orchestrator()
+                if rag_orch and hasattr(rag_orch, "retrieval_service"):
+                    rag_orch.retrieval_service.refresh_indexes()
+                    logger.info("Triggered immediate refresh of BM25 and parent-store indexes post-ingestion.")
+            except Exception as ref_err:
+                logger.warning(f"Note: Post-ingestion index auto-refresh deferred: {ref_err}")
+
     def get_history(self) -> list[dict[str, Any]]:
         if not settings.HISTORY_STORE_PATH.exists():
             return []

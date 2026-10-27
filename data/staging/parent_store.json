@@ -1,304 +1,4 @@
 {
-  "HS-PREMIUM-001-SEC-01": {
-    "parent_id": "HS-PREMIUM-001-SEC-01",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "1",
-    "section_title": "PLAN OVERVIEW",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 1: PLAN OVERVIEW"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 1: PLAN OVERVIEW\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 1\u20132\n\n\nSECTION 1: PLAN OVERVIEW Health Shield \u2013 Premium is an illustrative fixed-benefit health insurance plan designed to provide predefined monetary benefits for eligible hospitalization, surgery, selected illnesses, and other specified medical events. The Premium tier is designed to illustrate higher benefit limits than the Gold and Basic tiers. All benefits remain subject to the applicable policy wording, eligibility requirements, waiting periods, exclusions, and claim limits. The figures in this document are proposed demo values for developing and testing an AI insurance assistant. They must not be presented as actual insurance coverage until verified against an approved policy document. Key Details \uf0b7 Plan Name: Health Shield \u2013 Premium \uf0b7 Plan ID: HS-PREMIUM-001 \uf0b7 Plan Category: Premium \uf0b7 Product Type: Fixed-benefit health insurance \uf0b7 Policy Term: Illustrative 1 year \uf0b7 Currency: Indian Rupees (INR) \uf0b7 Intended Market: India \uf0b7 Initial Daily Hospital Cash Benefit: \u20b910,000\n\n#### Notes & Conditions:\n- Health Shield \u2013 Premium is an illustrative fixed-benefit health insurance plan designed to\n- periods, exclusions, and claim limits.\n- Policy Term: Illustrative 1 year",
-    "source_page_start": 1,
-    "source_page_end": 2,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-01-CHK-001"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-02": {
-    "parent_id": "HS-PREMIUM-001-SEC-02",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "2",
-    "section_title": "PREMIUM DETAILS",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 2: PREMIUM DETAILS"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 2: PREMIUM DETAILS\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 2: PREMIUM DETAILS The following premium is an illustrative placeholder for testing and demonstration. \uf0b7 Illustrative Annual Premium: \u20b915,000 \uf0b7 Premium Payment Frequency: Annual \uf0b7 Taxes: Not included in the illustrative amount \uf0b7 Half-Yearly Premium: Not defined \uf0b7 Monthly Premium: Not defined \uf0b7 Premium by age, location, or underwriting category: Not defined \uf0b7 Renewal premium terms: Not verified\n\n#### Notes & Conditions:\n- The following premium is an illustrative placeholder for testing and demonstration.\n- Illustrative Annual Premium: \u20b915,000\n- Taxes: Not included in the illustrative amount\n- Half-Yearly Premium: Not defined\n- Monthly Premium: Not defined\n- Premium by age, location, or underwriting category: Not defined\n- Renewal premium terms: Not verified",
-    "source_page_start": 2,
-    "source_page_end": 2,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-02-CHK-002"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-03": {
-    "parent_id": "HS-PREMIUM-001-SEC-03",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "3",
-    "section_title": "HOSPITAL CASH BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 3: HOSPITAL CASH BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 3: HOSPITAL CASH BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 2\u20133\n\n\nSECTION 3: HOSPITAL CASH BENEFIT The Hospital Cash Benefit provides a predefined daily amount for eligible hospitalization, subject to the plan's qualifying conditions and benefit limits. Illustrative Premium Benefits \uf0b7 Daily Hospital Cash: \u20b910,000 \uf0b7 Minimum Hospitalization Duration: More than 24 hours \uf0b7 Maximum Benefit Days Per Policy Year: 30 days \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b93,00,000 Example For 5 eligible payable hospitalization days: \u20b910,000 \u00d7 5 days = \u20b950,000.\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b93,00,000",
-    "source_page_start": 2,
-    "source_page_end": 3,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-03-CHK-003"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-04": {
-    "parent_id": "HS-PREMIUM-001-SEC-04",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "4",
-    "section_title": "ICU BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 4: ICU BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 4: ICU BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 3\u20133\n\n\nSECTION 4: ICU BENEFIT The ICU Benefit provides a higher illustrative daily benefit for eligible hospitalization in an Intensive Care Unit (ICU). Illustrative Premium Benefits \uf0b7 Daily ICU Benefit: \u20b920,000 \uf0b7 ICU Eligibility Conditions: Not officially defined \uf0b7 Maximum ICU Benefit Days: Not defined \uf0b7 Interaction with Hospital Cash: Subject to approved policy terms Example For 3 eligible ICU days: \u20b920,000 \u00d7 3 days = \u20b960,000.\n\n#### Notes & Conditions:\n- The ICU Benefit provides a higher illustrative daily benefit for eligible hospitalization in an\n- Illustrative Premium Benefits\n- Maximum ICU Benefit Days: Not defined",
-    "source_page_start": 3,
-    "source_page_end": 3,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-04-CHK-004"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-05": {
-    "parent_id": "HS-PREMIUM-001-SEC-05",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "5",
-    "section_title": "MAJOR SURGERY BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 5: MAJOR SURGERY BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 5: MAJOR SURGERY BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 3\u20134\n\n\nSECTION 5: MAJOR SURGERY BENEFIT The Major Surgery Benefit provides a predefined lump-sum payment based on the applicable surgery category and benefit basis. Illustrative Premium Benefit Basis: \u20b910,00,000 Proposed payout structure: Surgery Category Illustrative Payout Percentage Illustrative Payout Category 1 100% \u20b910,00,000 Category 2 60% \u20b96,00,000 Category 3 40% \u20b94,00,000 Category 4 20% \u20b92,00,000 \uf0b7 Overall Surgery Benefit Limit: Illustrative 10 times the benefit basis \uf0b7 Illustrative Overall Maximum: \u20b91,00,00,000 \uf0b7 Surgery list and category mapping: Not officially defined \uf0b7 Repeated claims for the same surgery: Subject to approved policy terms\n\n#### Table: Table 1: Surgery Category / Illustrative Payout Percentage / Illustrative Payout\n| Surgery Category | Illustrative Payout Percentage | Illustrative Payout |\n| --- | --- | --- |\n| Category 1 | 100% | \u20b910,00,000 |\n| Category 2 | 60% | \u20b96,00,000 |\n| Category 3 | 40% | \u20b94,00,000 |\n| Category 4 | 20% | \u20b92,00,000 |\n\n#### Notes & Conditions:\n- Illustrative Premium Benefit Basis: \u20b910,00,000\n- Illustrative Payout Percentage\n- Illustrative Payout\n- Overall Surgery Benefit Limit: Illustrative 10 times the benefit basis\n- Illustrative Overall Maximum: \u20b91,00,00,000",
-    "source_page_start": 3,
-    "source_page_end": 4,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-05-CHK-005",
-      "HS-PREMIUM-001-SEC-05-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-06": {
-    "parent_id": "HS-PREMIUM-001-SEC-06",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "6",
-    "section_title": "DAY-CARE PROCEDURE BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 6: DAY-CARE PROCEDURE BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 6: DAY-CARE PROCEDURE BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 4\u20135\n\n\nSECTION 6: DAY-CARE PROCEDURE BENEFIT The Day-Care Procedure Benefit is intended to provide a predefined payment for eligible listed medical procedures that meet the plan's day-care criteria. Illustrative Premium Benefits \uf0b7 Benefit Per Eligible Procedure: \u20b950,000 \uf0b7 Maximum Claims Per Policy Year: 3 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b91,50,000 \uf0b7 Overall Procedure Limit: Not defined \uf0b7 Eligible Procedure List: Not defined Whether Hospital Cash is payable alongside a day-care procedure benefit has not been confirmed.\n\n#### Table: Table 1: Surgery Category / Illustrative Payout Percentage / Illustrative Payout\n| Surgery Category | Illustrative Payout Percentage | Illustrative Payout |\n| --- | --- | --- |\n| Category 1 | 100% | \u20b910,00,000 |\n| Category 2 | 60% | \u20b96,00,000 |\n| Category 3 | 40% | \u20b94,00,000 |\n| Category 4 | 20% | \u20b92,00,000 |\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b91,50,000\n- Overall Procedure Limit: Not defined\n- Eligible Procedure List: Not defined",
-    "source_page_start": 4,
-    "source_page_end": 5,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-06-CHK-007",
-      "HS-PREMIUM-001-SEC-06-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-07": {
-    "parent_id": "HS-PREMIUM-001-SEC-07",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "7",
-    "section_title": "OTHER SURGERY BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 7: OTHER SURGERY BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 7: OTHER SURGERY BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 5\u20135\n\n\nSECTION 7: OTHER SURGERY BENEFIT This benefit is intended to provide a predefined daily amount for eligible surgeries that fall within the plan's specified Other Surgery category. Illustrative Premium Benefits \uf0b7 Daily Other Surgery Benefit: \u20b925,000 \uf0b7 Minimum Hospitalization Duration: More than 24 hours \uf0b7 Maximum Benefit Days Per Policy Year: 15 days \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b93,75,000 \uf0b7 Eligible Surgery List: Not defined\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b93,75,000\n- Eligible Surgery List: Not defined",
-    "source_page_start": 5,
-    "source_page_end": 5,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-07-CHK-009"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-08": {
-    "parent_id": "HS-PREMIUM-001-SEC-08",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "8",
-    "section_title": "MEDICAL MANAGEMENT BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 8: MEDICAL MANAGEMENT BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 8: MEDICAL MANAGEMENT BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 5\u20136\n\n\nSECTION 8: MEDICAL MANAGEMENT BENEFIT The Medical Management Benefit is intended to provide a predefined lump-sum payment for specified illnesses managed according to the plan's eligibility conditions. Illustrative Premium Benefits \uf0b7 Lump-Sum Benefit Per Eligible Claim: \u20b925,000 \uf0b7 Maximum Claims Per Policy Year: 3 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b975,000 Illustrative Illness Examples \uf0b7 Dengue \uf0b7 Malaria \uf0b7 Pneumonia \uf0b7 Pulmonary Tuberculosis \uf0b7 Viral Hepatitis A\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b975,000\n- Illustrative Illness Examples",
-    "source_page_start": 5,
-    "source_page_end": 6,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-08-CHK-010"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-09": {
-    "parent_id": "HS-PREMIUM-001-SEC-09",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "9",
-    "section_title": "EXTENDED HOSPITAL STAY BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 9: EXTENDED HOSPITAL STAY BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 9: EXTENDED HOSPITAL STAY BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 6\u20136\n\n\nSECTION 9: EXTENDED HOSPITAL STAY BENEFIT The Extended Hospital Stay Benefit is intended to provide an additional lump-sum payment when an eligible continuous hospitalization exceeds the plan's specified duration. Illustrative Premium Benefits \uf0b7 Minimum Continuous Hospitalization: More than 30 days \uf0b7 Lump-Sum Benefit: \u20b91,00,000 \uf0b7 Maximum Claims Per Policy Year: 1 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000 The definition of continuous hospitalization, exclusions, claim documentation, and interaction with other benefits are not officially defined in this illustrative document.\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000\n- The definition of continuous hospitalization, exclusions, claim documentation, and interaction\n- with other benefits are not officially defined in this illustrative document.",
-    "source_page_start": 6,
-    "source_page_end": 6,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-09-CHK-011"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-10": {
-    "parent_id": "HS-PREMIUM-001-SEC-10",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "10",
-    "section_title": "HEALTH CHECK-UP BENEFIT",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 10: HEALTH CHECK-UP BENEFIT"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 10: HEALTH CHECK-UP BENEFIT\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 6\u20137\n\n\nSECTION 10: HEALTH CHECK-UP BENEFIT The Health Check-up Benefit is intended to reimburse eligible preventive health-check-up expenses within the specified plan limit. Illustrative Premium Benefits \uf0b7 Maximum Reimbursement: \u20b95,000 \uf0b7 Payment Basis: Actual eligible expense, subject to the limit \uf0b7 Waiting Period: Not defined \uf0b7 Frequency: Not defined \uf0b7 Eligible Tests and Providers: Not defined \uf0b7 Required Documents: Not defined\n\n#### Notes & Conditions:\n- Illustrative Premium Benefits\n- Waiting Period: Not defined\n- Frequency: Not defined\n- Eligible Tests and Providers: Not defined\n- Required Documents: Not defined",
-    "source_page_start": 6,
-    "source_page_end": 7,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-10-CHK-012"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-11": {
-    "parent_id": "HS-PREMIUM-001-SEC-11",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "11",
-    "section_title": "ADDITIONAL BENEFITS",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 11: ADDITIONAL BENEFITS"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 11: ADDITIONAL BENEFITS\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 7\u20138\n\n\nSECTION 11: ADDITIONAL BENEFITS 11.1 Restored Cover \uf0b7 Availability: Not confirmed \uf0b7 Eligible Events: Not defined \uf0b7 Restoration Amount: Not defined \uf0b7 Number of Restorations: Not defined \uf0b7 Conditions for Use: Not defined 11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b91,000 \uf0b7 Eligibility Conditions: Not defined \uf0b7 Eligible Ambulance Types: Not defined \uf0b7 Claim Limit: Not defined 11.3 Quick Cash Benefit \uf0b7 Availability: Not confirmed \uf0b7 Advance Percentage: Not defined \uf0b7 Eligible Surgery Categories: Not defined \uf0b7 Network Hospital Conditions: Not defined \uf0b7 Final Claim Adjustment Rules: Not defined\n\n### 11.1 Restored Cover\n11.1 Restored Cover \uf0b7 Availability: Not confirmed \uf0b7 Eligible Events: Not defined \uf0b7 Restoration Amount: Not defined \uf0b7 Number of Restorations: Not defined \uf0b7 Conditions for Use: Not defined\n\n### 11.2 Ambulance Benefit\n11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b91,000 \uf0b7 Eligibility Conditions: Not defined \uf0b7 Eligible Ambulance Types: Not defined \uf0b7 Claim Limit: Not defined\n\n### 11.3 Quick Cash Benefit\n11.3 Quick Cash Benefit \uf0b7 Availability: Not confirmed \uf0b7 Advance Percentage: Not defined \uf0b7 Eligible Surgery Categories: Not defined \uf0b7 Network Hospital Conditions: Not defined \uf0b7 Final Claim Adjustment Rules: Not defined\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Not verified |\n| Day-Care Procedure + Hospital Cash | Not verified |\n| Other Surgery + Hospital Cash | Not verified |\n| Medical Management + Hospital Cash | Not verified |\n| Medical Management + Surgery Benefit | Not verified |\n| Extended Stay + Other Eligible Benefits | Not verified |\n| ICU Benefit + Hospital Cash | Not verified |\n\n#### Notes & Conditions:\n- Availability: Not confirmed\n- Eligible Events: Not defined\n- Restoration Amount: Not defined\n- Number of Restorations: Not defined\n- Conditions for Use: Not defined\n- Illustrative Ambulance Benefit: \u20b91,000\n- Eligibility Conditions: Not defined\n- Eligible Ambulance Types: Not defined\n- Claim Limit: Not defined\n- Availability: Not confirmed\n- Advance Percentage: Not defined\n- Eligible Surgery Categories: Not defined\n- Network Hospital Conditions: Not defined\n- Final Claim Adjustment Rules: Not defined",
-    "source_page_start": 7,
-    "source_page_end": 8,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-11-CHK-013",
-      "HS-PREMIUM-001-SEC-11-CHK-014",
-      "HS-PREMIUM-001-SEC-11-CHK-015",
-      "HS-PREMIUM-001-SEC-11-CHK-016",
-      "HS-PREMIUM-001-SEC-11-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-12": {
-    "parent_id": "HS-PREMIUM-001-SEC-12",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "12",
-    "section_title": "BENEFIT COMBINATION RULES",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 12: BENEFIT COMBINATION RULES"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 12: BENEFIT COMBINATION RULES\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 8\u20138\n\n\nSECTION 12: BENEFIT COMBINATION RULES The final Premium plan must define whether the following benefits can be paid together for the same hospitalization or medical event. Benefit Combination Status Major Surgery + Hospital Cash Not verified Day-Care Procedure + Hospital Cash Not verified Other Surgery + Hospital Cash Not verified Medical Management + Hospital Cash Not verified Medical Management + Surgery Benefit Not verified Extended Stay + Other Eligible Benefits Not verified ICU Benefit + Hospital Cash Not verified\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Not verified |\n| Day-Care Procedure + Hospital Cash | Not verified |\n| Other Surgery + Hospital Cash | Not verified |\n| Medical Management + Hospital Cash | Not verified |\n| Medical Management + Surgery Benefit | Not verified |\n| Extended Stay + Other Eligible Benefits | Not verified |\n| ICU Benefit + Hospital Cash | Not verified |\n\n#### Notes & Conditions:\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified",
-    "source_page_start": 8,
-    "source_page_end": 8,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-12-CHK-018",
-      "HS-PREMIUM-001-SEC-12-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-13": {
-    "parent_id": "HS-PREMIUM-001-SEC-13",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "13",
-    "section_title": "CLAIM-FREE BENEFIT INCREASE",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 13: CLAIM-FREE BENEFIT INCREASE"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 13: CLAIM-FREE BENEFIT INCREASE\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 8\u20139\n\n\nSECTION 13: CLAIM-FREE BENEFIT INCREASE The Premium plan's claim-free benefit increase has not been defined in the illustrative product specification. \uf0b7 Claim-Free Increase Percentage: Not defined \uf0b7 Increase Frequency: Not defined \uf0b7 Maximum Increased Benefit: Not defined \uf0b7 Effect of a Claim: Not defined \uf0b7 Effect on Premium: Not defined\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Not verified |\n| Day-Care Procedure + Hospital Cash | Not verified |\n| Other Surgery + Hospital Cash | Not verified |\n| Medical Management + Hospital Cash | Not verified |\n| Medical Management + Surgery Benefit | Not verified |\n| Extended Stay + Other Eligible Benefits | Not verified |\n| ICU Benefit + Hospital Cash | Not verified |\n\n#### Notes & Conditions:\n- The Premium plan's claim-free benefit increase has not been defined in the illustrative product\n- Claim-Free Increase Percentage: Not defined\n- Increase Frequency: Not defined\n- Maximum Increased Benefit: Not defined\n- Effect of a Claim: Not defined\n- Effect on Premium: Not defined",
-    "source_page_start": 8,
-    "source_page_end": 9,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-13-CHK-020",
-      "HS-PREMIUM-001-SEC-13-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-14": {
-    "parent_id": "HS-PREMIUM-001-SEC-14",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "14",
-    "section_title": "PREMIUM WAIVER AND AUTO HEALTH",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 14: PREMIUM WAIVER AND AUTO HEALTH"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 14: PREMIUM WAIVER AND AUTO HEALTH\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 9\u20139\n\n\nSECTION 14: PREMIUM WAIVER AND AUTO HEALTH COVER 14.1 Premium Waiver \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Surgery Categories: Not defined \uf0b7 Waiver Duration: Not defined \uf0b7 Start Date: Not defined \uf0b7 Rider Premium Treatment: Not defined 14.2 Auto Health Cover \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Death Event: Not defined \uf0b7 Eligible Family Members: Not defined \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n### 14.1 Premium Waiver\n14.1 Premium Waiver \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Surgery Categories: Not defined \uf0b7 Waiver Duration: Not defined \uf0b7 Start Date: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n### 14.2 Auto Health Cover\n14.2 Auto Health Cover \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Death Event: Not defined \uf0b7 Eligible Family Members: Not defined \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n#### Notes & Conditions:\n- Availability: Not confirmed\n- Qualifying Surgery Categories: Not defined\n- Waiver Duration: Not defined\n- Start Date: Not defined\n- Rider Premium Treatment: Not defined\n- Availability: Not confirmed\n- Qualifying Death Event: Not defined\n- Eligible Family Members: Not defined\n- Future Premium Waiver Rules: Not defined\n- Rider Premium Treatment: Not defined",
-    "source_page_start": 9,
-    "source_page_end": 9,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-14-CHK-022",
-      "HS-PREMIUM-001-SEC-14-CHK-023",
-      "HS-PREMIUM-001-SEC-14-CHK-024"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-15": {
-    "parent_id": "HS-PREMIUM-001-SEC-15",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "15",
-    "section_title": "WAITING PERIODS, EXCLUSIONS, AND",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 15: WAITING PERIODS, EXCLUSIONS, AND"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 9\u201310\n\n\nSECTION 15: WAITING PERIODS, EXCLUSIONS, AND POLICY CONDITIONS The official waiting periods and exclusions for the illustrative Premium plan have not been verified. The following items require confirmation before the plan can be treated as a real product: \uf0b7 Initial waiting period for illness \uf0b7 Accident coverage commencement \uf0b7 Waiting periods for specified diseases and procedures \uf0b7 Pre-existing disease definition and exclusion rules \uf0b7 Treatment-location restrictions \uf0b7 Hospital and provider eligibility \uf0b7 Grace period for premium payment \uf0b7 Lapse and revival conditions \uf0b7 Medical disclosures and underwriting requirements \uf0b7 Claim filing deadlines and documentation \uf0b7 General and benefit-specific exclusions\n\n#### Notes & Conditions:\n- SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n- The official waiting periods and exclusions for the illustrative Premium plan have not been\n- Initial waiting period for illness\n- Waiting periods for specified diseases and procedures\n- Pre-existing disease definition and exclusion rules\n- General and benefit-specific exclusions",
-    "source_page_start": 9,
-    "source_page_end": 10,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-15-CHK-025"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-16": {
-    "parent_id": "HS-PREMIUM-001-SEC-16",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "16",
-    "section_title": "MATURITY, DEATH, SURRENDER, AND LOAN",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 10\u201311\n\n\nSECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN BENEFITS The illustrative Premium plan has not been verified for maturity, death, surrender, or loan benefits. Benefit Type Status Maturity Benefit Not defined Death Benefit Not defined Surrender Value Not defined Policy Loan Not defined Refund of Premium Not defined\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not defined |\n| Death Benefit | Not defined |\n| Surrender Value | Not defined |\n| Policy Loan | Not defined |\n| Refund of Premium | Not defined |\n\n#### Notes & Conditions:\n- The illustrative Premium plan has not been verified for maturity, death, surrender, or loan\n- Not defined\n- Not defined\n- Not defined\n- Not defined\n- Not defined",
-    "source_page_start": 10,
-    "source_page_end": 11,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-16-CHK-026",
-      "HS-PREMIUM-001-SEC-16-TBL-01-G01"
-    ]
-  },
-  "HS-PREMIUM-001-SEC-17": {
-    "parent_id": "HS-PREMIUM-001-SEC-17",
-    "plan_id": "HS-PREMIUM-001",
-    "section_number": "17",
-    "section_title": "OPTIONAL RIDERS",
-    "heading_hierarchy": [
-      "Health Shield \u2013 Premium",
-      "SECTION 17: OPTIONAL RIDERS"
-    ],
-    "full_content_markdown": "# Health Shield \u2013 Premium \u2014 SECTION 17: OPTIONAL RIDERS\n\n**Plan ID**: HS-PREMIUM-001 | **Audience**: customer | **Pages**: 11\u201311\n\n\nSECTION 17: OPTIONAL RIDERS The availability and terms of optional riders have not been established for the illustrative Premium plan. \uf0b7 Available Riders: Not defined \uf0b7 Rider Premiums: Not defined \uf0b7 Rider Eligibility: Not defined \uf0b7 Rider Waiting Periods: Not defined \uf0b7 Rider Exclusions: Not defined \uf0b7 Rider Renewal Conditions: Not defined\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not defined |\n| Death Benefit | Not defined |\n| Surrender Value | Not defined |\n| Policy Loan | Not defined |\n| Refund of Premium | Not defined |\n\n#### Notes & Conditions:\n- The availability and terms of optional riders have not been established for the illustrative\n- Available Riders: Not defined\n- Rider Premiums: Not defined\n- Rider Eligibility: Not defined\n- Rider Waiting Periods: Not defined\n- Rider Exclusions: Not defined\n- Rider Renewal Conditions: Not defined",
-    "source_page_start": 11,
-    "source_page_end": 11,
-    "child_chunk_ids": [
-      "HS-PREMIUM-001-SEC-17-CHK-028",
-      "HS-PREMIUM-001-SEC-17-TBL-01-G01"
-    ]
-  },
-  "TEST-SEC-01": {
-    "parent_id": "TEST-SEC-01",
-    "plan_id": "HS-TEST-001",
-    "section_number": "1",
-    "section_title": "Test Section",
-    "heading_hierarchy": [
-      "Test Plan",
-      "Section 1"
-    ],
-    "full_content_markdown": "# Test Section\nFull text here.",
-    "source_page_start": 1,
-    "source_page_end": 1,
-    "child_chunk_ids": [
-      "TEST-SEC-01-CHK-001"
-    ]
-  },
   "HS-BASIC-001-SEC-01": {
     "parent_id": "HS-BASIC-001-SEC-01",
     "plan_id": "HS-BASIC-001",
@@ -308,7 +8,7 @@
       "Health Shield \u2013 Basic",
       "SECTION 1: PLAN IDENTIFICATION AND OVERVIEW"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 1: PLAN IDENTIFICATION AND OVERVIEW\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 1\u20132\n\n\nSECTION 1: PLAN IDENTIFICATION AND OVERVIEW Plan Name: Health Shield \u2013 Basic. Plan Category: Basic. Internal Plan ID: HS-BASIC-001. Official Plan Number: Not assigned. UIN: Not assigned. Insurance Type: Proposed fixed-benefit health insurance. Illustrative Policy Term: 1 year, renewable subject to approved terms. Premium Payment Frequency: Annual. Illustrative Insured Person: One individual, age 23, male. Initial Daily Hospital Cash Benefit: \u20b92,000. Coverage Structure: Individual fixed benefits with separate limits for each insured member. This proposed plan is not designed as a shared reimbursement pool. Purpose of the Plan: The proposed Basic tier provides entry-level fixed benefits for eligible hospitalization, ICU stays, specified surgeries, listed day-care procedures, certain illnesses, extended hospital stays, and health check-ups. Basic Tier Positioning: The proposed Basic tier has lower benefit amounts and limits than the proposed Gold and Premium tiers. Important Limitation: All benefits are illustrative. Actual coverage, eligibility, exclusions, and claim conditions must be established in approved policy documentation.\n\n#### Notes & Conditions:\n- Illustrative Policy Term: 1 year, renewable subject to approved terms.\n- Illustrative Insured Person: One individual, age 23, male.\n- Important Limitation: All benefits are illustrative. Actual coverage, eligibility, exclusions, and",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 1: PLAN IDENTIFICATION AND OVERVIEW\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 1\u20132\n\n\nSECTION 1: PLAN IDENTIFICATION AND OVERVIEW Plan Name: Health Shield \u2013 Basic. Plan Category: Basic. Internal Plan ID: HS-BASIC-001. Official Plan Number and UIN: Not assigned because this is a demonstration plan, not an approved product. Insurance Type: Proposed fixed-benefit health insurance. Illustrative Policy Term: 1 year, renewable subject to approved terms. Premium Payment Frequency: Annual. Illustrative Insured Person: One individual, age 23, male. Initial Daily Hospital Cash Benefit: \u20b92,000. Coverage Structure: Individual fixed benefits with separate limits for each insured member; benefits are not a shared reimbursement pool. Purpose of the Plan: Entry-level illustrative fixed benefits for eligible hospitalization, ICU stays, listed surgeries and day-care procedures, specified illnesses, extended hospital stays, and health check- ups. Basic Tier Positioning: Proposed lower benefit amounts and limits than the illustrative Gold and Premium tiers. Important limitation: All figures and rules are proposed demonstration values. They must not be represented as actual insurance coverage unless approved policy wording confirms them.\n\n#### Notes & Conditions:\n- Illustrative Policy Term: 1 year, renewable subject to approved terms.\n- Illustrative Insured Person: One individual, age 23, male.\n- Purpose of the Plan: Entry-level illustrative fixed benefits for eligible hospitalization, ICU stays,\n- Basic Tier Positioning: Proposed lower benefit amounts and limits than the illustrative Gold and",
     "source_page_start": 1,
     "source_page_end": 2,
     "child_chunk_ids": [
@@ -324,7 +24,7 @@
       "Health Shield \u2013 Basic",
       "SECTION 2: PREMIUM AND PAYMENT DETAILS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 2: PREMIUM AND PAYMENT DETAILS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 2: PREMIUM AND PAYMENT DETAILS 2.1 Proposed Illustrative Premium Annual premium: \u20b94,500. Half-yearly payment option: Not defined in this draft. Illustrative policy term: 1 year. Illustrative annual premium for the example insured person: \u20b94,500. Taxes: GST and other applicable taxes are excluded. 2.2 Premium Interpretation The proposed annual premium of \u20b94,500 is a demonstration value for a 23-year-old male. It is not a verified quotation or guaranteed premium. The actual premium would depend on the final product design, applicable underwriting rules, coverage selected, and insurer-approved pricing. The one-year policy term does not represent a guaranteed long-term premium commitment.\n\n### 2.1 Proposed Illustrative Premium\n2.1 Proposed Illustrative Premium Annual premium: \u20b94,500. Half-yearly payment option: Not defined in this draft. Illustrative policy term: 1 year. Illustrative annual premium for the example insured person: \u20b94,500. Taxes: GST and other applicable taxes are excluded.\n\n### 2.2 Premium Interpretation\n2.2 Premium Interpretation The proposed annual premium of \u20b94,500 is a demonstration value for a 23-year-old male. It is not a verified quotation or guaranteed premium. The actual premium would depend on the final product design, applicable underwriting rules, coverage selected, and insurer-approved pricing. The one-year policy term does not represent a guaranteed long-term premium commitment.\n\n#### Notes & Conditions:\n- 2.1 Proposed Illustrative Premium\n- Half-yearly payment option: Not defined in this draft.\n- Illustrative policy term: 1 year.\n- Illustrative annual premium for the example insured person: \u20b94,500.",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 2: PREMIUM AND PAYMENT DETAILS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 2: PREMIUM AND PAYMENT DETAILS 2.1 Proposed Illustrative Premium Illustrative annual premium: \u20b95,500 for the example insured person aged 23. Premium payment frequency: Annual only in this draft; half-yearly and monthly instalment options are not offered. Taxes: GST and other applicable taxes are excluded. Illustrative age-based pricing: For demo testing only: \u20b95,500 for ages 18\u201335; \u20b97,500 for ages 36\u201350; \u20b911,000 for ages 51\u201360. These are sample assumptions, not a rate card. 2.2 Premium Interpretation The \u20b95,500 annual premium is an illustrative placeholder, not a quotation or guaranteed premium. Actual pricing requires approved product design, underwriting rules, and insurer-approved rates. Renewal premiums may change at renewal according to approved pricing; no future premium is guaranteed.\n\n### 2.1 Proposed Illustrative Premium\n2.1 Proposed Illustrative Premium Illustrative annual premium: \u20b95,500 for the example insured person aged 23. Premium payment frequency: Annual only in this draft; half-yearly and monthly instalment options are not offered. Taxes: GST and other applicable taxes are excluded. Illustrative age-based pricing: For demo testing only: \u20b95,500 for ages 18\u201335; \u20b97,500 for ages 36\u201350; \u20b911,000 for ages 51\u201360. These are sample assumptions, not a rate card.\n\n### 2.2 Premium Interpretation\n2.2 Premium Interpretation The \u20b95,500 annual premium is an illustrative placeholder, not a quotation or guaranteed premium. Actual pricing requires approved product design, underwriting rules, and insurer-approved rates. Renewal premiums may change at renewal according to approved pricing; no future premium is guaranteed.\n\n#### Notes & Conditions:\n- 2.1 Proposed Illustrative Premium\n- Illustrative annual premium: \u20b95,500 for the example insured person aged 23.\n- Illustrative age-based pricing: For demo testing only: \u20b95,500 for ages 18\u201335; \u20b97,500 for ages 36\u201350;\n- The \u20b95,500 annual premium is an illustrative placeholder, not a quotation or guaranteed premium.",
     "source_page_start": 2,
     "source_page_end": 2,
     "child_chunk_ids": [
@@ -342,9 +42,9 @@
       "Health Shield \u2013 Basic",
       "SECTION 3: HOSPITAL CASH BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 3: HOSPITAL CASH BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 2\u20133\n\n\nSECTION 3: HOSPITAL CASH BENEFIT Proposed Initial Daily Benefit: \u20b92,000 per day. The proposed hospital cash benefit provides a fixed daily amount for an eligible hospital stay exceeding 24 hours, subject to the final approved policy terms. Proposed Limits: \uf0b7 Up to 10 days during the policy year. \uf0b7 Maximum of 10 days overall during the one-year policy term. The hospital cash benefit is a fixed payment, not reimbursement of actual hospital expenses.",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 3: HOSPITAL CASH BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 3: HOSPITAL CASH BENEFIT Proposed initial daily benefit: \u20b92,000 per eligible day. A fixed payment for eligible inpatient hospitalization exceeding 24 consecutive hours, subject to final approved terms. \uf0b7 Maximum payable days: 10 per policy year. \uf0b7 Illustrative maximum benefit per policy year: \u20b920,000. Example: 4 eligible payable days \u00d7 \u20b92,000 = \u20b98,000. This is a fixed benefit, not reimbursement of actual hospital expenses.\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum benefit per policy year: \u20b920,000.",
     "source_page_start": 2,
-    "source_page_end": 3,
+    "source_page_end": 2,
     "child_chunk_ids": [
       "HS-BASIC-001-SEC-03-CHK-005"
     ]
@@ -358,11 +58,12 @@
       "Health Shield \u2013 Basic",
       "SECTION 4: INTENSIVE CARE UNIT (ICU) BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 4: INTENSIVE CARE UNIT (ICU) BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 3\u20133\n\n\nSECTION 4: INTENSIVE CARE UNIT (ICU) BENEFIT Proposed ICU Benefit: \u20b94,000 per day. The proposed Basic tier includes an illustrative ICU benefit of \u20b94,000 per eligible day. The benefit is subject to the final policy definitions, qualifying conditions, and applicable limits. A separate ICU day limit and rules governing combination with hospital cash have not been finalized in this draft.\n\n#### Notes & Conditions:\n- The proposed Basic tier includes an illustrative ICU benefit of \u20b94,000 per eligible day.",
-    "source_page_start": 3,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 4: INTENSIVE CARE UNIT (ICU) BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 2\u20133\n\n\nSECTION 4: INTENSIVE CARE UNIT (ICU) BENEFIT Proposed ICU benefit: \u20b94,000 per eligible ICU day. \uf0b7 Illustrative maximum ICU benefit days: 5 per policy year. \uf0b7 Illustrative maximum ICU benefit per policy year: \u20b920,000. Eligibility requires medically necessary admission to a recognized hospital ICU, supported by hospital records. In this demo configuration, ICU benefit is additional to hospital cash for the same eligible day, subject to separate limits.\n\n#### Table: Table 1: Proposed Surgery\nCategory / Illustrative Payout\nPercentage / Illustrative Benefit\nAmount\n| Proposed Surgery\nCategory | Illustrative Payout\nPercentage | Illustrative Benefit\nAmount | Illustrative Examples |\n| --- | --- | --- | --- |\n| Category 1 | 100% | \u20b92,00,000 | Open-heart surgery or\nmajor organ transplant |\n| Category 2 | 60% | \u20b91,20,000 | Major neurosurgery or\ncomplex abdominal\nsurgery |\n| Category 3 | 40% | \u20b980,000 | Specified major\northopedic surgery |\n| Category 4 | 20% | \u20b940,000 | Other listed eligible\nmajor procedures |\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum ICU benefit days: 5 per policy year.\n- \uf0b7 Illustrative maximum ICU benefit per policy year: \u20b920,000.",
+    "source_page_start": 2,
     "source_page_end": 3,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-04-CHK-006"
+      "HS-BASIC-001-SEC-04-CHK-006",
+      "HS-BASIC-001-SEC-04-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-05": {
@@ -374,11 +75,11 @@
       "Health Shield \u2013 Basic",
       "SECTION 5: MAJOR SURGERY BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 5: MAJOR SURGERY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 3\u20134\n\n\nSECTION 5: MAJOR SURGERY BENEFIT Proposed Major Surgery Benefit Basis: \u20b92,00,000. The proposed Basic tier provides fixed benefits for eligible listed major surgeries. The payable percentage depends on the surgery category defined in the final approved policy. Proposed Surgery Benefit Percentage Illustrative Benefit Amount 100% \u20b92,00,000 60% \u20b91,20,000 40% \u20b980,000 20% \u20b940,000 Proposed Overall Limit: Up to 3 times the benefit basis, equivalent to \u20b96,00,000 over the applicable coverage period, subject to final policy conditions. The surgery benefit applies only to eligible listed procedures. Each surgery must be matched to the category specified in the final approved surgery list.\n\n#### Table: Table 1: Proposed Surgery Benefit Percentage / Illustrative Benefit Amount\n| Proposed Surgery Benefit Percentage | Illustrative Benefit Amount |\n| --- | --- |\n| 100% | \u20b92,00,000 |\n| 60% | \u20b91,20,000 |\n| 40% | \u20b980,000 |\n| 20% | \u20b940,000 |\n\n#### Notes & Conditions:\n- Illustrative Benefit Amount",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 5: MAJOR SURGERY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 3\u20133\n\n\nSECTION 5: MAJOR SURGERY BENEFIT Proposed major surgery benefit basis: \u20b92,00,000. The fixed payout is based on an illustrative surgery category. Examples below are demonstration mappings only; eligibility requires an approved surgery list. Proposed Surgery Category Illustrative Payout Percentage Illustrative Benefit Amount Illustrative Examples Category 1 100% \u20b92,00,000 Open-heart surgery or major organ transplant Category 2 60% \u20b91,20,000 Major neurosurgery or complex abdominal surgery Category 3 40% \u20b980,000 Specified major orthopedic surgery Category 4 20% \u20b940,000 Other listed eligible major procedures Proposed overall limit: Up to 3 times the benefit basis, or \u20b96,00,000 over the applicable coverage period. Only surgeries on the approved schedule qualify. A repeat procedure is not paid more than once unless approved policy wording expressly allows it.\n\n#### Table: Table 1: Proposed Surgery\nCategory / Illustrative Payout\nPercentage / Illustrative Benefit\nAmount\n| Proposed Surgery\nCategory | Illustrative Payout\nPercentage | Illustrative Benefit\nAmount | Illustrative Examples |\n| --- | --- | --- | --- |\n| Category 1 | 100% | \u20b92,00,000 | Open-heart surgery or\nmajor organ transplant |\n| Category 2 | 60% | \u20b91,20,000 | Major neurosurgery or\ncomplex abdominal\nsurgery |\n| Category 3 | 40% | \u20b980,000 | Specified major\northopedic surgery |\n| Category 4 | 20% | \u20b940,000 | Other listed eligible\nmajor procedures |\n\n#### Notes & Conditions:\n- The fixed payout is based on an illustrative surgery category. Examples below are demonstration\n- Illustrative Payout\n- Illustrative Benefit\n- Illustrative Examples",
     "source_page_start": 3,
-    "source_page_end": 4,
+    "source_page_end": 3,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-05-CHK-007",
+      "HS-BASIC-001-SEC-05-CHK-008",
       "HS-BASIC-001-SEC-05-TBL-01-G01"
     ]
   },
@@ -391,11 +92,11 @@
       "Health Shield \u2013 Basic",
       "SECTION 6: DAY-CARE PROCEDURE BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 6: DAY-CARE PROCEDURE BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 4\u20134\n\n\nSECTION 6: DAY-CARE PROCEDURE BENEFIT Proposed Benefit Amount: \u20b910,000 per eligible listed procedure. The proposed Basic tier provides a fixed benefit for eligible listed day-care procedures. Proposed Limits: \uf0b7 Up to 1 eligible procedure per policy year. \uf0b7 Maximum of 1 eligible procedure during the one-year policy term. The proposed benefit applies only to procedures listed in the final approved policy.\n\n#### Table: Table 1: Proposed Surgery Benefit Percentage / Illustrative Benefit Amount\n| Proposed Surgery Benefit Percentage | Illustrative Benefit Amount |\n| --- | --- |\n| 100% | \u20b92,00,000 |\n| 60% | \u20b91,20,000 |\n| 40% | \u20b980,000 |\n| 20% | \u20b940,000 |",
-    "source_page_start": 4,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 6: DAY-CARE PROCEDURE BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 3\u20134\n\n\nSECTION 6: DAY-CARE PROCEDURE BENEFIT Proposed benefit amount: \u20b910,000 per eligible listed procedure. \uf0b7 Maximum: 1 eligible procedure per policy year. \uf0b7 Illustrative maximum benefit per policy year: \u20b910,000. Possible examples, subject to the final approved list, include cataract surgery, dialysis, chemotherapy, radiotherapy, and specified endoscopic procedures meeting the day-care definition. A procedure is not automatically eligible just because it does not require an overnight stay. Hospital cash is not payable for a day-care-only event under this configuration unless the event separately meets the inpatient hospitalization definition.\n\n#### Table: Table 1: Proposed Surgery\nCategory / Illustrative Payout\nPercentage / Illustrative Benefit\nAmount\n| Proposed Surgery\nCategory | Illustrative Payout\nPercentage | Illustrative Benefit\nAmount | Illustrative Examples |\n| --- | --- | --- | --- |\n| Category 1 | 100% | \u20b92,00,000 | Open-heart surgery or\nmajor organ transplant |\n| Category 2 | 60% | \u20b91,20,000 | Major neurosurgery or\ncomplex abdominal\nsurgery |\n| Category 3 | 40% | \u20b980,000 | Specified major\northopedic surgery |\n| Category 4 | 20% | \u20b940,000 | Other listed eligible\nmajor procedures |\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum benefit per policy year: \u20b910,000.",
+    "source_page_start": 3,
     "source_page_end": 4,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-06-CHK-009",
+      "HS-BASIC-001-SEC-06-CHK-010",
       "HS-BASIC-001-SEC-06-TBL-01-G01"
     ]
   },
@@ -408,12 +109,11 @@
       "Health Shield \u2013 Basic",
       "SECTION 7: OTHER SURGERY BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 7: OTHER SURGERY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 4\u20135\n\n\nSECTION 7: OTHER SURGERY BENEFIT Proposed Benefit Amount: \u20b93,000 per eligible day. This proposed benefit is intended for eligible surgeries other than the specified major surgeries when the hospital stay exceeds 24 hours. Proposed Limits: \uf0b7 Up to 5 days during the policy year. \uf0b7 Maximum of 5 days overall during the one-year policy term. Whether the other surgery benefit combines with hospital cash must be specified in the final approved policy.\n\n#### Table: Table 1: Proposed Surgery Benefit Percentage / Illustrative Benefit Amount\n| Proposed Surgery Benefit Percentage | Illustrative Benefit Amount |\n| --- | --- |\n| 100% | \u20b92,00,000 |\n| 60% | \u20b91,20,000 |\n| 40% | \u20b980,000 |\n| 20% | \u20b940,000 |",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 7: OTHER SURGERY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 4\u20134\n\n\nSECTION 7: OTHER SURGERY BENEFIT Proposed benefit amount: \u20b93,000 per eligible day. \uf0b7 Minimum hospitalization: More than 24 consecutive hours. \uf0b7 Maximum payable days: 5 per policy year. \uf0b7 Illustrative maximum benefit per policy year: \u20b915,000. For eligible listed surgeries not classified under the major surgery schedule. The same procedure cannot be claimed under both Major Surgery and Other Surgery. Other Surgery and Hospital Cash may combine if both independently qualify.\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum benefit per policy year: \u20b915,000.",
     "source_page_start": 4,
-    "source_page_end": 5,
+    "source_page_end": 4,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-07-CHK-011",
-      "HS-BASIC-001-SEC-07-TBL-01-G01"
+      "HS-BASIC-001-SEC-07-CHK-012"
     ]
   },
   "HS-BASIC-001-SEC-08": {
@@ -425,9 +125,9 @@
       "Health Shield \u2013 Basic",
       "SECTION 8: MEDICAL MANAGEMENT BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 8: MEDICAL MANAGEMENT BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 5\u20135\n\n\nSECTION 8: MEDICAL MANAGEMENT BENEFIT Proposed Benefit Amount: \u20b95,000 as a lump sum. The proposed Basic tier is designed to include a medical management benefit for eligible admissions associated with the following illustrative illnesses:\n\nProposed Limits: \uf0b7 Up to 1 claim per policy year. \uf0b7 Maximum of 1 claim during the one-year policy term.\n\n#### Notes & Conditions:\n- admissions associated with the following illustrative illnesses:",
-    "source_page_start": 5,
-    "source_page_end": 5,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 8: MEDICAL MANAGEMENT BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 4\u20134\n\n\nSECTION 8: MEDICAL MANAGEMENT BENEFIT Proposed benefit amount: \u20b95,000 lump sum per eligible claim. \uf0b7 Maximum: 1 eligible claim per policy year. \uf0b7 Illustrative maximum benefit per policy year: \u20b95,000. Illustrative illnesses: dengue, malaria, pneumonia, pulmonary tuberculosis, and viral hepatitis A, subject to diagnosis, supporting records, and the final approved list. Diagnosis alone does not guarantee payment. Medical Management may combine with Hospital Cash if both independently qualify; only one claim is payable for the same illness episode under this configuration.\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum benefit per policy year: \u20b95,000.\n- Illustrative illnesses: dengue, malaria, pneumonia, pulmonary tuberculosis, and viral hepatitis A,",
+    "source_page_start": 4,
+    "source_page_end": 4,
     "child_chunk_ids": [
       "HS-BASIC-001-SEC-08-CHK-013"
     ]
@@ -441,9 +141,9 @@
       "Health Shield \u2013 Basic",
       "SECTION 9: EXTENDED HOSPITAL STAY BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 9: EXTENDED HOSPITAL STAY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 5\u20136\n\n\nSECTION 9: EXTENDED HOSPITAL STAY BENEFIT Proposed Benefit Amount: \u20b915,000 as a lump sum. The proposed benefit is intended for a single eligible hospital stay exceeding 30 days. Proposed Limits: \uf0b7 Maximum of 1 claim during the policy term. \uf0b7 Maximum overall benefit of \u20b915,000 during the one-year policy term. Whether this benefit combines with other eligible benefits must be specified in the final approved policy.",
-    "source_page_start": 5,
-    "source_page_end": 6,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 9: EXTENDED HOSPITAL STAY BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 4\u20135\n\n\nSECTION 9: EXTENDED HOSPITAL STAY BENEFIT Proposed benefit amount: \u20b915,000 lump sum. Qualifying stay: One continuous eligible inpatient hospitalization exceeding 30 consecutive days. \uf0b7 Maximum: 1 claim per policy year. \uf0b7 Illustrative maximum benefit per policy year: \u20b915,000. Admission and discharge records are required. Transfers count as continuous only where approved wording permits. This benefit may combine with other independently eligible benefits, subject to their limits.\n\n#### Notes & Conditions:\n- \uf0b7 Illustrative maximum benefit per policy year: \u20b915,000.",
+    "source_page_start": 4,
+    "source_page_end": 5,
     "child_chunk_ids": [
       "HS-BASIC-001-SEC-09-CHK-014"
     ]
@@ -457,9 +157,9 @@
       "Health Shield \u2013 Basic",
       "SECTION 10: HEALTH CHECK-UP BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 10: HEALTH CHECK-UP BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 6\u20136\n\n\nSECTION 10: HEALTH CHECK-UP BENEFIT Proposed Maximum Benefit: \u20b91,000 based on eligible actual cost. The proposed Basic tier includes an illustrative health check-up benefit of up to \u20b91,000. The benefit is intended to cover eligible actual expenses, up to the specified limit, subject to the final approved policy terms. The timing, frequency, eligible tests, and documentation requirements have not been finalized in this draft.\n\n#### Notes & Conditions:\n- The proposed Basic tier includes an illustrative health check-up benefit of up to \u20b91,000.",
-    "source_page_start": 6,
-    "source_page_end": 6,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 10: HEALTH CHECK-UP BENEFIT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 5\u20135\n\n\nSECTION 10: HEALTH CHECK-UP BENEFIT Proposed maximum benefit: \u20b91,000 per policy year, based on eligible actual expenses. Waiting period: 30 days from policy commencement for the first check-up claim. Frequency: One eligible check-up per policy year. Eligible tests/providers: Routine preventive tests from a registered diagnostic provider or hospital, subject to the illustrative schedule. Required documents: Itemized bill, payment receipt, test report, and provider details. Payment is limited to actual eligible expenses or \u20b91,000, whichever is lower. Cosmetic procedures and non-prescribed supplements are excluded from this illustrative benefit.\n\n#### Notes & Conditions:\n- Waiting period: 30 days from policy commencement for the first check-up claim.\n- subject to the illustrative schedule.\n- non-prescribed supplements are excluded from this illustrative benefit.",
+    "source_page_start": 5,
+    "source_page_end": 5,
     "child_chunk_ids": [
       "HS-BASIC-001-SEC-10-CHK-015"
     ]
@@ -473,14 +173,15 @@
       "Health Shield \u2013 Basic",
       "SECTION 11: ADDITIONAL BENEFITS ASSOCIATED WITH MAJOR"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 11: ADDITIONAL BENEFITS ASSOCIATED WITH MAJOR\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 6\u20137\n\n\nSECTION 11: ADDITIONAL BENEFITS ASSOCIATED WITH MAJOR SURGERY 11.1 Restored Cover The proposed Basic tier does not include a confirmed restored surgery benefit. Whether restored cover is available must be confirmed in the final approved policy. The assistant must not promise an additional surgery payment or restoration of an exhausted limit without supporting policy wording. 11.2 Ambulance Benefit Proposed Benefit Amount: \u20b9250. The proposed ambulance benefit is intended to apply only in connection with an eligible major surgery when an ambulance was required, subject to final approved policy terms. It is not intended as unlimited ambulance coverage for every hospital visit. 11.3 Quick Cash Benefit A quick cash advance feature has not been defined for this proposed Basic tier.\n\n### 11.1 Restored Cover\n11.1 Restored Cover The proposed Basic tier does not include a confirmed restored surgery benefit. Whether restored cover is available must be confirmed in the final approved policy. The assistant must not promise an additional surgery payment or restoration of an exhausted limit without supporting policy wording.\n\n### 11.2 Ambulance Benefit\n11.2 Ambulance Benefit Proposed Benefit Amount: \u20b9250. The proposed ambulance benefit is intended to apply only in connection with an eligible major surgery when an ambulance was required, subject to final approved policy terms. It is not intended as unlimited ambulance coverage for every hospital visit.\n\n### 11.3 Quick Cash Benefit\n11.3 Quick Cash Benefit A quick cash advance feature has not been defined for this proposed Basic tier.",
-    "source_page_start": 6,
-    "source_page_end": 7,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 11: ADDITIONAL BENEFITS ASSOCIATED WITH MAJOR\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 5\u20136\n\n\nSECTION 11: ADDITIONAL BENEFITS ASSOCIATED WITH MAJOR SURGERY 11.1 Restored Cover Availability: Not included in the proposed Basic configuration. No additional surgery limit is restored after exhaustion. The assistant must not promise restoration unless a later approved endorsement expressly adds it. 11.2 Ambulance Benefit Proposed benefit amount: Up to \u20b9250 per eligible major-surgery event. Eligibility: Medically necessary ground ambulance transport to or between hospitals for an eligible major-surgery event, supported by an itemized receipt. Claim limit: One claim per policy year, maximum \u20b9250. Air ambulance, non-emergency transport, and routine travel are excluded in this illustrative configuration. 11.3 Quick Cash Benefit Availability: Not included in the proposed Basic configuration. No advance payment is available. Claims are assessed after required documents are submitted and eligibility is confirmed.\n\n### 11.1 Restored Cover\n11.1 Restored Cover Availability: Not included in the proposed Basic configuration. No additional surgery limit is restored after exhaustion. The assistant must not promise restoration unless a later approved endorsement expressly adds it.\n\n### 11.2 Ambulance Benefit\n11.2 Ambulance Benefit Proposed benefit amount: Up to \u20b9250 per eligible major-surgery event. Eligibility: Medically necessary ground ambulance transport to or between hospitals for an eligible major-surgery event, supported by an itemized receipt. Claim limit: One claim per policy year, maximum \u20b9250. Air ambulance, non-emergency transport, and routine travel are excluded in this illustrative configuration.\n\n### 11.3 Quick Cash Benefit\n11.3 Quick Cash Benefit Availability: Not included in the proposed Basic configuration. No advance payment is available. Claims are assessed after required documents are submitted and eligibility is confirmed.\n\n#### Table: Table 2: Benefit Combination / Illustrative Status\n| Benefit Combination | Illustrative Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together if both independently qualify\nand separate limits are not exceeded. |\n| Day-Care Procedure + Hospital Cash | Not payable for a day-care-only event; Hospital\nCash requires a qualifying inpatient stay\nexceeding 24 hours. |\n| Other Surgery + Hospital Cash | Payable together if the surgery and\nhospitalization independently qualify. |\n| Medical Management + Hospital Cash | Payable together if the illness claim and hospital\nstay independently qualify. |\n| Medical Management + Surgery Benefit | Not payable for the same event under this Basic\nconfiguration; assess the applicable illness or\nsurgery benefit. |\n| Extended Stay + Other Eligible Benefits | Payable together if the continuous stay and each\nother benefit independently qualify. |\n| ICU Benefit + Hospital Cash | Payable together for eligible overlapping days;\ncombined illustrative daily amount \u20b96,000,\nsubject to both day limits. |\n\n#### Notes & Conditions:\n- Air ambulance, non-emergency transport, and routine travel are excluded in this illustrative",
+    "source_page_start": 5,
+    "source_page_end": 6,
     "child_chunk_ids": [
       "HS-BASIC-001-SEC-11-CHK-016",
       "HS-BASIC-001-SEC-11-CHK-017",
       "HS-BASIC-001-SEC-11-CHK-018",
-      "HS-BASIC-001-SEC-11-CHK-019"
+      "HS-BASIC-001-SEC-11-CHK-019",
+      "HS-BASIC-001-SEC-11-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-12": {
@@ -492,11 +193,12 @@
       "Health Shield \u2013 Basic",
       "SECTION 12: RULES FOR COMBINING BENEFITS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 12: RULES FOR COMBINING BENEFITS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 7\u20138\n\n\nSECTION 12: RULES FOR COMBINING BENEFITS The proposed Basic tier contains separate benefit categories. Their combination rules have not all been finalized. Rule 12.1 \u2014 Major Surgery with Hospital Stay: Whether the major surgery benefit and hospital cash are payable together must be specified in the final policy. Rule 12.2 \u2014 Day-Care Procedure: The day-care benefit applies only to eligible listed procedures. Additional hospital cash must not be assumed. Rule 12.3 \u2014 Other Surgery: Whether the other surgery benefit and hospital cash combine must be confirmed from the final policy. Rule 12.4 \u2014 Listed Illness Admission: The permitted combination of medical management and hospital cash must be confirmed in the final policy. Rule 12.5 \u2014 Extended Hospital Stay: Whether the extended hospital stay benefit combines with other benefits must be confirmed in the final policy. Important Interpretation Rule: Do not add all benefit amounts together automatically. Each benefit must meet its own qualifying conditions, limits, and combination rules.",
-    "source_page_start": 7,
-    "source_page_end": 8,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 12: RULES FOR COMBINING BENEFITS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 6\u20136\n\n\nSECTION 12: RULES FOR COMBINING BENEFITS Proposed demonstration rules for this Basic tier. Each benefit must independently satisfy its qualifying conditions and limits. Benefit Combination Illustrative Status Major Surgery + Hospital Cash Payable together if both independently qualify and separate limits are not exceeded. Day-Care Procedure + Hospital Cash Not payable for a day-care-only event; Hospital Cash requires a qualifying inpatient stay exceeding 24 hours. Other Surgery + Hospital Cash Payable together if the surgery and hospitalization independently qualify. Medical Management + Hospital Cash Payable together if the illness claim and hospital stay independently qualify. Medical Management + Surgery Benefit Not payable for the same event under this Basic configuration; assess the applicable illness or surgery benefit. Extended Stay + Other Eligible Benefits Payable together if the continuous stay and each other benefit independently qualify. ICU Benefit + Hospital Cash Payable together for eligible overlapping days; combined illustrative daily amount \u20b96,000, subject to both day limits.\n\n#### Table: Table 2: Benefit Combination / Illustrative Status\n| Benefit Combination | Illustrative Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together if both independently qualify\nand separate limits are not exceeded. |\n| Day-Care Procedure + Hospital Cash | Not payable for a day-care-only event; Hospital\nCash requires a qualifying inpatient stay\nexceeding 24 hours. |\n| Other Surgery + Hospital Cash | Payable together if the surgery and\nhospitalization independently qualify. |\n| Medical Management + Hospital Cash | Payable together if the illness claim and hospital\nstay independently qualify. |\n| Medical Management + Surgery Benefit | Not payable for the same event under this Basic\nconfiguration; assess the applicable illness or\nsurgery benefit. |\n| Extended Stay + Other Eligible Benefits | Payable together if the continuous stay and each\nother benefit independently qualify. |\n| ICU Benefit + Hospital Cash | Payable together for eligible overlapping days;\ncombined illustrative daily amount \u20b96,000,\nsubject to both day limits. |\n\n#### Notes & Conditions:\n- Illustrative Status\n- combined illustrative daily amount \u20b96,000,",
+    "source_page_start": 6,
+    "source_page_end": 6,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-12-CHK-020"
+      "HS-BASIC-001-SEC-12-CHK-021",
+      "HS-BASIC-001-SEC-12-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-13": {
@@ -508,11 +210,12 @@
       "Health Shield \u2013 Basic",
       "SECTION 13: CLAIM-FREE DAILY BENEFIT INCREASE"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 13: CLAIM-FREE DAILY BENEFIT INCREASE\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 8\u20138\n\n\nSECTION 13: CLAIM-FREE DAILY BENEFIT INCREASE The proposed initial daily hospital cash benefit is \u20b92,000. A claim-free daily benefit increase has not been included as a confirmed feature of this Basic draft. The assistant must not invent an increase percentage, qualifying period, or revised daily benefit amount.",
-    "source_page_start": 8,
-    "source_page_end": 8,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 13: CLAIM-FREE DAILY BENEFIT INCREASE\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 6\u20137\n\n\nSECTION 13: CLAIM-FREE DAILY BENEFIT INCREASE Claim-free increase: 5% of the initial daily Hospital Cash Benefit after each completed claim-free policy year. Increase frequency: At renewal after one full claim-free policy year. Maximum increased benefit: Up to 10% above the initial daily benefit; maximum \u20b92,200 per day for the \u20b92,000 starting benefit. Effect of a claim: A paid claim prevents an increase for that year; previously earned increases are retained at renewal in this illustrative configuration. Effect on premium: The increase does not automatically reduce or increase premium; renewal premium is determined separately. This is a proposed demo rule only and should be used only if consistent with the intended test scenarios.\n\n#### Table: Table 2: Benefit Combination / Illustrative Status\n| Benefit Combination | Illustrative Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together if both independently qualify\nand separate limits are not exceeded. |\n| Day-Care Procedure + Hospital Cash | Not payable for a day-care-only event; Hospital\nCash requires a qualifying inpatient stay\nexceeding 24 hours. |\n| Other Surgery + Hospital Cash | Payable together if the surgery and\nhospitalization independently qualify. |\n| Medical Management + Hospital Cash | Payable together if the illness claim and hospital\nstay independently qualify. |\n| Medical Management + Surgery Benefit | Not payable for the same event under this Basic\nconfiguration; assess the applicable illness or\nsurgery benefit. |\n| Extended Stay + Other Eligible Benefits | Payable together if the continuous stay and each\nother benefit independently qualify. |\n| ICU Benefit + Hospital Cash | Payable together for eligible overlapping days;\ncombined illustrative daily amount \u20b96,000,\nsubject to both day limits. |\n\n#### Notes & Conditions:\n- retained at renewal in this illustrative configuration.",
+    "source_page_start": 6,
+    "source_page_end": 7,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-13-CHK-021"
+      "HS-BASIC-001-SEC-13-CHK-023",
+      "HS-BASIC-001-SEC-13-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-14": {
@@ -524,13 +227,13 @@
       "Health Shield \u2013 Basic",
       "SECTION 14: PREMIUM PROTECTION"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 14: PREMIUM PROTECTION\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 8\u20139\n\n\nSECTION 14: PREMIUM PROTECTION 14.1 Premium Waiver Following Major Surgery A premium waiver following major surgery has not been defined as a confirmed benefit in this Basic draft. The assistant must not promise a premium waiver without final approved policy wording. 14.2 Auto Health Cover Auto Health Cover and premium waiver following the death of the principal insured have not been defined as confirmed benefits in this Basic draft. The assistant must not state that surviving members' premiums are automatically waived unless the final policy confirms this feature.\n\n### 14.1 Premium Waiver Following Major Surgery\n14.1 Premium Waiver Following Major Surgery A premium waiver following major surgery has not been defined as a confirmed benefit in this Basic draft. The assistant must not promise a premium waiver without final approved policy wording.\n\n### 14.2 Auto Health Cover\n14.2 Auto Health Cover Auto Health Cover and premium waiver following the death of the principal insured have not been defined as confirmed benefits in this Basic draft. The assistant must not state that surviving members' premiums are automatically waived unless the final policy confirms this feature.",
-    "source_page_start": 8,
-    "source_page_end": 9,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 14: PREMIUM PROTECTION\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 7\u20138\n\n\nSECTION 14: PREMIUM PROTECTION 14.1 Premium Waiver Following Major Surgery Availability: Optional illustrative rider; not included in the base premium. Qualifying event: Approved Category 1 major surgery during the policy term, supported by medical evidence and claim approval. Waiver duration: Waives the next annual base premium at the next renewal only; taxes and optional rider premiums remain payable. Start date: At the first renewal following approval of the qualifying surgery claim. Illustrative rider premium: \u20b9300 per year, subject to eligibility and underwriting. 14.2 Auto Health Cover Availability: Optional illustrative rider; not included in the base plan. Qualifying death event: Death of the principal insured during the policy term, confirmed by required documents. Eligible family members: Spouse and up to two dependent children named in the schedule, if the rider is purchased. Future premium waiver: One renewal-year base premium may be waived for eligible listed dependants; later premiums remain payable unless approved rider terms say otherwise. Illustrative rider premium: \u20b9500 per year; sample assumption only.\n\n### 14.1 Premium Waiver Following Major Surgery\n14.1 Premium Waiver Following Major Surgery Availability: Optional illustrative rider; not included in the base premium. Qualifying event: Approved Category 1 major surgery during the policy term, supported by medical evidence and claim approval. Waiver duration: Waives the next annual base premium at the next renewal only; taxes and optional rider premiums remain payable. Start date: At the first renewal following approval of the qualifying surgery claim. Illustrative rider premium: \u20b9300 per year, subject to eligibility and underwriting.\n\n### 14.2 Auto Health Cover\n14.2 Auto Health Cover Availability: Optional illustrative rider; not included in the base plan. Qualifying death event: Death of the principal insured during the policy term, confirmed by required documents. Eligible family members: Spouse and up to two dependent children named in the schedule, if the rider is purchased. Future premium waiver: One renewal-year base premium may be waived for eligible listed dependants; later premiums remain payable unless approved rider terms say otherwise. Illustrative rider premium: \u20b9500 per year; sample assumption only.\n\n#### Notes & Conditions:\n- Availability: Optional illustrative rider; not included in the base premium.\n- Illustrative rider premium: \u20b9300 per year, subject to eligibility and underwriting.\n- Availability: Optional illustrative rider; not included in the base plan.\n- Illustrative rider premium: \u20b9500 per year; sample assumption only.",
+    "source_page_start": 7,
+    "source_page_end": 8,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-14-CHK-022",
-      "HS-BASIC-001-SEC-14-CHK-023",
-      "HS-BASIC-001-SEC-14-CHK-024"
+      "HS-BASIC-001-SEC-14-CHK-025",
+      "HS-BASIC-001-SEC-14-CHK-026",
+      "HS-BASIC-001-SEC-14-CHK-027"
     ]
   },
   "HS-BASIC-001-SEC-15": {
@@ -542,32 +245,29 @@
       "Health Shield \u2013 Basic",
       "SECTION 15: WAITING PERIODS AND EXCLUSIONS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 15: WAITING PERIODS AND EXCLUSIONS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 9\u20139\n\n\nSECTION 15: WAITING PERIODS AND EXCLUSIONS 15.1 Initial Waiting Period The initial waiting period for illness benefits has not been finalized in this draft. 15.2 Specified Medical Conditions Waiting periods for conditions such as cataract, hernia, and joint replacement have not been finalized. 15.3 Pre-Existing Conditions The treatment of pre-existing conditions has not been finalized in this draft. 15.4 Geographical Coverage The geographical scope of treatment coverage has not been finalized. 15.5 Grace Period The premium grace period has not been specified in this draft.\n\n### 15.1 Initial Waiting Period\n15.1 Initial Waiting Period The initial waiting period for illness benefits has not been finalized in this draft.\n\n### 15.2 Specified Medical Conditions\n15.2 Specified Medical Conditions Waiting periods for conditions such as cataract, hernia, and joint replacement have not been finalized.\n\n### 15.3 Pre-Existing Conditions\n15.3 Pre-Existing Conditions The treatment of pre-existing conditions has not been finalized in this draft.\n\n### 15.4 Geographical Coverage\n15.4 Geographical Coverage The geographical scope of treatment coverage has not been finalized.\n\n### 15.5 Grace Period\n15.5 Grace Period The premium grace period has not been specified in this draft.\n\n#### Notes & Conditions:\n- SECTION 15: WAITING PERIODS AND EXCLUSIONS\n- 15.1 Initial Waiting Period\n- The initial waiting period for illness benefits has not been finalized in this draft.\n- Waiting periods for conditions such as cataract, hernia, and joint replacement have not been",
-    "source_page_start": 9,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 15: WAITING PERIODS AND EXCLUSIONS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 8\u20139\n\n\nSECTION 15: WAITING PERIODS AND EXCLUSIONS The following proposed waiting periods and conditions are illustrative assumptions for testing and must be replaced by approved policy wording before real-world use. Initial waiting period for illness: 30 days from policy commencement. Accident benefits are proposed to start on the policy start date, subject to the policy definition of accident. Specified medical conditions: 24 months for listed conditions such as cataract, hernia, and joint replacement, if included in the final schedule. Pre-existing conditions: Conditions diagnosed or treated during the 36 months before commencement are treated as pre-existing for this demo; proposed waiting period is 36 months, subject to applicable law and approved wording. Geographical coverage: Eligible treatment within India at a legally registered hospital/provider meeting the policy criteria. Hospital eligibility: Illustratively, a registered hospital with at least 10 inpatient beds, qualified medical staff, and 24-hour nursing, subject to approved wording and applicable rules. Grace period: 15 days for annual premium payment after the due date, subject to applicable regulations and approved terms. Lapse and revival: Coverage may cease after the grace period if premium remains unpaid. Revival within 90 days may be requested subject to arrears and underwriting approval; cover is not assumed during a lapse. Medical disclosures: Applicants must answer proposal-form questions truthfully and disclose requested medical history. Claim filing deadline: Notify the insurer promptly and submit documents within 30 days of discharge, unless an extension is allowed for valid reasons. General exclusions: Illustrative exclusions include intentional self-injury, treatment for intoxication or non-prescribed substance use, non-medically necessary cosmetic treatment, non-medical expenses, and treatment outside eligible provider/geographical scope. Final exclusions must be explicitly stated in approved wording. Claim documents: Claim form, identity and policy details, admission/discharge summary, doctor's notes, bills/receipts, diagnostic reports, and other reasonably required documents.\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not included |\n| Death Benefit | Not included under base plan |\n| Surrender Value | Not available |\n| Policy Loan | Not available |\n| Refund of Premium | Subject to applicable free-look/cancellation rules |\n\n#### Notes & Conditions:\n- SECTION 15: WAITING PERIODS AND EXCLUSIONS\n- The following proposed waiting periods and conditions are illustrative assumptions for testing and\n- Initial waiting period for illness: 30 days from policy commencement. Accident benefits are\n- are treated as pre-existing for this demo; proposed waiting period is 36 months, subject to applicable\n- Hospital eligibility: Illustratively, a registered hospital with at least 10 inpatient beds, qualified\n- General exclusions: Illustrative exclusions include intentional self-injury, treatment for intoxication or\n- treatment outside eligible provider/geographical scope. Final exclusions must be explicitly stated in",
+    "source_page_start": 8,
     "source_page_end": 9,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-15-CHK-025",
-      "HS-BASIC-001-SEC-15-CHK-026",
-      "HS-BASIC-001-SEC-15-CHK-027",
       "HS-BASIC-001-SEC-15-CHK-028",
-      "HS-BASIC-001-SEC-15-CHK-029",
-      "HS-BASIC-001-SEC-15-CHK-030"
+      "HS-BASIC-001-SEC-15-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-16": {
     "parent_id": "HS-BASIC-001-SEC-16",
     "plan_id": "HS-BASIC-001",
     "section_number": "16",
-    "section_title": "BENEFITS NOT PROVIDED OR NOT",
+    "section_title": "BENEFITS NOT PROVIDED OR NOT CONFIRMED",
     "heading_hierarchy": [
       "Health Shield \u2013 Basic",
-      "SECTION 16: BENEFITS NOT PROVIDED OR NOT"
+      "SECTION 16: BENEFITS NOT PROVIDED OR NOT CONFIRMED"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 16: BENEFITS NOT PROVIDED OR NOT\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 9\u201310\n\n\nSECTION 16: BENEFITS NOT PROVIDED OR NOT CONFIRMED The following benefits have not been established as available under this proposed Basic draft: Maturity Benefit: Not defined. Death Benefit: Not defined. Surrender Benefit: Not defined. Loan Facility: Not defined. Restored Surgery Cover: Not confirmed. Quick Cash Advance: Not confirmed. Premium Waiver: Not confirmed. Auto Health Cover: Not confirmed. \u201cNot defined\u201d or \u201cnot confirmed\u201d means that this demonstration document does not establish the benefit. It must not be interpreted as a verified statement about an actual insurance product.\n\n#### Notes & Conditions:\n- Maturity Benefit: Not defined.\n- Death Benefit: Not defined.\n- Surrender Benefit: Not defined.\n- Loan Facility: Not defined.\n- Restored Surgery Cover: Not confirmed.\n- Quick Cash Advance: Not confirmed.\n- Premium Waiver: Not confirmed.\n- Auto Health Cover: Not confirmed.\n- \u201cNot defined\u201d or \u201cnot confirmed\u201d means that this demonstration document does not establish the",
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 16: BENEFITS NOT PROVIDED OR NOT CONFIRMED\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 9\u20139\n\n\nSECTION 16: BENEFITS NOT PROVIDED OR NOT CONFIRMED Benefit Type Status Maturity Benefit Not included Death Benefit Not included under base plan Surrender Value Not available Policy Loan Not available Refund of Premium Subject to applicable free-look/cancellation rules\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not included |\n| Death Benefit | Not included under base plan |\n| Surrender Value | Not available |\n| Policy Loan | Not available |\n| Refund of Premium | Subject to applicable free-look/cancellation rules |\n\n#### Notes & Conditions:\n- SECTION 16: BENEFITS NOT PROVIDED OR NOT CONFIRMED",
     "source_page_start": 9,
-    "source_page_end": 10,
+    "source_page_end": 9,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-16-CHK-031"
+      "HS-BASIC-001-SEC-16-CHK-030",
+      "HS-BASIC-001-SEC-16-TBL-01-G01"
     ]
   },
   "HS-BASIC-001-SEC-17": {
@@ -579,11 +279,12 @@
       "Health Shield \u2013 Basic",
       "SECTION 17: OPTIONAL RIDERS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 17: OPTIONAL RIDERS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 10\u201310\n\n\nSECTION 17: OPTIONAL RIDERS Optional riders have not been defined in this proposed Basic draft. The assistant must not invent rider names, prices, coverage amounts, or eligibility requirements. If optional riders are introduced in the final product, each rider must have a separate description containing its name, premium, benefits, exclusions, eligibility conditions, and effect on the total premium. The final policy must specify whether rider premiums are payable separately and whether any rider remains payable during a premium waiver.\n\n#### Notes & Conditions:\n- containing its name, premium, benefits, exclusions, eligibility conditions, and effect on the total",
-    "source_page_start": 10,
-    "source_page_end": 10,
+    "full_content_markdown": "# Health Shield \u2013 Basic \u2014 SECTION 17: OPTIONAL RIDERS\n\n**Plan ID**: HS-BASIC-001 | **Audience**: customer | **Pages**: 9\u20139\n\n\nSECTION 17: OPTIONAL RIDERS Available riders in this illustrative draft: Premium Waiver Following Major Surgery and Auto Health Cover, both optional and excluded from the base premium. Illustrative rider premiums: \u20b9300 per year for Premium Waiver Following Major Surgery; \u20b9500 per year for Auto Health Cover. Sample assumptions only. Eligibility: Subject to age limits, proposal disclosures, underwriting, and acceptance stated in final rider wording. Rider waiting periods: Illustrative 90 days from rider commencement for Premium Waiver; Auto Health Cover applies only to qualifying events after rider commencement. Rider exclusions: Events excluded by rider wording, events before rider commencement, and material non-disclosure handled under applicable law and approved terms. Rider renewal conditions: Riders renew only with the base policy, subject to approved renewal terms, payment of rider premium, and eligibility requirements. All values in this document are illustrative demonstration data for RAG development. They are not approved insurance terms, a sales illustration, or a binding quotation. Before use with real customers, replace these assumptions with insurer-approved policy wording, benefit schedule, premium rate card, and compliance review.\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not included |\n| Death Benefit | Not included under base plan |\n| Surrender Value | Not available |\n| Policy Loan | Not available |\n| Refund of Premium | Subject to applicable free-look/cancellation rules |\n\n#### Notes & Conditions:\n- Available riders in this illustrative draft: Premium Waiver Following Major Surgery and Auto\n- Illustrative rider premiums: \u20b9300 per year for Premium Waiver Following Major Surgery; \u20b9500 per\n- Rider waiting periods: Illustrative 90 days from rider commencement for Premium Waiver; Auto\n- Rider exclusions: Events excluded by rider wording, events before rider commencement, and material\n- All values in this document are illustrative demonstration data for RAG development. They are not",
+    "source_page_start": 9,
+    "source_page_end": 9,
     "child_chunk_ids": [
-      "HS-BASIC-001-SEC-17-CHK-032"
+      "HS-BASIC-001-SEC-17-CHK-032",
+      "HS-BASIC-001-SEC-17-TBL-01-G01"
     ]
   },
   "HS-GOLD-001-SEC-01": {
@@ -611,7 +312,7 @@
       "Health Shield \u2013 Gold",
       "SECTION 2: PREMIUM DETAILS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 2: PREMIUM DETAILS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 2: PREMIUM DETAILS The following premium is an illustrative placeholder for testing and demonstrating the insurance assistant. \uf0b7 Illustrative Annual Premium: \u20b98,000 \uf0b7 Premium Payment Frequency: Annual \uf0b7 Taxes: Not included in the illustrative amount \uf0b7 Half-Yearly Premium: Not defined \uf0b7 Monthly Premium: Not defined \uf0b7 Premium by age, location, or underwriting category: Not defined \uf0b7 Premium renewal terms: Not verified\n\n#### Notes & Conditions:\n- The following premium is an illustrative placeholder for testing and demonstrating the insurance\n- Illustrative Annual Premium: \u20b98,000\n- Taxes: Not included in the illustrative amount\n- Half-Yearly Premium: Not defined\n- Monthly Premium: Not defined\n- Premium by age, location, or underwriting category: Not defined\n- Premium renewal terms: Not verified",
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 2: PREMIUM DETAILS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 2\u20132\n\n\nSECTION 2: PREMIUM DETAILS The following premium is an illustrative placeholder for testing and demonstrating the insurance assistant. \uf0b7 Illustrative Annual Premium: \u20b911,800 \uf0b7 Premium Payment Frequency: Annual \uf0b7 Taxes: Not included in the illustrative amount \uf0b7 Illustrative Half-Yearly Premium: not defined \uf0b7 Illustrative Monthly Premium: not defined \uf0b7 Illustrative premium varies by age band: location and underwriting may affect pricing. \uf0b7 Illustrative renewal: annually, subject to renewal before expiry; premium may change by age band and approved product pricing. No guaranteed fixed renewal premium.\n\n#### Notes & Conditions:\n- The following premium is an illustrative placeholder for testing and demonstrating the insurance\n- Illustrative Annual Premium: \u20b911,800\n- Taxes: Not included in the illustrative amount\n- Illustrative Half-Yearly Premium: not defined\n- Illustrative Monthly Premium: not defined\n- Illustrative premium varies by age band: location and underwriting may affect pricing.\n- Illustrative renewal: annually, subject to renewal before expiry; premium may change by",
     "source_page_start": 2,
     "source_page_end": 2,
     "child_chunk_ids": [
@@ -643,7 +344,7 @@
       "Health Shield \u2013 Gold",
       "SECTION 4: ICU BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 4: ICU BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 3\u20133\n\n\nSECTION 4: ICU BENEFIT The ICU Benefit provides a higher illustrative daily benefit when an eligible insured person is admitted to an Intensive Care Unit (ICU). Illustrative Gold Benefits \uf0b7 Daily ICU Benefit: \u20b910,000 \uf0b7 ICU Eligibility Conditions: Not officially defined \uf0b7 Maximum ICU Benefit Days: Not defined \uf0b7 Interaction with Hospital Cash: Subject to approved policy terms Example For 3 eligible ICU days: \u20b910,000 \u00d7 3 days = \u20b930,000.\n\n#### Notes & Conditions:\n- The ICU Benefit provides a higher illustrative daily benefit when an eligible insured person is\n- Illustrative Gold Benefits\n- Maximum ICU Benefit Days: Not defined",
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 4: ICU BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 3\u20133\n\n\nSECTION 4: ICU BENEFIT The ICU Benefit provides a higher illustrative daily benefit when an eligible insured person is admitted to an Intensive Care Unit (ICU). Illustrative Gold Benefits \uf0b7 Daily ICU Benefit: \u20b910,000 \uf0b7 ICU Eligibility Conditions: Not officially defined \uf0b7 Maximum ICU Benefit Days: 10 days per policy year \uf0b7 Interaction with Hospital Cash: Subject to approved policy terms Example For 3 eligible ICU days: \u20b910,000 \u00d7 3 days = \u20b930,000.\n\n#### Notes & Conditions:\n- The ICU Benefit provides a higher illustrative daily benefit when an eligible insured person is\n- Illustrative Gold Benefits",
     "source_page_start": 3,
     "source_page_end": 3,
     "child_chunk_ids": [
@@ -676,9 +377,9 @@
       "Health Shield \u2013 Gold",
       "SECTION 6: DAY-CARE PROCEDURE BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 6: DAY-CARE PROCEDURE BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 4\u20134\n\n\nSECTION 6: DAY-CARE PROCEDURE BENEFIT The Day-Care Procedure Benefit is intended to provide a predefined payment for eligible listed medical procedures that meet the plan's day-care criteria. Illustrative Gold Benefits \uf0b7 Benefit Per Eligible Procedure: \u20b925,000 \uf0b7 Maximum Claims Per Policy Year: 2 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b950,000 \uf0b7 Overall Procedure Limit: Not defined \uf0b7 Eligible Procedure List: Not defined\n\n#### Table: Table 1: Surgery Category / Illustrative Payout Percentage / Illustrative Payout\n| Surgery Category | Illustrative Payout Percentage | Illustrative Payout |\n| --- | --- | --- |\n| Category 1 | 100% | \u20b95,00,000 |\n| Category 2 | 60% | \u20b93,00,000 |\n| Category 3 | 40% | \u20b92,00,000 |\n| Category 4 | 20% | \u20b91,00,000 |\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b950,000\n- Overall Procedure Limit: Not defined\n- Eligible Procedure List: Not defined",
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 6: DAY-CARE PROCEDURE BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 4\u20135\n\n\nSECTION 6: DAY-CARE PROCEDURE BENEFIT The Day-Care Procedure Benefit is intended to provide a predefined payment for eligible listed medical procedures that meet the plan's day-care criteria. Illustrative Gold Benefits \uf0b7 Benefit Per Eligible Procedure: \u20b925,000 \uf0b7 Maximum Claims Per Policy Year: 2 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b950,000 \uf0b7 Overall Procedure Limit: \u20b950,000 per eligible procedure and \u20b950,000 per policy year, subject to the 2-claim annual limit \uf0b7 Eligible Procedure List: Illustrative examples include cataract surgery, dialysis, chemotherapy, radiotherapy, and selected endoscopic procedures requiring less than 24 hours of hospital care; subject to the approved list.\n\n#### Table: Table 1: Surgery Category / Illustrative Payout Percentage / Illustrative Payout\n| Surgery Category | Illustrative Payout Percentage | Illustrative Payout |\n| --- | --- | --- |\n| Category 1 | 100% | \u20b95,00,000 |\n| Category 2 | 60% | \u20b93,00,000 |\n| Category 3 | 40% | \u20b92,00,000 |\n| Category 4 | 20% | \u20b91,00,000 |\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b950,000\n- Eligible Procedure List: Illustrative examples include cataract surgery, dialysis,",
     "source_page_start": 4,
-    "source_page_end": 4,
+    "source_page_end": 5,
     "child_chunk_ids": [
       "HS-GOLD-001-SEC-06-CHK-007",
       "HS-GOLD-001-SEC-06-TBL-01-G01"
@@ -693,12 +394,11 @@
       "Health Shield \u2013 Gold",
       "SECTION 7: OTHER SURGERY BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 7: OTHER SURGERY BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 4\u20135\n\n\nSECTION 7: OTHER SURGERY BENEFIT This benefit is intended to provide a predefined daily amount for eligible surgeries that fall within the plan's specified Other Surgery category. Illustrative Gold Benefits \uf0b7 Daily Other Surgery Benefit: \u20b910,000 \uf0b7 Minimum Hospitalization Duration: More than 24 hours \uf0b7 Maximum Benefit Days Per Policy Year: 10 days \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000 \uf0b7 Eligible Surgery List: Not defined\n\n#### Table: Table 1: Surgery Category / Illustrative Payout Percentage / Illustrative Payout\n| Surgery Category | Illustrative Payout Percentage | Illustrative Payout |\n| --- | --- | --- |\n| Category 1 | 100% | \u20b95,00,000 |\n| Category 2 | 60% | \u20b93,00,000 |\n| Category 3 | 40% | \u20b92,00,000 |\n| Category 4 | 20% | \u20b91,00,000 |\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000\n- Eligible Surgery List: Not defined",
-    "source_page_start": 4,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 7: OTHER SURGERY BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 5\u20135\n\n\nSECTION 7: OTHER SURGERY BENEFIT This benefit is intended to provide a predefined daily amount for eligible surgeries that fall within the plan's specified Other Surgery category. Illustrative Gold Benefits \uf0b7 Daily Other Surgery Benefit: \u20b910,000 \uf0b7 Minimum Hospitalization Duration: More than 24 hours \uf0b7 Maximum Benefit Days Per Policy Year: 10 days \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000 \uf0b7 Eligible Surgery List: Illustrative examples include hernia repair, appendectomy, gallbladder surgery, and selected orthopaedic procedures requiring inpatient admission; final category mapping must be approved.\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b91,00,000\n- Eligible Surgery List: Illustrative examples include hernia repair, appendectomy,",
+    "source_page_start": 5,
     "source_page_end": 5,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-07-CHK-009",
-      "HS-GOLD-001-SEC-07-TBL-01-G01"
+      "HS-GOLD-001-SEC-07-CHK-009"
     ]
   },
   "HS-GOLD-001-SEC-08": {
@@ -710,11 +410,11 @@
       "Health Shield \u2013 Gold",
       "SECTION 8: MEDICAL MANAGEMENT BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 8: MEDICAL MANAGEMENT BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 5\u20135\n\n\nSECTION 8: MEDICAL MANAGEMENT BENEFIT The Medical Management Benefit is intended to provide a predefined lump-sum payment for specified illnesses managed according to the plan's eligibility conditions. Illustrative Gold Benefits \uf0b7 Lump-Sum Benefit Per Eligible Claim: \u20b915,000 \uf0b7 Maximum Claims Per Policy Year: 2 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b930,000 Illustrative Illness Examples \uf0b7 Dengue \uf0b7 Malaria \uf0b7 Pneumonia \uf0b7 Pulmonary Tuberculosis \uf0b7 Viral Hepatitis A\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b930,000\n- Illustrative Illness Examples",
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 8: MEDICAL MANAGEMENT BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 5\u20136\n\n\nSECTION 8: MEDICAL MANAGEMENT BENEFIT The Medical Management Benefit is intended to provide a predefined lump-sum payment for specified illnesses managed according to the plan's eligibility conditions. Illustrative Gold Benefits \uf0b7 Lump-Sum Benefit Per Eligible Claim: \u20b915,000 \uf0b7 Maximum Claims Per Policy Year: 2 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b930,000 Illustrative Illness Examples \uf0b7 Dengue \uf0b7 Malaria \uf0b7 Pneumonia \uf0b7 Pulmonary Tuberculosis \uf0b7 Viral Hepatitis A\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b930,000\n- Illustrative Illness Examples",
     "source_page_start": 5,
-    "source_page_end": 5,
+    "source_page_end": 6,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-08-CHK-011"
+      "HS-GOLD-001-SEC-08-CHK-010"
     ]
   },
   "HS-GOLD-001-SEC-09": {
@@ -726,11 +426,11 @@
       "Health Shield \u2013 Gold",
       "SECTION 9: EXTENDED HOSPITAL STAY BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 9: EXTENDED HOSPITAL STAY BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 5\u20136\n\n\nSECTION 9: EXTENDED HOSPITAL STAY BENEFIT The Extended Hospital Stay Benefit is intended to provide an additional lump-sum payment when an eligible continuous hospitalization exceeds the plan's specified duration. Illustrative Gold Benefits \uf0b7 Minimum Continuous Hospitalization: More than 30 days \uf0b7 Lump-Sum Benefit: \u20b950,000 \uf0b7 Maximum Claims Per Policy Year: 1 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b950,000\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b950,000",
-    "source_page_start": 5,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 9: EXTENDED HOSPITAL STAY BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 6\u20136\n\n\nSECTION 9: EXTENDED HOSPITAL STAY BENEFIT The Extended Hospital Stay Benefit is intended to provide an additional lump-sum payment when an eligible continuous hospitalization exceeds the plan's specified duration. Illustrative Gold Benefits \uf0b7 Minimum Continuous Hospitalization: More than 30 days \uf0b7 Lump-Sum Benefit: \u20b950,000 \uf0b7 Maximum Claims Per Policy Year: 1 \uf0b7 Illustrative Maximum Benefit Per Policy Year: \u20b950,000\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Illustrative Maximum Benefit Per Policy Year: \u20b950,000",
+    "source_page_start": 6,
     "source_page_end": 6,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-09-CHK-012"
+      "HS-GOLD-001-SEC-09-CHK-011"
     ]
   },
   "HS-GOLD-001-SEC-10": {
@@ -742,11 +442,11 @@
       "Health Shield \u2013 Gold",
       "SECTION 10: HEALTH CHECK-UP BENEFIT"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 10: HEALTH CHECK-UP BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 6\u20136\n\n\nSECTION 10: HEALTH CHECK-UP BENEFIT The Health Check-up Benefit is intended to reimburse eligible preventive health-check-up expenses within the specified plan limit. Illustrative Gold Benefits \uf0b7 Maximum Reimbursement: \u20b93,000 \uf0b7 Payment Basis: Actual eligible expense, subject to the limit \uf0b7 Waiting Period: Not defined \uf0b7 Frequency: Not defined \uf0b7 Eligible Tests and Providers: Not defined \uf0b7 Required Documents: Not defined\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Waiting Period: Not defined\n- Frequency: Not defined\n- Eligible Tests and Providers: Not defined\n- Required Documents: Not defined",
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 10: HEALTH CHECK-UP BENEFIT\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 6\u20137\n\n\nSECTION 10: HEALTH CHECK-UP BENEFIT The Health Check-up Benefit is intended to reimburse eligible preventive health-check-up expenses within the specified plan limit. Illustrative Gold Benefits \uf0b7 Maximum Reimbursement: \u20b93,000 \uf0b7 Payment Basis: Actual eligible expense, subject to the limit \uf0b7 Waiting Period: 30 days from policy start, except eligible accidents; subject to policy terms \uf0b7 Frequency: Once per policy year, after completion of the applicable waiting period \uf0b7 Eligible Tests and Providers: Basic blood tests, blood sugar, lipid profile, kidney and liver function tests, ECG, and other listed preventive tests at registered diagnostic centres or network providers. \uf0b7 Required Documents: Itemised bill, payment receipt, test reports, prescription or doctor recommendation where applicable, and claim form.\n\n#### Notes & Conditions:\n- Illustrative Gold Benefits\n- Waiting Period: 30 days from policy start, except eligible accidents; subject to policy\n- Frequency: Once per policy year, after completion of the applicable waiting period",
     "source_page_start": 6,
-    "source_page_end": 6,
+    "source_page_end": 7,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-10-CHK-013"
+      "HS-GOLD-001-SEC-10-CHK-012"
     ]
   },
   "HS-GOLD-001-SEC-11": {
@@ -758,14 +458,15 @@
       "Health Shield \u2013 Gold",
       "SECTION 11: ADDITIONAL BENEFITS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 11: ADDITIONAL BENEFITS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 6\u20137\n\n\nSECTION 11: ADDITIONAL BENEFITS 11.1 Restored Cover \uf0b7 Availability: Not confirmed \uf0b7 Eligible Events: Not defined \uf0b7 Restoration Amount: Not defined \uf0b7 Number of Restorations: Not defined \uf0b7 Conditions for Use: Not defined The assistant must not state that exhausted surgery coverage is automatically restored. 11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b9500 \uf0b7 Eligibility Conditions: Not defined \uf0b7 Eligible Ambulance Types: Not defined \uf0b7 Claim Limit: Not defined 11.3 Quick Cash Benefit \uf0b7 Availability: Not confirmed \uf0b7 Advance Percentage: Not defined \uf0b7 Eligible Surgery Categories: Not defined \uf0b7 Network Hospital Conditions: Not defined \uf0b7 Final Claim Adjustment Rules: Not defined\n\n### 11.1 Restored Cover\n11.1 Restored Cover \uf0b7 Availability: Not confirmed \uf0b7 Eligible Events: Not defined \uf0b7 Restoration Amount: Not defined \uf0b7 Number of Restorations: Not defined \uf0b7 Conditions for Use: Not defined The assistant must not state that exhausted surgery coverage is automatically restored.\n\n### 11.2 Ambulance Benefit\n11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b9500 \uf0b7 Eligibility Conditions: Not defined \uf0b7 Eligible Ambulance Types: Not defined \uf0b7 Claim Limit: Not defined\n\n### 11.3 Quick Cash Benefit\n11.3 Quick Cash Benefit \uf0b7 Availability: Not confirmed \uf0b7 Advance Percentage: Not defined \uf0b7 Eligible Surgery Categories: Not defined \uf0b7 Network Hospital Conditions: Not defined \uf0b7 Final Claim Adjustment Rules: Not defined\n\n#### Notes & Conditions:\n- Availability: Not confirmed\n- Eligible Events: Not defined\n- Restoration Amount: Not defined\n- Number of Restorations: Not defined\n- Conditions for Use: Not defined\n- Illustrative Ambulance Benefit: \u20b9500\n- Eligibility Conditions: Not defined\n- Eligible Ambulance Types: Not defined\n- Claim Limit: Not defined\n- Availability: Not confirmed\n- Advance Percentage: Not defined\n- Eligible Surgery Categories: Not defined\n- Network Hospital Conditions: Not defined\n- Final Claim Adjustment Rules: Not defined",
-    "source_page_start": 6,
-    "source_page_end": 7,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 11: ADDITIONAL BENEFITS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 7\u20139\n\n\nSECTION 11: ADDITIONAL BENEFITS 11.1 Restored Cover \uf0b7 Availability: Included in this illustrative plan \uf0b7 Eligible Events: Restoration applies after the major surgery benefit limit is exhausted by an eligible claim; available for a subsequent unrelated eligible illness or injury, not for the same event. \uf0b7 Restoration Amount: Up to 100% of the original major surgery benefit basis (\u20b95,00,000) per policy year \uf0b7 Number of Restorations: Once per policy year \uf0b7 Conditions for Use: Applies only after exhaustion of the applicable major surgery benefit; not available for the same illness/event that caused exhaustion; no cash value; subject to remaining policy term. 11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b9500 \uf0b7 Eligibility Conditions: Medically necessary emergency ground ambulance transport to the nearest suitable hospital, supported by a valid bill and trip details. \uf0b7 Eligible Ambulance Types: Road ambulance operated by a licensed provider; air ambulance excluded. \uf0b7 Claim Limit: \u20b9500 per admissible trip, maximum 2 trips per policy year (\u20b91,000 total) 11.3 Quick Cash Benefit \uf0b7 Availability: Included in this illustrative plan \uf0b7 Advance Percentage: Up to 25% of the estimated eligible surgery benefit, capped at \u20b950,000 \uf0b7 Eligible Surgery Categories: Category 1 and Category 2 major surgeries only, subject to pre-authorisation. \uf0b7 Network Hospital Conditions: Available only at a participating network hospital after written pre-authorisation and identity verification. \uf0b7 Final Claim Adjustment Rules: The advance is deducted from the final admissible benefit; any excess advance must be repaid within 30 days of final claim settlement.\n\n### 11.1 Restored Cover\n11.1 Restored Cover \uf0b7 Availability: Included in this illustrative plan \uf0b7 Eligible Events: Restoration applies after the major surgery benefit limit is exhausted by an eligible claim; available for a subsequent unrelated eligible illness or injury, not for the same event. \uf0b7 Restoration Amount: Up to 100% of the original major surgery benefit basis (\u20b95,00,000) per policy year \uf0b7 Number of Restorations: Once per policy year \uf0b7 Conditions for Use: Applies only after exhaustion of the applicable major surgery benefit; not available for the same illness/event that caused exhaustion; no cash value; subject to remaining policy term.\n\n### 11.2 Ambulance Benefit\n11.2 Ambulance Benefit \uf0b7 Illustrative Ambulance Benefit: \u20b9500 \uf0b7 Eligibility Conditions: Medically necessary emergency ground ambulance transport to the nearest suitable hospital, supported by a valid bill and trip details. \uf0b7 Eligible Ambulance Types: Road ambulance operated by a licensed provider; air ambulance excluded. \uf0b7 Claim Limit: \u20b9500 per admissible trip, maximum 2 trips per policy year (\u20b91,000 total)\n\n### 11.3 Quick Cash Benefit\n11.3 Quick Cash Benefit \uf0b7 Availability: Included in this illustrative plan \uf0b7 Advance Percentage: Up to 25% of the estimated eligible surgery benefit, capped at \u20b950,000 \uf0b7 Eligible Surgery Categories: Category 1 and Category 2 major surgeries only, subject to pre-authorisation. \uf0b7 Network Hospital Conditions: Available only at a participating network hospital after written pre-authorisation and identity verification. \uf0b7 Final Claim Adjustment Rules: The advance is deducted from the final admissible benefit; any excess advance must be repaid within 30 days of final claim settlement.\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Day-Care Procedure + Hospital Cash | Not payable together |\n| Other Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Surgery Benefit | Payable together, subject to eligibility and individual\nbenefit limits |\n| Extended Stay + Other Eligible Benefits | Payable together, subject to eligibility and individual\nbenefit limits |\n| ICU Benefit + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n\n#### Notes & Conditions:\n- Availability: Included in this illustrative plan\n- Illustrative Ambulance Benefit: \u20b9500\n- Availability: Included in this illustrative plan",
+    "source_page_start": 7,
+    "source_page_end": 9,
     "child_chunk_ids": [
+      "HS-GOLD-001-SEC-11-CHK-013",
       "HS-GOLD-001-SEC-11-CHK-014",
       "HS-GOLD-001-SEC-11-CHK-015",
       "HS-GOLD-001-SEC-11-CHK-016",
-      "HS-GOLD-001-SEC-11-CHK-017"
+      "HS-GOLD-001-SEC-11-TBL-01-G01"
     ]
   },
   "HS-GOLD-001-SEC-12": {
@@ -777,9 +478,9 @@
       "Health Shield \u2013 Gold",
       "SECTION 12: BENEFIT COMBINATION RULES"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 12: BENEFIT COMBINATION RULES\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 7\u20138\n\n\nSECTION 12: BENEFIT COMBINATION RULES The final Gold plan must define whether the following benefits can be paid together for the same hospitalization or medical event. Benefit Combination Status Major Surgery + Hospital Cash Not verified Day-Care Procedure + Hospital Cash Not verified Other Surgery + Hospital Cash Not verified Medical Management + Hospital Cash Not verified Medical Management + Surgery Benefit Not verified Extended Stay + Other Eligible Benefits Not verified ICU Benefit + Hospital Cash Not verified\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Not verified |\n| Day-Care Procedure + Hospital Cash | Not verified |\n| Other Surgery + Hospital Cash | Not verified |\n| Medical Management + Hospital Cash | Not verified |\n| Medical Management + Surgery Benefit | Not verified |\n| Extended Stay + Other Eligible Benefits | Not verified |\n| ICU Benefit + Hospital Cash | Not verified |\n\n#### Notes & Conditions:\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified\n- Not verified",
-    "source_page_start": 7,
-    "source_page_end": 8,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 12: BENEFIT COMBINATION RULES\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 9\u20139\n\n\nSECTION 12: BENEFIT COMBINATION RULES Benefit Combination Status Major Surgery + Hospital Cash Payable together, subject to eligibility and individual benefit limits Day-Care Procedure + Hospital Cash Not payable together Other Surgery + Hospital Cash Payable together, subject to eligibility and individual benefit limits Medical Management + Hospital Cash Payable together, subject to eligibility and individual benefit limits Medical Management + Surgery Benefit Payable together, subject to eligibility and individual benefit limits Extended Stay + Other Eligible Benefits Payable together, subject to eligibility and individual benefit limits ICU Benefit + Hospital Cash Payable together, subject to eligibility and individual benefit limits\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Day-Care Procedure + Hospital Cash | Not payable together |\n| Other Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Surgery Benefit | Payable together, subject to eligibility and individual\nbenefit limits |\n| Extended Stay + Other Eligible Benefits | Payable together, subject to eligibility and individual\nbenefit limits |\n| ICU Benefit + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |",
+    "source_page_start": 9,
+    "source_page_end": 9,
     "child_chunk_ids": [
       "HS-GOLD-001-SEC-12-CHK-018",
       "HS-GOLD-001-SEC-12-TBL-01-G01"
@@ -794,11 +495,12 @@
       "Health Shield \u2013 Gold",
       "SECTION 13: CLAIM-FREE BENEFIT INCREASE"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 13: CLAIM-FREE BENEFIT INCREASE\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 8\u20138\n\n\nSECTION 13: CLAIM-FREE BENEFIT INCREASE The Gold plan's claim-free benefit increase has not been defined in the illustrative product specification. \uf0b7 Claim-Free Increase Percentage: Not defined \uf0b7 Increase Frequency: Not defined \uf0b7 Maximum Increased Benefit: Not defined \uf0b7 Effect of a Claim: Not defined \uf0b7 Effect on Premium: Not defined\n\n#### Notes & Conditions:\n- The Gold plan's claim-free benefit increase has not been defined in the illustrative product\n- Claim-Free Increase Percentage: Not defined\n- Increase Frequency: Not defined\n- Maximum Increased Benefit: Not defined\n- Effect of a Claim: Not defined\n- Effect on Premium: Not defined",
-    "source_page_start": 8,
-    "source_page_end": 8,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 13: CLAIM-FREE BENEFIT INCREASE\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 9\u201310\n\n\nSECTION 13: CLAIM-FREE BENEFIT INCREASE The following claim-free benefit increase is a proposed rule for this illustrative product specification. \uf0b7 Claim-Free Increase Percentage: 10% of the original major surgery benefit basis for each claim-free policy year \uf0b7 Increase Frequency: At each renewal after a completed claim-free policy year \uf0b7 Maximum Increased Benefit: Up to 50% of the original benefit basis (maximum additional \u20b92,50,000) \uf0b7 Effect of a Claim: No increase is added for a year in which a claim is paid; previously accumulated increase is retained but not increased for that year. \uf0b7 Effect on Premium: Claim-free increase does not itself reduce the renewal premium; renewal pricing remains subject to applicable rates.\n\n#### Table: Table 2: Benefit Combination / Status\n| Benefit Combination | Status |\n| --- | --- |\n| Major Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Day-Care Procedure + Hospital Cash | Not payable together |\n| Other Surgery + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n| Medical Management + Surgery Benefit | Payable together, subject to eligibility and individual\nbenefit limits |\n| Extended Stay + Other Eligible Benefits | Payable together, subject to eligibility and individual\nbenefit limits |\n| ICU Benefit + Hospital Cash | Payable together, subject to eligibility and individual\nbenefit limits |\n\n#### Notes & Conditions:\n- The following claim-free benefit increase is a proposed rule for this illustrative product",
+    "source_page_start": 9,
+    "source_page_end": 10,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-13-CHK-020"
+      "HS-GOLD-001-SEC-13-CHK-020",
+      "HS-GOLD-001-SEC-13-TBL-01-G01"
     ]
   },
   "HS-GOLD-001-SEC-14": {
@@ -810,9 +512,9 @@
       "Health Shield \u2013 Gold",
       "SECTION 14: PREMIUM WAIVER AND AUTO HEALTH"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 14: PREMIUM WAIVER AND AUTO HEALTH\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 8\u20139\n\n\nSECTION 14: PREMIUM WAIVER AND AUTO HEALTH COVER 14.1 Premium Waiver \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Surgery Categories: Not defined \uf0b7 Waiver Duration: Not defined \uf0b7 Start Date: Not defined \uf0b7 Rider Premium Treatment: Not defined 14.2 Auto Health Cover \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Death Event: Not defined \uf0b7 Eligible Family Members: Not defined \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n### 14.1 Premium Waiver\n14.1 Premium Waiver \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Surgery Categories: Not defined \uf0b7 Waiver Duration: Not defined \uf0b7 Start Date: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n### 14.2 Auto Health Cover\n14.2 Auto Health Cover \uf0b7 Availability: Not confirmed \uf0b7 Qualifying Death Event: Not defined \uf0b7 Eligible Family Members: Not defined \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: Not defined\n\n#### Notes & Conditions:\n- Availability: Not confirmed\n- Qualifying Surgery Categories: Not defined\n- Waiver Duration: Not defined\n- Start Date: Not defined\n- Rider Premium Treatment: Not defined\n- Availability: Not confirmed\n- Qualifying Death Event: Not defined\n- Eligible Family Members: Not defined\n- Future Premium Waiver Rules: Not defined\n- Rider Premium Treatment: Not defined",
-    "source_page_start": 8,
-    "source_page_end": 9,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 14: PREMIUM WAIVER AND AUTO HEALTH\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 10\u201311\n\n\nSECTION 14: PREMIUM WAIVER AND AUTO HEALTH COVER 14.1 Premium Waiver \uf0b7 Availability: Included in this illustrative plan \uf0b7 Qualifying Surgery Categories: Category 1 major surgery resulting in permanent total disability, as confirmed by an independent medical assessment; illustrative eligibility only. \uf0b7 Waiver Duration: Remaining premiums for the current policy term only \uf0b7 Start Date: From the next premium due date after approval of the qualifying claim \uf0b7 Rider Premium Treatment: No separate rider premium in this illustrative version; availability and pricing require product approval 14.2 Auto Health Cover \uf0b7 Availability: Included in this illustrative plan \uf0b7 Qualifying Death Event: Death of the primary insured policyholder during the policy term, subject to proof of death and policy conditions \uf0b7 Eligible Family Members: Spouse and dependent children listed on the policy schedule, if enrolled under an approved family version \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: No separate rider premium in this illustrative version; availability and pricing require product approval\n\n### 14.1 Premium Waiver\n14.1 Premium Waiver \uf0b7 Availability: Included in this illustrative plan \uf0b7 Qualifying Surgery Categories: Category 1 major surgery resulting in permanent total disability, as confirmed by an independent medical assessment; illustrative eligibility only. \uf0b7 Waiver Duration: Remaining premiums for the current policy term only \uf0b7 Start Date: From the next premium due date after approval of the qualifying claim \uf0b7 Rider Premium Treatment: No separate rider premium in this illustrative version; availability and pricing require product approval\n\n### 14.2 Auto Health Cover\n14.2 Auto Health Cover \uf0b7 Availability: Included in this illustrative plan \uf0b7 Qualifying Death Event: Death of the primary insured policyholder during the policy term, subject to proof of death and policy conditions \uf0b7 Eligible Family Members: Spouse and dependent children listed on the policy schedule, if enrolled under an approved family version \uf0b7 Future Premium Waiver Rules: Not defined \uf0b7 Rider Premium Treatment: No separate rider premium in this illustrative version; availability and pricing require product approval\n\n#### Notes & Conditions:\n- Availability: Included in this illustrative plan\n- disability, as confirmed by an independent medical assessment; illustrative eligibility\n- Rider Premium Treatment: No separate rider premium in this illustrative version;\n- Availability: Included in this illustrative plan\n- Future Premium Waiver Rules: Not defined\n- Rider Premium Treatment: No separate rider premium in this illustrative version;",
+    "source_page_start": 10,
+    "source_page_end": 11,
     "child_chunk_ids": [
       "HS-GOLD-001-SEC-14-CHK-022",
       "HS-GOLD-001-SEC-14-CHK-023",
@@ -828,11 +530,12 @@
       "Health Shield \u2013 Gold",
       "SECTION 15: WAITING PERIODS, EXCLUSIONS, AND"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 9\u201310\n\n\nSECTION 15: WAITING PERIODS, EXCLUSIONS, AND POLICY CONDITIONS The official waiting periods and exclusions for the illustrative Gold plan have not been verified. The following items require confirmation before the plan can be treated as a real product: \uf0b7 Initial waiting period for illness \uf0b7 Accident coverage commencement \uf0b7 Waiting periods for specified diseases and procedures \uf0b7 Pre-existing disease definition and exclusion rules \uf0b7 Treatment-location restrictions \uf0b7 Hospital and provider eligibility \uf0b7 Grace period for premium payment \uf0b7 Lapse and revival conditions \uf0b7 Medical disclosures and underwriting requirements \uf0b7 Claim filing deadlines and documentation \uf0b7 General and benefit-specific exclusions\n\n#### Notes & Conditions:\n- SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n- The official waiting periods and exclusions for the illustrative Gold plan have not been verified.\n- Initial waiting period for illness\n- Waiting periods for specified diseases and procedures\n- Pre-existing disease definition and exclusion rules\n- General and benefit-specific exclusions",
-    "source_page_start": 9,
-    "source_page_end": 10,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 11\u201313\n\n\nSECTION 15: WAITING PERIODS, EXCLUSIONS, AND POLICY CONDITIONS The following waiting periods, exclusions, and policy conditions are proposed illustrative rules and must be checked against approved policy wording before real-world use. Illustrative waiting periods and policy conditions: \uf0b7 Initial waiting period for illness: 30 days from policy commencement, except eligible accidental injuries. \uf0b7 Accident coverage commencement: From the policy start date, subject to policy issuance and exclusions. \uf0b7 Waiting periods for specified diseases and procedures: 24 months for listed conditions/procedures, such as cataract, hernia, joint replacement, and selected benign conditions. \uf0b7 Pre-existing disease definition and exclusion rules: Conditions diagnosed, treated, or medically advised within 48 months before policy commencement; illustrative waiting period of 36 months, subject to disclosure and underwriting. \uf0b7 Treatment-location restrictions: Treatment in India at a legally registered hospital or eligible day-care centre; overseas treatment excluded. \uf0b7 Hospital and provider eligibility: Registered hospital with at least 10 inpatient beds (relaxable in specified locations), qualified medical staff, and 24-hour nursing where inpatient admission is required. \uf0b7 Grace period for premium payment: 15 days for monthly instalments and 30 days for annual or half-yearly payments. \uf0b7 Lapse and revival conditions: Cover may cease after the grace period; revival may be requested within 90 days, subject to outstanding premium and any required health declaration. \uf0b7 Medical disclosures and underwriting requirements: Complete proposal form and disclose medical history, ongoing treatment, smoking status, and prior claims; medical tests may be requested. \uf0b7 Claim filing deadlines and documentation: Notify the insurer within 24 hours for emergency hospitalisation where practicable and submit complete claim documents within 30 days of discharge; late submission may be considered with valid reasons. \uf0b7 General and benefit-specific exclusions: Illustrative exclusions include cosmetic treatment, non-medical expenses, self-inflicted injury, substance misuse-related events, unproven treatment, and claims arising from material misrepresentation; detailed wording governs.\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not applicable; no maturity payment under this illustrative plan. |\n| Death Benefit | No separate death benefit; eligible accrued claims remain subject to policy\nterms. |\n| Surrender Value | Nil; no surrender value under the illustrative 1-year fixed-benefit plan. |\n| Policy Loan | Not available; no policy loan facility. |\n| Refund of\nPremium | No refund after cover begins, except any legally required or expressly\napproved cancellation refund. |\n\n#### Notes & Conditions:\n- SECTION 15: WAITING PERIODS, EXCLUSIONS, AND\n- The following waiting periods, exclusions, and policy conditions are proposed illustrative rules\n- Illustrative waiting periods and policy conditions:\n- Initial waiting period for illness: 30 days from policy commencement, except eligible\n- and exclusions.\n- Waiting periods for specified diseases and procedures: 24 months for listed\n- Pre-existing disease definition and exclusion rules: Conditions diagnosed, treated, or\n- medically advised within 48 months before policy commencement; illustrative waiting\n- General and benefit-specific exclusions: Illustrative exclusions include cosmetic",
+    "source_page_start": 11,
+    "source_page_end": 13,
     "child_chunk_ids": [
-      "HS-GOLD-001-SEC-15-CHK-026"
+      "HS-GOLD-001-SEC-15-CHK-025",
+      "HS-GOLD-001-SEC-15-TBL-01-G01"
     ]
   },
   "HS-GOLD-001-SEC-16": {
@@ -844,9 +547,9 @@
       "Health Shield \u2013 Gold",
       "SECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 10\u201311\n\n\nSECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN BENEFITS The illustrative Gold plan has not been verified for maturity, death, surrender, or loan benefits. Benefit Type Status Maturity Benefit Not defined Death Benefit Not defined Surrender Value Not defined Policy Loan Not defined Refund of Premium Not defined\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not defined |\n| Death Benefit | Not defined |\n| Surrender Value | Not defined |\n| Policy Loan | Not defined |\n| Refund of Premium | Not defined |\n\n#### Notes & Conditions:\n- The illustrative Gold plan has not been verified for maturity, death, surrender, or loan benefits.\n- Not defined\n- Not defined\n- Not defined\n- Not defined\n- Not defined",
-    "source_page_start": 10,
-    "source_page_end": 11,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 13\u201313\n\n\nSECTION 16: MATURITY, DEATH, SURRENDER, AND LOAN BENEFITS Benefit Type Status Maturity Benefit Not applicable; no maturity payment under this illustrative plan. Death Benefit No separate death benefit; eligible accrued claims remain subject to policy terms. Surrender Value Nil; no surrender value under the illustrative 1-year fixed-benefit plan. Policy Loan Not available; no policy loan facility. Refund of Premium No refund after cover begins, except any legally required or expressly approved cancellation refund.\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not applicable; no maturity payment under this illustrative plan. |\n| Death Benefit | No separate death benefit; eligible accrued claims remain subject to policy\nterms. |\n| Surrender Value | Nil; no surrender value under the illustrative 1-year fixed-benefit plan. |\n| Policy Loan | Not available; no policy loan facility. |\n| Refund of\nPremium | No refund after cover begins, except any legally required or expressly\napproved cancellation refund. |\n\n#### Notes & Conditions:\n- Not applicable; no maturity payment under this illustrative plan.\n- Nil; no surrender value under the illustrative 1-year fixed-benefit plan.",
+    "source_page_start": 13,
+    "source_page_end": 13,
     "child_chunk_ids": [
       "HS-GOLD-001-SEC-16-CHK-027",
       "HS-GOLD-001-SEC-16-TBL-01-G01"
@@ -861,9 +564,9 @@
       "Health Shield \u2013 Gold",
       "SECTION 17: OPTIONAL RIDERS"
     ],
-    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 17: OPTIONAL RIDERS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 11\u201311\n\n\nSECTION 17: OPTIONAL RIDERS The availability and terms of optional riders have not been established for the illustrative Gold plan. \uf0b7 Available Riders: Not defined \uf0b7 Rider Premiums: Not defined \uf0b7 Rider Eligibility: Not defined \uf0b7 Rider Waiting Periods: Not defined \uf0b7 Rider Exclusions: Not defined \uf0b7 Rider Renewal Conditions: Not defined\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not defined |\n| Death Benefit | Not defined |\n| Surrender Value | Not defined |\n| Policy Loan | Not defined |\n| Refund of Premium | Not defined |\n\n#### Notes & Conditions:\n- The availability and terms of optional riders have not been established for the illustrative Gold\n- Available Riders: Not defined\n- Rider Premiums: Not defined\n- Rider Eligibility: Not defined\n- Rider Waiting Periods: Not defined\n- Rider Exclusions: Not defined\n- Rider Renewal Conditions: Not defined",
-    "source_page_start": 11,
-    "source_page_end": 11,
+    "full_content_markdown": "# Health Shield \u2013 Gold \u2014 SECTION 17: OPTIONAL RIDERS\n\n**Plan ID**: HS-GOLD-001 | **Audience**: customer | **Pages**: 13\u201314\n\n\nSECTION 17: OPTIONAL RIDERS The following optional riders and terms are illustrative examples only and are not confirmed product offerings. \uf0b7 Available Riders: Illustrative options: personal accident cover, critical illness lump-sum cover, and premium waiver rider; subject to separate approval. \uf0b7 Rider Premiums: Illustrative annual add-on pricing: personal accident \u20b9600; critical illness \u20b91,500; premium waiver \u20b9400. These are demo values, not quotes. \uf0b7 Rider Eligibility: Available to insured persons aged 18\u201360 at entry, subject to health declarations, underwriting, and rider-specific terms. \uf0b7 Rider Waiting Periods: Personal accident: none for accidental events after commencement; critical illness: 90 days initial waiting period; premium waiver: 90 days from rider commencement. \uf0b7 Rider Exclusions: Subject to rider wording; illustrative exclusions include intentional self-injury, fraud, undisclosed pre-existing conditions, and events specifically excluded by the rider.\n\n#### Table: Table 3: Benefit Type / Status\n| Benefit Type | Status |\n| --- | --- |\n| Maturity Benefit | Not applicable; no maturity payment under this illustrative plan. |\n| Death Benefit | No separate death benefit; eligible accrued claims remain subject to policy\nterms. |\n| Surrender Value | Nil; no surrender value under the illustrative 1-year fixed-benefit plan. |\n| Policy Loan | Not available; no policy loan facility. |\n| Refund of\nPremium | No refund after cover begins, except any legally required or expressly\napproved cancellation refund. |\n\n#### Notes & Conditions:\n- The following optional riders and terms are illustrative examples only and are not confirmed\n- Available Riders: Illustrative options: personal accident cover, critical illness lump-sum\n- Rider Premiums: Illustrative annual add-on pricing: personal accident \u20b9600; critical\n- Rider Waiting Periods: Personal accident: none for accidental events after\n- commencement; critical illness: 90 days initial waiting period; premium waiver: 90 days\n- Rider Exclusions: Subject to rider wording; illustrative exclusions include intentional",
+    "source_page_start": 13,
+    "source_page_end": 14,
     "child_chunk_ids": [
       "HS-GOLD-001-SEC-17-CHK-029",
       "HS-GOLD-001-SEC-17-TBL-01-G01"

@@ -1,6 +1,9 @@
 import json
 import time
+import sys
+import os
 from pathlib import Path
+sys.path.insert(0, os.path.abspath("."))
 from backend.app.services.ingestion_orchestrator import IngestionOrchestrator
 from backend.app.core.config import settings
 
